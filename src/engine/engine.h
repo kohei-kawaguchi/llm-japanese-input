@@ -93,7 +93,8 @@ class Engine : public EngineInterface {
         GetConverter(), candidate_ranking_service_);
   }
 
-  void SetCandidateRankerForTesting(
+  // Replaces the ranking backend. The previous service is shut down.
+  void SetCandidateRanker(
       std::shared_ptr<converter::CandidateRankerBackendInterface> backend);
 
   // Functions for Reload, Sync, Wait return true if successfully operated

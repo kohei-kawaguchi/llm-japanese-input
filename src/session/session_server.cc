@@ -35,18 +35,42 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 
 #include "absl/log/log.h"
+#include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
 #include "absl/time/time.h"
 #include "base/vlog.h"
+#include "converter/candidate_ranker.h"
+#include "engine/engine.h"
 #include "engine/engine_factory.h"
 #include "ipc/ipc.h"
 #include "ipc/named_event.h"
 #include "protocol/commands.pb.h"
 #include "session/session_handler.h"
 
+#ifdef _WIN32
+#include "engine/zenz_candidate_ranker.h"
+#endif  // _WIN32
+
 namespace {
+
+std::unique_ptr<mozc::Engine> CreateServerEngine() {
+  std::unique_ptr<mozc::Engine> engine = mozc::EngineFactory::Create().value();
+#ifdef _WIN32
+  absl::StatusOr<
+      std::shared_ptr<mozc::converter::CandidateRankerBackendInterface>>
+      ranker = mozc::engine::CreateInstalledZenzCandidateRanker();
+  if (!ranker.ok()) {
+    LOG(ERROR) << "Installed candidate ranker is unavailable: "
+               << ranker.status().code();
+  } else if (*ranker != nullptr) {
+    engine->SetCandidateRanker(*std::move(ranker));
+  }
+#endif  // _WIN32
+  return engine;
+}
 
 #ifdef _WIN32
 // On Windows, multiple processes can create named pipe objects whose names are
@@ -67,8 +91,7 @@ namespace mozc {
 
 SessionServer::SessionServer()
     : IPCServer(kSessionName, kNumConnections, kTimeOut),
-      session_handler_(
-          std::make_unique<SessionHandler>(EngineFactory::Create().value())) {
+      session_handler_(std::make_unique<SessionHandler>(CreateServerEngine())) {
   // start session watch dog timer
   session_handler_->StartWatchDog();
 

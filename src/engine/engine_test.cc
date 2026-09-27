@@ -125,7 +125,7 @@ TEST_F(EngineTest, CandidateRankingServiceIsAlwaysOwned) {
 
 TEST_F(EngineTest, CandidateRankingServiceIdentitySurvivesReloadModules) {
   auto backend = std::make_shared<converter::RecordingCandidateRanker>();
-  engine_->SetCandidateRankerForTesting(backend);
+  engine_->SetCandidateRanker(backend);
   const std::shared_ptr<CandidateRankingServiceInterface> service =
       GetCandidateRankingService(*engine_);
   ASSERT_TRUE(service->HasBackend());
@@ -141,7 +141,7 @@ TEST_F(EngineTest, CandidateRankingServiceIdentitySurvivesReloadModules) {
 }
 
 TEST_F(EngineTest, CandidateRankingServiceShutsDownWithEngine) {
-  engine_->SetCandidateRankerForTesting(
+  engine_->SetCandidateRanker(
       std::make_shared<converter::RecordingCandidateRanker>());
   const std::shared_ptr<CandidateRankingServiceInterface> service =
       GetCandidateRankingService(*engine_);

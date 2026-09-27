@@ -857,7 +857,7 @@ TEST_F(SessionTest, TestOfTestForSetup) {
 
 TEST_F(SessionTest, CandidateRankingUsesAndClearsCurrentCommandContext) {
   auto ranker = std::make_shared<RecordingCandidateRanker>();
-  mock_data_engine_->SetCandidateRankerForTesting(ranker);
+  mock_data_engine_->SetCandidateRanker(ranker);
   Session session(*mock_data_engine_);
   config::Config config;
   config::ConfigHandler::GetDefaultConfig(&config);
@@ -891,7 +891,7 @@ TEST_F(SessionTest, CandidateRankingUsesAndClearsCurrentCommandContext) {
 
 TEST_F(SessionTest, CandidateRankingUndoPreservesPasswordPrivacy) {
   auto ranker = std::make_shared<RecordingCandidateRanker>();
-  mock_data_engine_->SetCandidateRankerForTesting(ranker);
+  mock_data_engine_->SetCandidateRanker(ranker);
   Session session(*mock_data_engine_);
   config::Config config;
   config::ConfigHandler::GetDefaultConfig(&config);

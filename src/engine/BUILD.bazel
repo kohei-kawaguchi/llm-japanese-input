@@ -456,9 +456,7 @@ mozc_cc_library(
         "@com_google_absl//absl/status",
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
-    ] + mozc_select(windows = [
-        ":zenz_candidate_ranker",
-    ]),
+    ],
 )
 
 mozc_cc_test(

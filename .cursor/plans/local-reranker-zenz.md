@@ -255,15 +255,19 @@ still not met.
 
 ## Engine integration
 
-`Engine` creates the backend at construction when
-`zenz-v3.2-small-Q5_K_M.gguf` is present in the server directory, and passes it
-to the existing `CandidateRankingService`. Without the file, or on platforms
+The conversion server (`SessionServer`) creates the backend when
+`zenz-v3.2-small-Q5_K_M.gguf` is present in the server directory and hands it
+to its `Engine`, which replaces the backend of its `CandidateRankingService`.
+Engines created elsewhere, including every test, keep no backend, so tests do
+not depend on an installed model. Without the file, or on platforms
 other than Windows, the service keeps no backend and ranking reports the
 existing unavailable diagnostic. The model is fetched by `http_file` at its
 pinned revision and SHA256 and installed beside `mozc_server.exe`, and the
 installer credits include the llama.cpp MIT and zenz Apache 2.0 notices.
 On Windows the default configuration enables `candidate_ranking_config`
-with a 250 millisecond `max_wait_millisec`; when ranking takes longer, Mozc
+with a 250 millisecond `max_wait_millisec`, and configuration normalization
+adds the same section when a stored configuration has none, so a configuration
+saved before ranking existed, or no configuration file, also ranks; when ranking takes longer, Mozc
 order is shown. The settings dialog has a checkbox that turns ranking off and
 on, and enabling it writes the same 250 millisecond wait when none is stored.
 The evaluation freezers clear the ranking section from the default

@@ -268,14 +268,19 @@ mozc_cc_library(
     deps = [
         ":session_handler",
         "//base:vlog",
+        "//converter:candidate_ranker",
+        "//engine",
         "//engine:engine_factory",
         "//ipc",
         "//ipc:named_event",
         "//protocol:commands_cc_proto",
         "@com_google_absl//absl/log",
+        "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/time",
-    ],
+    ] + mozc_select(windows = [
+        "//engine:zenz_candidate_ranker",
+    ]),
 )
 
 mozc_cc_binary(

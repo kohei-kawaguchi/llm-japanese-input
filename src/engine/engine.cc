@@ -54,10 +54,6 @@
 #include "rewriter/rewriter.h"
 #include "rewriter/rewriter_interface.h"
 
-#ifdef _WIN32
-#include "engine/zenz_candidate_ranker.h"
-#endif  // _WIN32
-
 namespace mozc {
 
 absl::StatusOr<std::unique_ptr<Engine>> Engine::CreateEngine(
@@ -84,35 +80,14 @@ std::unique_ptr<Engine> Engine::CreateEngine() {
   return std::make_unique<Engine>();
 }
 
-namespace {
-
-std::shared_ptr<converter::CandidateRankerBackendInterface>
-CreateInstalledCandidateRanker() {
-#ifdef _WIN32
-  absl::StatusOr<std::shared_ptr<converter::CandidateRankerBackendInterface>>
-      ranker = engine::CreateInstalledZenzCandidateRanker();
-  if (!ranker.ok()) {
-    LOG(ERROR) << "Installed candidate ranker is unavailable: "
-               << ranker.status().code();
-    return nullptr;
-  }
-  return *std::move(ranker);
-#else   // _WIN32
-  return nullptr;
-#endif  // _WIN32
-}
-
-}  // namespace
-
 Engine::Engine()
     : candidate_ranking_service_(
-          std::make_shared<engine::CandidateRankingService>(
-              CreateInstalledCandidateRanker())),
+          std::make_shared<engine::CandidateRankingService>(nullptr)),
       minimal_converter_(CreateMinimalConverter()) {}
 
 Engine::~Engine() { candidate_ranking_service_->Shutdown(); }
 
-void Engine::SetCandidateRankerForTesting(
+void Engine::SetCandidateRanker(
     std::shared_ptr<converter::CandidateRankerBackendInterface> backend) {
   candidate_ranking_service_->Shutdown();
   candidate_ranking_service_ =

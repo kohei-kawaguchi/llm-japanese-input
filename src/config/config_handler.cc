@@ -85,6 +85,16 @@ bool GetPlatformSpecificDefaultEmojiSetting() {
   return use_emoji_conversion_default;
 }
 
+#ifdef _WIN32
+void SetDefaultCandidateRanking(Config* config) {
+  Config::CandidateRankingConfig& candidate_ranking =
+      *config->mutable_candidate_ranking_config();
+  candidate_ranking.set_enabled(true);
+  candidate_ranking.set_max_wait_millisec(
+      ConfigHandler::kDefaultCandidateRankingMaxWaitMillisec);
+}
+#endif  // _WIN32
+
 Config CreateDefaultConfig() {
   Config config;
   config.set_session_keymap(ConfigHandler::GetDefaultKeyMap());
@@ -117,11 +127,7 @@ Config CreateDefaultConfig() {
   }
 
 #ifdef _WIN32
-  Config::CandidateRankingConfig& candidate_ranking =
-      *config.mutable_candidate_ranking_config();
-  candidate_ranking.set_enabled(true);
-  candidate_ranking.set_max_wait_millisec(
-      ConfigHandler::kDefaultCandidateRankingMaxWaitMillisec);
+  SetDefaultCandidateRanking(&config);
 #endif  // _WIN32
 
   return config;
@@ -161,6 +167,12 @@ void NormalizeConfig(Config* config) {
       !config->has_use_emoji_conversion()) {
     config->set_use_emoji_conversion(true);
   }
+
+#ifdef _WIN32
+  if (!config->has_candidate_ranking_config()) {
+    SetDefaultCandidateRanking(config);
+  }
+#endif  // _WIN32
 }
 
 class ConfigHandlerImpl final {

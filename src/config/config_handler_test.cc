@@ -152,6 +152,43 @@ TEST_F(ConfigHandlerTest, CandidateRankingConfigPersists) {
   EXPECT_EQ(output.candidate_ranking_config().max_wait_millisec(), 37);
 }
 
+#ifdef _WIN32
+TEST_F(ConfigHandlerTest, StoredConfigWithoutRankingEnablesRanking) {
+  TempDirectory temp_dir = testing::MakeTempDirectoryOrDie();
+  const std::string config_file =
+      FileUtil::JoinPath(temp_dir.path(), "config_without_ranking_test");
+  ASSERT_OK(FileUtil::UnlinkIfExists(config_file));
+  ConfigHandler::SetConfigFileNameForTesting(config_file);
+
+  Config input = ConfigHandler::DefaultConfig();
+  input.clear_candidate_ranking_config();
+  ConfigHandler::SetConfig(input);
+  ConfigHandler::Reload();
+
+  const Config output = ConfigHandler::GetCopiedConfig();
+  ASSERT_TRUE(output.has_candidate_ranking_config());
+  EXPECT_TRUE(output.candidate_ranking_config().enabled());
+  EXPECT_EQ(output.candidate_ranking_config().max_wait_millisec(),
+            ConfigHandler::kDefaultCandidateRankingMaxWaitMillisec);
+}
+
+TEST_F(ConfigHandlerTest, StoredDisabledRankingStaysDisabled) {
+  TempDirectory temp_dir = testing::MakeTempDirectoryOrDie();
+  const std::string config_file =
+      FileUtil::JoinPath(temp_dir.path(), "config_disabled_ranking_test");
+  ASSERT_OK(FileUtil::UnlinkIfExists(config_file));
+  ConfigHandler::SetConfigFileNameForTesting(config_file);
+
+  Config input = ConfigHandler::DefaultConfig();
+  input.mutable_candidate_ranking_config()->set_enabled(false);
+  ConfigHandler::SetConfig(input);
+  ConfigHandler::Reload();
+
+  EXPECT_FALSE(
+      ConfigHandler::GetCopiedConfig().candidate_ranking_config().enabled());
+}
+#endif  // _WIN32
+
 TEST_F(ConfigHandlerTest, SetMetadata) {
   auto make_Config_with_clock = [](int seconds, bool incognito) {
     Config input = ConfigHandler::DefaultConfig();
