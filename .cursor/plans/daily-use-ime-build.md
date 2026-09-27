@@ -42,6 +42,14 @@ Run from `src/`.
 4. `bazelisk build package --config release_build`
 5. Install `bazel-bin/win32/installer/LLMJapaneseInput64.msi`.
 
+## Release versions
+
+Every installer given to a user raises `BUILD_OSS` in `src/version.bzl`.
+Windows Installer keeps an installed executable whose file version equals the
+incoming one, so an upgrade with an unchanged version replaces only files
+that are new and leaves the old `mozc_server.exe` and `mozc_tool.exe` in
+place. Version 3.34.6240.100 is the first release with the zenz ranker.
+
 ## Product identity
 
 The product name is LLM日本語入力, with the English name LLM Japanese Input,

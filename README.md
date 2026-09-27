@@ -62,7 +62,9 @@ bazelisk build package --config release_build
 
 Install `bazel-bin/win32/installer/LLMJapaneseInput64.msi` by opening it. The
 model is downloaded by Bazel at a pinned revision and SHA256 and is installed
-next to the conversion server.
+next to the conversion server. Raise `BUILD_OSS` in `src/version.bzl` for every
+installer release, because Windows Installer does not replace executables
+whose version is unchanged.
 
 ## Turning ranking off
 
