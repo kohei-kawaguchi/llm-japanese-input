@@ -67,6 +67,8 @@ struct EvaluationFreezeCaseInput {
   absl::string_view preceding_text;
   absl::string_view following_text;
   FrozenReadingSource reading_source = FrozenReadingSource::kUnspecified;
+  converter::CandidateRankerMode mode =
+      converter::CandidateRankerMode::kConversion;
 };
 
 struct EvaluationFreezeCaseResult {

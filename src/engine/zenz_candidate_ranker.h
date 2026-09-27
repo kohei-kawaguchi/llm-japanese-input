@@ -78,6 +78,10 @@ struct ZenzScoredOutput {
   bool add_end = false;
 };
 
+// zenz scores the conversion of the complete reading, so it ranks only
+// conversion requests and leaves prediction and suggestion in Mozc order.
+bool IsZenzRankedMode(converter::CandidateRankerMode mode);
+
 std::string BuildZenzPrompt(const converter::CandidateRankerRequest& request);
 
 // Returns the scored outputs of every segment in request order, limited to the

@@ -66,6 +66,12 @@ converter::CandidateRankerRequest Request() {
   return request;
 }
 
+TEST(ZenzCandidateRankerTest, RanksOnlyConversionRequests) {
+  EXPECT_TRUE(IsZenzRankedMode(converter::CandidateRankerMode::kConversion));
+  EXPECT_FALSE(IsZenzRankedMode(converter::CandidateRankerMode::kPrediction));
+  EXPECT_FALSE(IsZenzRankedMode(converter::CandidateRankerMode::kSuggestion));
+}
+
 TEST(ZenzCandidateRankerTest, PromptOrdersContextBeforeKatakanaInput) {
   EXPECT_EQ(BuildZenzPrompt(Request()),
             "\uEE02傘を持って\uEE07から\uEE00アメガフル\uEE01");

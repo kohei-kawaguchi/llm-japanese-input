@@ -1416,3 +1416,43 @@ mozc_cc_binary(
         "//base/win32:utf8_console_argv",
     ]),
 )
+
+proto_library(
+    name = "prediction_frozen_corpus_proto",
+    srcs = ["prediction_frozen_corpus.proto"],
+    deps = [":frozen_candidate_ranker_proto"],
+)
+
+cc_proto_library(
+    name = "prediction_frozen_corpus_cc_proto",
+    deps = [":prediction_frozen_corpus_proto"],
+)
+
+mozc_cc_binary(
+    name = "freeze_prediction_corpus",
+    testonly = True,
+    srcs = ["freeze_prediction_corpus_main.cc"],
+    tags = ["manual"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":evaluation_freezer",
+        ":evaluation_freezer_runtime",
+        ":evaluation_protobuf_util",
+        ":prediction_frozen_corpus_cc_proto",
+        ":quality_regression_freezer",
+        ":quality_regression_frozen_corpus_cc_proto",
+        "//base:file_util",
+        "//base:init_mozc",
+        "//converter:candidate_ranker",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:string_view",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)

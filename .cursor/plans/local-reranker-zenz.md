@@ -274,6 +274,45 @@ The evaluation freezers clear the ranking section from the default
 configuration, so their pinned desktop configuration and frozen corpora are
 unchanged.
 
+## Prediction evaluation
+
+Every earlier result is in conversion mode. This evaluation, declared before
+any prediction result is seen, measures the shipped ranker in prediction mode,
+where Mozc proposes completed text while the reading is still partial.
+
+The inputs come from the development and holdout rank-zero cases. For a case
+whose reading has at least four characters, the typed prefix is the reading
+without its last two characters, and the target is the complete expected
+output. The evaluation freezer gains a prediction mode that composes the
+prefix, calls `StartPrediction` with a `PREDICTION` request, and freezes the
+resulting request in `MODE_PREDICTION`, so the ranker sees exactly what the
+Engine seam would send. The frozen prediction corpus reuses the frozen case
+layout of the quality regression corpus.
+
+Each case is ranked by the shipped setting: the small model, the `next`
+window, `K` = 5, reading copy penalty 100, and order prior 1.0. Top-one
+accuracy is the share of cases whose first merged candidate equals the target,
+and top-three accuracy is the share whose target is among the first three
+merged candidates, both compared with Mozc's order on the same frozen
+requests. The ranker helps prediction if development top-one accuracy rises
+with more wins than regressions; the holdout is then reported once as a
+confirmation. If it does not help, the shipped product ranks only conversion
+requests.
+
+## Prediction result
+
+The ranker hurts prediction. On the 214 development prefixes, Mozc's first
+prediction is the target in 44 cases and the ranked first prediction in 10,
+with 2 wins, 36 regressions, and an exact bootstrap gain interval of -45
+through -23 cases; the target is among the first three in 69 and 33 cases. On
+the 71 holdout prefixes, Mozc has 3 and the ranker 0, with 3 regressions.
+zenz scores the conversion of exactly the typed reading, so it promotes the
+candidate that converts only the prefix over the completion: `かねのな`
+becomes 金の名 instead of 金のなる木, and `よろしくおねがいし` becomes よろしくお願いし
+instead of よろしくお願いします. As declared, the shipped ranker now ranks only
+conversion requests and returns no order for prediction and suggestion
+requests, which keep Mozc's order.
+
 ## Runtime for the experiment
 
 The experiment scores the GGUF from Python with `llama-cpp-python`, which is

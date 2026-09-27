@@ -494,10 +494,173 @@ def run_speed(config_path):
   return report
 
 
+def _prediction_splits(config, root):
+  development, development_answers, _, _ = (
+      cursor_grok_ranker_corpus.load_development_inputs(config, root)
+  )
+  holdout, _ = cursor_grok_ranker_corpus.load_frozen_corpus(
+      root / config["holdout_frozen_corpus_path"],
+      config["holdout_frozen_corpus_sha256"],
+      config["holdout_expected_case_count"],
+  )
+  holdout_answers, _ = cursor_grok_ranker_corpus.load_answers(
+      root / config["holdout_answer_source_path"],
+      config["holdout_answer_source_sha256"],
+      config["conversion_expected_command"],
+      holdout,
+  )
+  return {
+      "development": (development, development_answers),
+      "holdout": (holdout, holdout_answers),
+  }
+
+
+def _prediction_path(root, config, split, suffix):
+  return root / config["prediction_directory"] / f"{split}_{suffix}"
+
+
+def run_prediction_inputs(config_path):
+  config = zenz_ranker_config.load_config(config_path)
+  root = Path.cwd()
+  for split, (cases, answers) in _prediction_splits(config, root).items():
+    lines = []
+    targets = {}
+    for case, accepted in zip(cases, answers):
+      reading = case.conversion_reading
+      if len(reading) < config["prediction_minimum_reading_characters"]:
+        continue
+      lines.append(
+          f"{case.source_line}\t{reading[:-config['prediction_trim_characters']]}"
+      )
+      targets[str(case.source_line)] = list(accepted)
+    tsv = _prediction_path(root, config, split, "inputs.tsv")
+    tsv.parent.mkdir(parents=True, exist_ok=True)
+    tsv.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    _write_json(_prediction_path(root, config, split, "targets.json"), targets)
+    print(split, len(lines), tsv)
+
+
+def _top_values(request, merged_orders, top_n):
+  segment = request.segments[0]
+  order = merged_orders[0].candidate_ids
+  values = {candidate.id: candidate.value for candidate in segment.candidates}
+  return [values[candidate_id] for candidate_id in order[:top_n]]
+
+
+def _prediction_metrics(cases, targets, mozc_tops, ranked_tops):
+  wins = 0
+  regressions = 0
+  counts = {"mozc_top1": 0, "zenz_top1": 0, "mozc_topn": 0, "zenz_topn": 0}
+  for case, mozc_top, ranked_top in zip(cases, mozc_tops, ranked_tops):
+    accepted = targets[str(case.source_line)]
+    mozc_hit = mozc_top[0] in accepted
+    zenz_hit = ranked_top[0] in accepted
+    counts["mozc_top1"] += mozc_hit
+    counts["zenz_top1"] += zenz_hit
+    counts["mozc_topn"] += any(value in accepted for value in mozc_top)
+    counts["zenz_topn"] += any(value in accepted for value in ranked_top)
+    wins += zenz_hit and not mozc_hit
+    regressions += mozc_hit and not zenz_hit
+  lower, upper = cursor_grok_ranker_metrics.exact_bootstrap_endpoints(
+      wins, regressions, len(cases) - wins - regressions
+  )
+  return {
+      "case_count": len(cases),
+      **counts,
+      "win_count": wins,
+      "regression_count": regressions,
+      "net_gain_cases": wins - regressions,
+      "bootstrap_lower_gain_cases": lower,
+      "bootstrap_upper_gain_cases": upper,
+  }
+
+
+def run_prediction(config_path):
+  config = zenz_ranker_config.load_config(config_path)
+  root = Path.cwd()
+  cell = zenz_ranker.CalibrationCell(
+      copy_penalty=config["selected_copy_penalty"],
+      order_prior=config["selected_order_prior"],
+      top_k=config["shipped_top_k"],
+  )
+  score_outputs = _reference_scorer(config, root)
+  report = {
+      "prompt_version": config["prompt_version"],
+      "model_name": config["reference_model"],
+      "right_window": config["shipped_right_window"],
+      "cell": {
+          "copy_penalty": cell.copy_penalty,
+          "order_prior": cell.order_prior,
+          "top_k": cell.top_k,
+      },
+      "top_n": config["prediction_top_n"],
+      "splits": {},
+  }
+  for split in ("development", "holdout"):
+    frozen_path = _prediction_path(root, config, split, "frozen.pb")
+    targets = json.loads(
+        _prediction_path(root, config, split, "targets.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    cases, frozen_sha256 = cursor_grok_ranker_corpus.load_frozen_corpus(
+        frozen_path, cursor_grok_ranker_corpus._sha256(frozen_path.read_bytes()),
+        len(targets),
+    )
+    mozc_tops = []
+    ranked_tops = []
+    records = []
+    for case in cases:
+      if len(case.request.segments) != 1:
+        raise cursor_grok_ranker.RankerError("prediction request has several segments")
+      _, candidate_scores = zenz_ranker.score_request(
+          config,
+          score_outputs,
+          case.request,
+          cell.top_k,
+          config["shipped_right_window"],
+      )
+      raw_scores = {
+          (segment_id, candidate_id): score
+          for segment_id, candidate_id, score, _ in candidate_scores
+      }
+      response = zenz_ranker.calibrated_response(case.request, raw_scores, cell)
+      merged = cursor_grok_ranker.merge_response(case.request, response)
+      mozc_order = cursor_grok_ranker.merge_response(
+          case.request,
+          cursor_grok_ranker.RankerResponse(
+              token=case.request.token, segment_orders=()
+          ),
+      )
+      mozc_tops.append(
+          _top_values(case.request, mozc_order, config["prediction_top_n"])
+      )
+      ranked_tops.append(
+          _top_values(case.request, merged, config["prediction_top_n"])
+      )
+      records.append(
+          {
+              "source_line": case.source_line,
+              "preedit": case.conversion_reading,
+              "mozc_top": mozc_tops[-1],
+              "zenz_top": ranked_tops[-1],
+          }
+      )
+    report["splits"][split] = {
+        "frozen_corpus_sha256": frozen_sha256,
+        "metrics": _prediction_metrics(cases, targets, mozc_tops, ranked_tops),
+        "cases": records,
+    }
+    print(split, json.dumps(report["splits"][split]["metrics"]), flush=True)
+  _write_json(_output_path(root, config, config["prediction_name"]), report)
+  return report
+
+
 def print_usage():
   print(
       "Usage: run_zenz_ranker.py <config> "
-      "{validate|prepare|score|grid|holdout|ajimee|speed}",
+      "{validate|prepare|score|grid|holdout|ajimee|speed|"
+      "prediction-inputs|prediction}",
       file=sys.stderr,
   )
 
@@ -530,6 +693,12 @@ def main():
         ensure_ascii=False,
         indent=2,
     ))
+    return 0
+  if command == "prediction-inputs":
+    run_prediction_inputs(config_path)
+    return 0
+  if command == "prediction":
+    run_prediction(config_path)
     return 0
   if command == "speed":
     report = run_speed(config_path)

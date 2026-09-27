@@ -219,6 +219,10 @@ CreateInstalledZenzCandidateRanker() {
       *std::move(ranker));
 }
 
+bool IsZenzRankedMode(converter::CandidateRankerMode mode) {
+  return mode == converter::CandidateRankerMode::kConversion;
+}
+
 std::string BuildZenzPrompt(const converter::CandidateRankerRequest& request) {
   return NormalizeForModel(absl::StrCat(
       kLeftContextTag, request.preceding_text, kRightContextTag,
@@ -346,6 +350,9 @@ ZenzCandidateRanker::~ZenzCandidateRanker() = default;
 absl::StatusOr<converter::CandidateRankerResponse> ZenzCandidateRanker::Rank(
     const converter::CandidateRankerRequest& request,
     const converter::CandidateRankerCancellation& cancellation) {
+  if (!IsZenzRankedMode(request.mode)) {
+    return converter::CandidateRankerResponse{.token = request.token};
+  }
   llama_context* context = runtime_->context.get();
   llama_memory_t memory = llama_get_memory(context);
   const int32_t vocabulary_size = runtime_->vocabulary_size;

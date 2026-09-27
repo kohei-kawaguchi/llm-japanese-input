@@ -177,6 +177,12 @@ absl::StatusOr<EvaluationFreezeCaseResult> EvaluationFreezerSession::FreezeCase(
     return absl::InvalidArgumentError(
         "evaluation frozen reading source is invalid");
   }
+  if (input.mode != converter::CandidateRankerMode::kConversion &&
+      input.mode != converter::CandidateRankerMode::kPrediction) {
+    return absl::InvalidArgumentError("evaluation freeze mode is invalid");
+  }
+  const bool prediction =
+      input.mode == converter::CandidateRankerMode::kPrediction;
 
   Segments segments;
   bool history_reconstructed = false;
@@ -195,6 +201,10 @@ absl::StatusOr<EvaluationFreezeCaseResult> EvaluationFreezerSession::FreezeCase(
   composer.SetPreeditTextForTestOnly(input.preedit_text);
   ConversionRequest::Options options;
   options.defer_candidate_limits = true;
+  if (prediction) {
+    options.request_type = ConversionRequest::PREDICTION;
+    options.use_actual_converter_for_realtime_conversion = true;
+  }
   const ConversionRequest conversion_request =
       ConversionRequestBuilder()
           .SetComposer(composer)
@@ -203,7 +213,9 @@ absl::StatusOr<EvaluationFreezeCaseResult> EvaluationFreezerSession::FreezeCase(
           .SetConfigView(desktop_config_)
           .SetOptions(options)
           .Build();
-  if (!converter_.StartConversion(conversion_request, &segments)) {
+  if (!(prediction
+            ? converter_.StartPrediction(conversion_request, &segments)
+            : converter_.StartConversion(conversion_request, &segments))) {
     return absl::UnknownError("evaluation conversion failed");
   }
   if (segments.conversion_segments_size() == 0) {
@@ -232,7 +244,7 @@ absl::StatusOr<EvaluationFreezeCaseResult> EvaluationFreezerSession::FreezeCase(
   };
   const converter::CandidateRankerRequest ranker_request =
       converter::BuildCandidateRankerRequest(
-          token, converter::CandidateRankerMode::kConversion, frozen_reading,
+          token, input.mode, frozen_reading,
           input.preceding_text, input.following_text, 0, segments);
   absl::StatusOr<FrozenCandidateRankerRequest> frozen_request =
       FreezeCandidateRankerRequest(ranker_request);

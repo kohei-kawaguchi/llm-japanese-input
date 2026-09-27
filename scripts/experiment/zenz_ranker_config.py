@@ -29,6 +29,8 @@ TEXT_FIELDS = (
     "speed_name",
     "reference_model",
     "reference_right_window",
+    "shipped_right_window",
+    "prediction_name",
 )
 GRID_FIELDS = ("copy_penalties", "order_priors", "top_ks")
 SELECTED_NUMBER_FIELDS = ("selected_copy_penalty", "selected_order_prior")
@@ -41,6 +43,7 @@ PATH_FIELDS = (
     "holdout_answer_source_path",
     "ajimee_frozen_corpus_path",
     "ajimee_answer_corpus_path",
+    "prediction_directory",
 )
 SHA256_FIELDS = (
     "frozen_corpus_sha256",
@@ -70,6 +73,10 @@ POSITIVE_INT_FIELDS = (
     "ajimee_minimum_retention_percent",
     "ajimee_maximum_slice_loss_points",
     "latency_target_p90_milliseconds",
+    "shipped_top_k",
+    "prediction_trim_characters",
+    "prediction_minimum_reading_characters",
+    "prediction_top_n",
 )
 
 
@@ -131,7 +138,8 @@ def validate_config(config):
     if name not in config["models"]:
       raise ValueError(f"model {name} is not defined")
   for window in _require_list(config["right_windows"], "right_windows") + [
-      config["reference_right_window"]
+      config["reference_right_window"],
+      config["shipped_right_window"],
   ]:
     if window not in RIGHT_WINDOWS:
       raise ValueError(f"right window {window} is unknown")
