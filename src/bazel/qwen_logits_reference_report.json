@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "source_model": "Qwen/Qwen2.5-0.5B",
+  "source_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+  "source_weight_sha256": "88c142557820ccad55bb59756bfcfcf891de9cc6202816bd346445188a0ed342",
+  "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+  "f16_gguf_sha256": "deeea35e08e9426b0995c0762224b3bb3440e929c807621416cae267e31006dc",
+  "rtol": 0.02,
+  "atol": 0.125,
+  "cases": [
+    {
+      "name": "japanese_natural_text",
+      "token_count": 7,
+      "positions": [
+        0,
+        3,
+        6
+      ],
+      "maximum_absolute_error": 0.11319184303283691,
+      "mean_absolute_error": 0.007980762049555779,
+      "top_token_ids": [
+        33975,
+        94121,
+        220
+      ]
+    },
+    {
+      "name": "japanese_conversion",
+      "token_count": 32,
+      "positions": [
+        0,
+        16,
+        31
+      ],
+      "maximum_absolute_error": 0.11326110363006592,
+      "mean_absolute_error": 0.007281973026692867,
+      "top_token_ids": [
+        33975,
+        100862,
+        133165
+      ]
+    },
+    {
+      "name": "whitespace_and_unicode",
+      "token_count": 16,
+      "positions": [
+        0,
+        8,
+        15
+      ],
+      "maximum_absolute_error": 0.11326110363006592,
+      "mean_absolute_error": 0.007953760214149952,
+      "top_token_ids": [
+        33975,
+        17,
+        197
+      ]
+    }
+  ]
+}

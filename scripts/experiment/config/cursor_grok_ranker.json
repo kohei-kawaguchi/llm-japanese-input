@@ -1,0 +1,61 @@
+{
+  "api_key_environment": "CURSOR_API_KEY",
+  "env_file": ".env",
+  "models_list_url": "https://api.cursor.com/v1/models",
+  "agents_url": "https://api.cursor.com/v1/agents",
+  "sdk_package": "cursor-http",
+  "prompt_version": "1",
+  "runtime": "cloud",
+  "cloud_repos": [
+    {
+      "url": "https://github.com/kohei-kawaguchi/LLMJapaneseInput",
+      "starting_ref": "main"
+    }
+  ],
+  "agent_name": "mozc-candidate-ranker",
+  "local_cwd": ".tools/cache/experiment/cursor-grok-ranker/work",
+  "retry_limit": 3,
+  "poll_interval_seconds": 2,
+  "request_timeout_seconds": 180,
+  "run_timeout_seconds": 600,
+  "model_selection": {
+    "id_required_substrings": [
+      "grok-4.6"
+    ],
+    "id_forbidden_substrings": [
+      "fast"
+    ],
+    "required_params": [
+      {
+        "id": "effort",
+        "value": "high"
+      },
+      {
+        "id": "fast",
+        "value": "false"
+      }
+    ]
+  },
+  "modes": {
+    "1": "suggestion",
+    "2": "prediction",
+    "3": "conversion"
+  },
+  "frozen_corpus_path": "src/engine/evaluation/checked/quality_regression_development_frozen_corpus.pb",
+  "frozen_corpus_sha256": "44c9a08d748f2cef5c8428b1101f490c2719db34e533ba1cda3cee9b12b41c59",
+  "answer_source_path": "src/data/test/quality_regression_test/oss.tsv",
+  "answer_source_sha256": "053a43e72d174da43b351278cadc471abe08cea9fe98829dafe3d152580fcff0",
+  "conversion_expected_command": "Conversion Expected",
+  "output_directory": "report/experiment/cursor-grok-ranker",
+  "run_names": [
+    "run1",
+    "run2"
+  ],
+  "expected_case_count": 219,
+  "expected_baseline_correct_count": 164,
+  "minimum_net_gain_cases": 5,
+  "maximum_baseline_correct_regressions": 3,
+  "metric_definition_version": 2,
+  "exact_bootstrap_definition_version": 1,
+  "clean_key_copy_definition_version": 1
+}

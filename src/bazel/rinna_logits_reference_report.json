@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "source_model": "rinna/japanese-gpt2-xsmall",
+  "source_revision": "8e91527b3276e0565154935e84a08bf0137ed99f",
+  "source_weight_sha256": "06662948dfa3227e3a42200787f28e86657d0f1e37a4ba1439452419581a4229",
+  "tokenizer_sha256": "b5cbdfa8aa7c54c8c5af85b78c309c54a5f2749a20468bf6f60eee007fe6fec1",
+  "f32_gguf_sha256": "b7f36bcf7fa6e13ef434f8a95080f5892df131f7841abc611f975e2736a82ddd",
+  "rtol": 0.0001,
+  "atol": 0.0001,
+  "cases": [
+    {
+      "name": "japanese_conversion",
+      "token_count": 31,
+      "positions": [
+        0,
+        15,
+        30
+      ],
+      "maximum_absolute_error": 2.9087066650390625e-05,
+      "mean_absolute_error": 4.271482339390786e-06,
+      "top_token_ids": [
+        9,
+        556,
+        9
+      ]
+    },
+    {
+      "name": "japanese_suggestion",
+      "token_count": 31,
+      "positions": [
+        0,
+        15,
+        30
+      ],
+      "maximum_absolute_error": 3.62396240234375e-05,
+      "mean_absolute_error": 3.3793280636018608e-06,
+      "top_token_ids": [
+        9,
+        9,
+        9
+      ]
+    },
+    {
+      "name": "japanese_prediction",
+      "token_count": 29,
+      "positions": [
+        0,
+        14,
+        28
+      ],
+      "maximum_absolute_error": 3.504753112792969e-05,
+      "mean_absolute_error": 3.7857644201721996e-06,
+      "top_token_ids": [
+        9,
+        1409,
+        9
+      ]
+    },
+    {
+      "name": "unicode_scalar_lower",
+      "token_count": 33,
+      "positions": [
+        0,
+        16,
+        32
+      ],
+      "maximum_absolute_error": 4.0650367736816406e-05,
+      "mean_absolute_error": 3.9139354157669e-06,
+      "top_token_ids": [
+        9,
+        9,
+        9
+      ]
+    },
+    {
+      "name": "whitespace_and_normalization",
+      "token_count": 30,
+      "positions": [
+        0,
+        15,
+        29
+      ],
+      "maximum_absolute_error": 4.00543212890625e-05,
+      "mean_absolute_error": 3.967189059039811e-06,
+      "top_token_ids": [
+        9,
+        61,
+        9
+      ]
+    },
+    {
+      "name": "long_japanese_context",
+      "token_count": 40,
+      "positions": [
+        0,
+        20,
+        39
+      ],
+      "maximum_absolute_error": 2.6226043701171875e-05,
+      "mean_absolute_error": 5.193114702706225e-06,
+      "top_token_ids": [
+        9,
+        0,
+        9
+      ]
+    }
+  ]
+}

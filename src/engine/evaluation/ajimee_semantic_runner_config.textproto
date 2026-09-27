@@ -1,0 +1,5 @@
+schema_version: 1
+semantic_results_schema_version: 1
+capacity_audit_config_sha256: "c1265cc3834522a5e9958950227c4b30421b36690e56be4d822ac66b61f6dc05"
+capacity_audit_sha256: "4854ae79bc8a24e292be356180420215dd56e70a04c10b12d2f8b242a75e9a5d"
+numeric_profile: AJIMEE_SEMANTIC_CONFIGURED

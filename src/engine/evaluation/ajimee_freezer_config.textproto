@@ -1,0 +1,23 @@
+schema_version: 2
+input_corpus_schema_version: 1
+frozen_corpus_schema_version: 2
+expected_source {
+  benchmark_name: "AJIMEE-Bench"
+  source_revision: "401666cd56d1a570c2021798b64b6da4396bfd45"
+  source_relative_path: "JWTD_v2/v1/evaluation_items.json"
+  source_sha256: "e9eb668fd6aa14b1e26436f429b5550108af0a1dfd443b8cea0bcb3ab3028fca"
+  creator: "azooKey/AJIMEE-Bench contributors"
+  source_url: "https://github.com/azooKey/AJIMEE-Bench/tree/401666cd56d1a570c2021798b64b6da4396bfd45"
+  license_identifier: "CC-BY-SA-3.0"
+  license_url: "https://creativecommons.org/licenses/by-sa/3.0/"
+  upstream_dataset_url: "https://nlp.ist.i.kyoto-u.ac.jp/?日本語Wikipedia入力誤りデータセット"
+  changes_notice: "The source JSON was transformed into separated deterministic protobuf input and answer corpora; original_text and split chunk contents were omitted."
+}
+input_corpus_sha256: "55fc26b4d86c5d30c2eae5f40fcf1cd9f9b4822ad5a8bae424cdc9ed10e82848"
+expected_case_count: 200
+mozc_source_revision: "851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+mozc_data_type: "oss"
+mozc_data_sha256: "fbb9a23419d677a33968145cfe1979dac6e7d3c28712d469854b4707a5965ed1"
+default_desktop_request_sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+default_desktop_config_sha256: "376212704866775205cd89f831ca3504300eb5a2762609fe07081db84a5a6e7b"
+evaluation_clock_utc_rfc3339: "2000-01-01T00:00:00Z"

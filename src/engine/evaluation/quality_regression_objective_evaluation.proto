@@ -1,0 +1,151 @@
+// Copyright 2026 LLM Japanese Input Authors
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//     * Neither the name of LLM Japanese Input Authors nor the names of its
+// contributors may be used to endorse or promote products derived from this
+// software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+
+package mozc.engine.evaluation;
+
+import "engine/candidate_ranker_model.proto";
+
+enum DevelopmentNativeCoverageDisposition {
+  DEVELOPMENT_NATIVE_COVERAGE_DISPOSITION_UNSPECIFIED = 0;
+  DEVELOPMENT_NATIVE_COVERAGE_SELECTED = 1;
+  DEVELOPMENT_NATIVE_COVERAGE_OMITTED_CAPACITY = 2;
+}
+
+enum DevelopmentNumericProfile {
+  DEVELOPMENT_NUMERIC_PROFILE_UNSPECIFIED = 0;
+  DEVELOPMENT_NUMERIC_PROFILE_CONFIGURED = 1;
+}
+
+enum DevelopmentEvaluationLayout {
+  DEVELOPMENT_EVALUATION_LAYOUT_UNSPECIFIED = 0;
+  DEVELOPMENT_EVALUATION_SHARED_TRIE = 1;
+}
+
+message DevelopmentObjectiveSpec {
+  required mozc.engine.CandidateRankerModelManifest.ScoringTemplate.RecordLayout
+      objective = 1;
+  required string manifest_filename = 2;
+  required string manifest_sha256 = 3;
+  required bool selection_eligible = 4;
+}
+
+message DevelopmentExecutionConfig {
+  required uint32 schema_version = 1;
+  required uint32 frozen_corpus_schema_version = 2;
+  required uint32 native_coverage_schema_version = 3;
+  required string frozen_corpus_sha256 = 4;
+  required uint32 expected_case_count = 5;
+  required uint32 model_manifest_schema_version = 6;
+  required uint32 coverage_definition_version = 7;
+  required uint32 permutation_definition_version = 8;
+  repeated DevelopmentObjectiveSpec objectives = 9;
+}
+
+message NativeCoverageSegment {
+  required uint64 segment_id = 1;
+  required DevelopmentNativeCoverageDisposition disposition = 2;
+  repeated uint64 selected_candidate_ids = 3;
+}
+
+message NativeCoverageCase {
+  required uint64 source_line = 1;
+  repeated NativeCoverageSegment segments = 2;
+}
+
+message NativeCoverageMap {
+  repeated NativeCoverageCase cases = 1;
+}
+
+message ObjectiveNativeCoverage {
+  required mozc.engine.CandidateRankerModelManifest.ScoringTemplate.RecordLayout
+      objective = 1;
+  required NativeCoverageMap map = 2;
+}
+
+message DevelopmentNativeCoverageSuite {
+  required uint32 schema_version = 1;
+  required string execution_config_sha256 = 2;
+  required string frozen_corpus_sha256 = 3;
+  required uint32 coverage_definition_version = 4;
+  repeated ObjectiveNativeCoverage coverages = 5;
+}
+
+message DevelopmentScoreRunnerConfig {
+  required uint32 schema_version = 1;
+  required uint32 score_artifact_schema_version = 2;
+  required string execution_config_sha256 = 3;
+  required string frozen_corpus_sha256 = 4;
+  required string native_coverage_suite_sha256 = 5;
+  required uint32 score_definition_version = 6;
+  required DevelopmentNumericProfile numeric_profile = 7;
+  required DevelopmentEvaluationLayout layout = 8;
+}
+
+message DevelopmentCandidateScore {
+  required uint64 candidate_id = 1;
+  required uint64 original_candidate_index = 2;
+  required int32 mozc_cost = 3;
+  reserved 4;
+  reserved "score_bits";
+  required fixed64 full_continuation_score_bits = 5;
+  required uint32 scored_continuation_token_count = 6;
+}
+
+message DevelopmentSegmentScores {
+  required uint64 segment_id = 1;
+  repeated DevelopmentCandidateScore candidates = 2;
+}
+
+message DevelopmentCaseScores {
+  required uint64 source_line = 1;
+  repeated DevelopmentSegmentScores segments = 2;
+}
+
+message DevelopmentObjectiveScoreSet {
+  required mozc.engine.CandidateRankerModelManifest.ScoringTemplate.RecordLayout
+      objective = 1;
+  repeated DevelopmentCaseScores cases = 2;
+}
+
+message DevelopmentObjectiveScoresIdentity {
+  required string score_config_sha256 = 1;
+  required string execution_config_sha256 = 2;
+  required string frozen_corpus_sha256 = 3;
+  required string native_coverage_suite_sha256 = 4;
+  required uint32 score_definition_version = 5;
+  required DevelopmentNumericProfile numeric_profile = 6;
+  required DevelopmentEvaluationLayout layout = 7;
+}
+
+message DevelopmentObjectiveScores {
+  required uint32 schema_version = 1;
+  required DevelopmentObjectiveScoresIdentity identity = 2;
+  repeated DevelopmentObjectiveScoreSet objectives = 3;
+}

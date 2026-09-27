@@ -1,0 +1,176 @@
+# Copyright 2010-2021, Google Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+load("@rules_python//python:defs.bzl", "py_test")
+load(
+    "//:build_defs.bzl",
+    "mozc_cc_binary",
+    "mozc_cc_test",
+    "mozc_py_binary",
+    "mozc_py_library",
+)
+load("//bazel:stubs.bzl", "bzl_library")
+
+package(default_visibility = ["//:__subpackages__"])
+
+exports_files(
+    [
+        "causal_model_logits_verification.py",
+        "llama_cpp_additional_notices.txt",
+        "llama_cpp_exact_f32_gelu.patch",
+        "llama_cpp_rinna_gpt2.patch",
+        "llama_cpp_static_backends.patch",
+        "llama_cpp_zenz_pretokenizer.patch",
+        "qwen_logits_reference_cases.json",
+        "qwen_logits_reference_report.json",
+        "rinna_f16_gguf_verification_report.json",
+        "rinna_f32_gguf_verification_report.json",
+        "rinna_gguf_reports_check.py",
+        "rinna_gguf_verification_config.json",
+        "rinna_gguf_verification_lib.py",
+        "rinna_gguf_verification_lib_test.py",
+        "rinna_logits_reference_cases.json",
+        "rinna_logits_reference_report.json",
+        "rinna_q4_k_m_gguf_verification_report.json",
+        "verify_rinna_gguf.py",
+        "verify_rinna_logits.py",
+        "verify_qwen_logits.py",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+mozc_py_library(
+    name = "rinna_gguf_verification_lib",
+    srcs = ["rinna_gguf_verification_lib.py"],
+    imports = ["."],
+)
+
+py_test(
+    name = "rinna_gguf_verification_lib_test",
+    size = "small",
+    srcs = ["rinna_gguf_verification_lib_test.py"],
+    deps = [":rinna_gguf_verification_lib"],
+)
+
+mozc_py_binary(
+    name = "rinna_gguf_reports_check",
+    srcs = ["rinna_gguf_reports_check.py"],
+    data = [
+        "BUILD.bazel",
+        "BUILD.llama_cpp.bazel",
+        "llama_cpp_exact_f32_gelu.patch",
+        "llama_cpp_q4_k_m.cc",
+        "llama_cpp_rinna_gpt2.patch",
+        "llama_cpp_static_backends.patch",
+        "rinna_f16_gguf_verification_report.json",
+        "rinna_f32_gguf_verification_report.json",
+        "rinna_gguf_verification_config.json",
+        "rinna_gguf_verification_lib.py",
+        "rinna_q4_k_m_gguf_verification_report.json",
+        "verify_rinna_gguf.py",
+    ],
+    tags = ["manual"],
+)
+
+bzl_library(
+    name = "qt_bzl",
+    srcs = ["qt.bzl"],
+    test_size = "small",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//:build_defs_bzl",
+        "//:config_bzl",
+        "//devtools/build_cleaner/skylark:build_defs_lib",
+        "@build_bazel_rules_apple//apple:macos",
+    ],
+)
+
+bzl_library(
+    name = "stubs_bzl",
+    srcs = ["stubs.bzl"],
+    test_size = "small",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@rules_cc//cc/common",
+        "@rules_python//python:defs.bzl",
+    ],
+)
+
+bzl_library(
+    name = "run_build_tool_bzl",
+    srcs = ["run_build_tool.bzl"],
+    test_size = "small",
+    deps = [
+        "@bazel_skylib//lib:dicts",
+    ],
+)
+
+mozc_cc_test(
+    name = "llama_cpp_runtime_test",
+    size = "small",
+    srcs = ["llama_cpp_runtime_test.cc"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        "//testing:gunit_main",
+        "@llama_cpp//:llama",
+    ],
+)
+
+mozc_cc_binary(
+    name = "llama_cpp_tokenizer_probe",
+    testonly = True,
+    srcs = ["llama_cpp_tokenizer_probe.cc"],
+    tags = ["manual"],
+    deps = ["@llama_cpp//:llama"],
+)
+
+mozc_cc_binary(
+    name = "llama_cpp_logits_probe",
+    testonly = True,
+    srcs = ["llama_cpp_logits_probe.cc"],
+    tags = ["manual"],
+    deps = ["@llama_cpp//:llama"],
+)
+
+mozc_cc_binary(
+    name = "llama_cpp_q4_k_m",
+    srcs = ["llama_cpp_q4_k_m.cc"],
+    linkopts = ["/Brepro"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        "//base/win32:utf8_console_argv",
+        "@llama_cpp//:llama",
+    ],
+)

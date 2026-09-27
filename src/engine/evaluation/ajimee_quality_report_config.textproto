@@ -1,0 +1,29 @@
+schema_version: 1
+answer_corpus_schema_version: 1
+frozen_corpus_schema_version: 2
+capacity_audit_schema_version: 1
+semantic_results_schema_version: 1
+quality_report_schema_version: 1
+input_corpus_sha256: "55fc26b4d86c5d30c2eae5f40fcf1cd9f9b4822ad5a8bae424cdc9ed10e82848"
+answer_corpus_sha256: "819465115d76cca65eb9d6c8f3f60f8850723376b440eb5c41f0cd8fd7b2c389"
+frozen_corpus_sha256: "9b1656a48ed3cfbf1577b7a404688affb49b793f9c556ba2d2fb46b41238c61c"
+capacity_audit_config_sha256: "c1265cc3834522a5e9958950227c4b30421b36690e56be4d822ac66b61f6dc05"
+capacity_audit_sha256: "4854ae79bc8a24e292be356180420215dd56e70a04c10b12d2f8b242a75e9a5d"
+semantic_results_sha256: "7b1aa411809ca6e74bad9f5f96bcb9706a735833c98c94b4d4a9d39be9ac38c8"
+expected_case_count: 200
+expected_context_case_count: 100
+expected_no_context_case_count: 100
+expected_source {
+  benchmark_name: "AJIMEE-Bench"
+  source_revision: "401666cd56d1a570c2021798b64b6da4396bfd45"
+  source_relative_path: "JWTD_v2/v1/evaluation_items.json"
+  source_sha256: "e9eb668fd6aa14b1e26436f429b5550108af0a1dfd443b8cea0bcb3ab3028fca"
+  creator: "azooKey/AJIMEE-Bench contributors"
+  source_url: "https://github.com/azooKey/AJIMEE-Bench/tree/401666cd56d1a570c2021798b64b6da4396bfd45"
+  license_identifier: "CC-BY-SA-3.0"
+  license_url: "https://creativecommons.org/licenses/by-sa/3.0/"
+  upstream_dataset_url: "https://nlp.ist.i.kyoto-u.ac.jp/?日本語Wikipedia入力誤りデータセット"
+  changes_notice: "The source JSON was transformed into separated deterministic protobuf input and answer corpora; original_text and split chunk contents were omitted."
+}
+metric_definition_version: 1
+exact_bootstrap_definition_version: 1

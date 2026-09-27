@@ -1,0 +1,52 @@
+// Copyright 2026 LLM Japanese Input Authors
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer in
+// the documentation and/or other materials provided with the distribution.
+//     * Neither the name of LLM Japanese Input Authors nor the names of its
+// contributors may be used to endorse or promote products derived from this
+// software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+
+package mozc.engine.evaluation;
+
+message ExactRatio {
+  required sint64 numerator = 1;
+  required uint64 denominator = 2;
+}
+
+message CharacterError {
+  required uint64 edit_distance_sum = 1;
+  required uint64 reference_unicode_scalar_count = 2;
+}
+
+message ExactPairedBootstrap {
+  required uint32 definition_version = 1;
+  required uint64 sample_size = 2;
+  required uint64 win_count = 3;
+  required uint64 regression_count = 4;
+  required uint64 tie_count = 5;
+  required sint64 lower_gain_cases = 6;
+  required sint64 upper_gain_cases = 7;
+  required uint64 gain_denominator_cases = 8;
+}

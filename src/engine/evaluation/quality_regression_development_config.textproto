@@ -1,0 +1,26 @@
+schema_version: 1
+frozen_corpus_schema_version: 1
+native_coverage_schema_version: 1
+frozen_corpus_sha256: "44c9a08d748f2cef5c8428b1101f490c2719db34e533ba1cda3cee9b12b41c59"
+expected_case_count: 219
+model_manifest_schema_version: 5
+coverage_definition_version: 1
+permutation_definition_version: 1
+objectives {
+  objective: STRUCTURED_WITH_TARGET
+  manifest_filename: "manifest-f16-structured-with-target-v1.textproto"
+  manifest_sha256: "2209e8ebcc9876e9427d934f3b9d739a65fb498d2160d64d742fc719a45271eb"
+  selection_eligible: false
+}
+objectives {
+  objective: STRUCTURED_WITHOUT_TARGET
+  manifest_filename: "manifest-f16-structured-without-target-v1.textproto"
+  manifest_sha256: "66c620673895d5462539b8c2073c8d4f1615c51c09895d85c9336246c0c08bff"
+  selection_eligible: true
+}
+objectives {
+  objective: NATURAL_TEXT_ONLY
+  manifest_filename: "manifest-f16-natural-text-only-v1.textproto"
+  manifest_sha256: "be316282bcf1e031b55228a8f99c78dda7b19961828c56fd5bf70f90881657f9"
+  selection_eligible: true
+}

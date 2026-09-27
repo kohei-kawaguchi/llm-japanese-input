@@ -1,0 +1,8 @@
+schema_version: 1
+score_artifact_schema_version: 2
+execution_config_sha256: "c0bca67765f3ad26bc16495d4dde60daa07cd1d8cd37d3c12b46999e59f24a9f"
+frozen_corpus_sha256: "44c9a08d748f2cef5c8428b1101f490c2719db34e533ba1cda3cee9b12b41c59"
+native_coverage_suite_sha256: "706bbe8c4c15e1cfb5fbec781afe28a3661ad3659c60d3dcabd03ba3912aad29"
+score_definition_version: 2
+numeric_profile: DEVELOPMENT_NUMERIC_PROFILE_CONFIGURED
+layout: DEVELOPMENT_EVALUATION_SHARED_TRIE

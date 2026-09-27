@@ -1,0 +1,131 @@
+// Copyright 2026 LLM Japanese Input Authors
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//     * Neither the name of LLM Japanese Input Authors nor the names of its
+// contributors may be used to endorse or promote products derived from this
+// software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+
+package mozc.engine.evaluation;
+
+import "engine/candidate_ranker_model.proto";
+import "engine/evaluation/exact_quality_metrics.proto";
+import "engine/evaluation/quality_regression_corpus.proto";
+import "engine/evaluation/quality_regression_objective_evaluation.proto";
+
+enum DevelopmentScoreAggregation {
+  DEVELOPMENT_SCORE_AGGREGATION_UNSPECIFIED = 0;
+  DEVELOPMENT_FULL_CONTINUATION_SUM = 1;
+  DEVELOPMENT_CONTINUATION_MEAN = 2;
+}
+
+message DevelopmentCalibrationSpec {
+  required uint32 ordinal = 1;
+  required DevelopmentScoreAggregation aggregation = 2;
+  required uint64 mozc_order_prior_microlog_probability = 3;
+  required uint64 exact_key_copy_penalty_microlog_probability = 4;
+}
+
+message DevelopmentModelSpec {
+  required uint32 ordinal = 1;
+  required string source_model = 2;
+  required string source_revision = 3;
+  required uint64 parameter_count = 4;
+  required string objective_scores_sha256 = 5;
+  required DevelopmentObjectiveScoresIdentity score_identity = 6;
+  repeated DevelopmentObjectiveSpec objectives = 7;
+}
+
+message QualityRegressionDevelopmentReportConfig {
+  required uint32 schema_version = 1;
+  required uint32 frozen_corpus_schema_version = 2;
+  required uint32 answer_corpus_schema_version = 3;
+  required uint32 score_artifact_schema_version = 4;
+  required uint32 report_schema_version = 5;
+  required QualityRegressionCorpusIdentity expected_corpus_identity = 6;
+  required string frozen_corpus_sha256 = 7;
+  required string answer_corpus_sha256 = 8;
+  repeated DevelopmentModelSpec models = 9;
+  required uint32 expected_case_count = 10;
+  required uint32 expected_baseline_correct_count = 11;
+  required sint64 minimum_net_gain_cases = 12;
+  required uint32 maximum_baseline_correct_regressions = 13;
+  required uint32 metric_definition_version = 14;
+  required uint32 exact_bootstrap_definition_version = 15;
+  required uint32 clean_key_copy_definition_version = 16;
+  required uint32 selection_policy_version = 17;
+  repeated DevelopmentCalibrationSpec calibrations = 18;
+}
+
+message QualityRegressionDevelopmentReportIdentity {
+  required string report_config_sha256 = 1;
+  required string frozen_corpus_sha256 = 2;
+  required string answer_corpus_sha256 = 3;
+  repeated DevelopmentModelSpec models = 4;
+  required QualityRegressionCorpusIdentity corpus_identity = 5;
+  required uint32 metric_definition_version = 6;
+  required uint32 exact_bootstrap_definition_version = 7;
+  required uint32 clean_key_copy_definition_version = 8;
+  required uint32 selection_policy_version = 9;
+}
+
+message QualityRegressionDevelopmentObjectiveMetric {
+  required mozc.engine.CandidateRankerModelManifest.ScoringTemplate.RecordLayout
+      objective = 1;
+  required bool selection_eligible = 2;
+  required uint64 case_count = 3;
+  required uint64 baseline_correct_count = 4;
+  required uint64 model_correct_count = 5;
+  required uint64 retained_correct_count = 6;
+  required uint64 win_count = 7;
+  required uint64 regression_count = 8;
+  required uint64 unchanged_incorrect_count = 9;
+  required uint64 mozc_correct_exact_key_regression_count = 10;
+  required CharacterError baseline_character_error = 11;
+  required CharacterError model_character_error = 12;
+  required ExactPairedBootstrap paired_bootstrap = 13;
+  required ExactRatio baseline_accuracy = 14;
+  required ExactRatio model_accuracy = 15;
+  required ExactRatio accuracy_gain = 16;
+  optional ExactRatio retention = 17;
+  required uint64 clean_key_copy_promotion_count = 18;
+  required sint64 clean_key_copy_removed_vs_reference = 19;
+  required sint64 clean_key_copy_added_vs_reference = 20;
+  required bool development_gate_passed = 21;
+  required DevelopmentCalibrationSpec calibration = 22;
+  required uint32 model_ordinal = 23;
+}
+
+message QualityRegressionDevelopmentReport {
+  required uint32 schema_version = 1;
+  required QualityRegressionDevelopmentReportIdentity identity = 2;
+  repeated QualityRegressionDevelopmentObjectiveMetric objectives = 3;
+  required bool selected = 4;
+  optional uint32 selected_model_ordinal = 5;
+  optional mozc.engine.CandidateRankerModelManifest.ScoringTemplate.RecordLayout
+      selected_objective = 6;
+  optional string selected_manifest_sha256 = 7;
+  optional DevelopmentCalibrationSpec selected_calibration = 8;
+}

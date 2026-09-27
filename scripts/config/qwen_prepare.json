@@ -1,0 +1,40 @@
+{
+  "model_id": "Qwen/Qwen2.5-0.5B",
+  "revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+  "license_identifier": "Apache-2.0",
+  "forbidden_model_id_substrings": [
+    "Instruct",
+    "sarashina"
+  ],
+  "allow_patterns": [
+    "LICENSE",
+    "README.md",
+    "config.json",
+    "generation_config.json",
+    "model.safetensors",
+    "tokenizer.json",
+    "tokenizer_config.json",
+    "vocab.json",
+    "merges.txt"
+  ],
+  "source_weight_filename": "model.safetensors",
+  "tokenizer_filename": "tokenizer.json",
+  "gguf_filename": "qwen2.5-0.5b-f16.gguf",
+  "quantization": "F16",
+  "outtype": "f16",
+  "runtime_name": "llama.cpp",
+  "converter_script": "convert_hf_to_gguf.py",
+  "converter_archive_url_template": "https://github.com/ggml-org/llama.cpp/archive/{revision}.tar.gz",
+  "converter_strip_prefix_template": "llama.cpp-{revision}",
+  "huggingface_file_url_template": "https://huggingface.co/{model_id}/resolve/{revision}/{filename}",
+  "cache_model_directory": ".tools/cache/models/Qwen/Qwen2.5-0.5B/060db6499f32faf8b98477b0a26969ef7d8b9987",
+  "prepare_work_directory": ".tools/cache/prepare/qwen2.5-0.5b",
+  "venv_directory": ".tools/cache/prepare/qwen2.5-0.5b/venv",
+  "manifest_directory": "src/engine/evaluation/checked",
+  "manifest_filenames": [
+    "manifest-f16-structured-with-target-v1.textproto",
+    "manifest-f16-structured-without-target-v1.textproto",
+    "manifest-f16-natural-text-only-v1.textproto"
+  ],
+  "requirements_file": "scripts/config/qwen_prepare_requirements.txt"
+}

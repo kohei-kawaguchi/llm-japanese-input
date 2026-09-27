@@ -1,0 +1,34 @@
+[
+  {
+    "index": "40",
+    "context_text": "数量の説明。",
+    "input": "サンビャク",
+    "expected_output": ["三百"],
+    "original_text": "AJIMEE_POISON_CASE_40",
+    "splitted_input_for_limited_input_length": ["サンゼロゼロ"]
+  },
+  {
+    "index": "3",
+    "context_text": "",
+    "input": "アメ",
+    "expected_output": ["雨", "飴"],
+    "original_text": "AJIMEE_POISON_CASE_3",
+    "splitted_input_for_limited_input_length": []
+  },
+  {
+    "index": "20",
+    "context_text": "契約について話した。",
+    "input": "コウショウ",
+    "expected_output": ["交渉"],
+    "original_text": "AJIMEE_POISON_CASE_20",
+    "splitted_input_for_limited_input_length": ["コーショー"]
+  },
+  {
+    "index": "1",
+    "context_text": "",
+    "input": "コウショウ",
+    "expected_output": ["校章"],
+    "original_text": "AJIMEE_POISON_CASE_1",
+    "splitted_input_for_limited_input_length": []
+  }
+]

@@ -1,0 +1,779 @@
+{
+  "artifacts": {
+    "f16": {
+      "filename": "rinna-xsmall-f16.gguf",
+      "metadata_overrides": {
+        "general.file_type": 1
+      },
+      "sha256": "62d04a340abcbaf2f11242dac30043f4a9a1419d844d3487782275cc6ef39e65",
+      "size_bytes": 76964160,
+      "tensor_type_counts": {
+        "F16": 25,
+        "F32": 51
+      }
+    },
+    "f32": {
+      "filename": "rinna-xsmall-f32.gguf",
+      "metadata_overrides": {
+        "general.file_type": 0
+      },
+      "sha256": "b7f36bcf7fa6e13ef434f8a95080f5892df131f7841abc611f975e2736a82ddd",
+      "size_bytes": 150626624,
+      "tensor_type_counts": {
+        "F32": 76
+      }
+    },
+    "q4_k_m": {
+      "filename": "rinna-xsmall-q4_k_m.gguf",
+      "metadata_overrides": {
+        "general.file_type": 15
+      },
+      "quantization": "q4_k_m",
+      "sha256": "3c53d019a0ff0832ff5f7b08508e8b5c3b78b747871060deb2db3375fcfb6677",
+      "size_bytes": 29257024,
+      "tensor_type_counts": {
+        "F32": 51,
+        "Q4_K": 20,
+        "Q6_K": 5
+      },
+      "tensor_type_map": {
+        "F16": "Q4_K",
+        "F32": "F32"
+      },
+      "tensor_type_overrides": {
+        "blk.2.attn_qkv.weight": "Q6_K",
+        "blk.2.ffn_down.weight": "Q6_K",
+        "blk.5.attn_qkv.weight": "Q6_K",
+        "blk.5.ffn_down.weight": "Q6_K",
+        "token_embd.weight": "Q6_K"
+      }
+    }
+  },
+  "conversion": {
+    "llama_cpp_revision": "1511ce3bc3f087376c8526b4ad07100bfabb277f",
+    "patch_filename": "llama_cpp_rinna_gpt2.patch",
+    "patch_sha256": "c06a904c34270299c7e327dfa8e81d7ce37fd5045a38aee93c6bf2f2a14e4e08",
+    "source_archive": {
+      "filename": "1511ce3bc3f087376c8526b4ad07100bfabb277f.tar.gz",
+      "sha256": "820c78508ee7a8234f4b928d182f6ff0a3d19f58a92f1e69795f93ae0dc46d16",
+      "size_bytes": 36853066
+    }
+  },
+  "quantization": {
+    "q4_k_m": {
+      "executable": {
+        "filename": "llama_cpp_q4_k_m.exe",
+        "sha256": "0a7423886cb945661f1211fa8c9f7c61ee7f3a507e030f209a9e2eb39dc2d683",
+        "size_bytes": 3447808
+      },
+      "input_artifact": "f16",
+      "mode": "LLAMA_FTYPE_MOSTLY_Q4_K_M",
+      "packing": {
+        "Q4_K": {
+          "block_bytes": 144,
+          "block_elements": 256
+        },
+        "Q6_K": {
+          "block_bytes": 210,
+          "block_elements": 256
+        }
+      },
+      "patches": [
+        {
+          "filename": "llama_cpp_static_backends.patch",
+          "sha256": "78ae5498848dbce3dce8db126c4aa4a2ee616f023086b4b0b455e8d7cc4b545c",
+          "size_bytes": 3638
+        },
+        {
+          "filename": "llama_cpp_exact_f32_gelu.patch",
+          "sha256": "75fb160b0dca93b0ca6df23bccbc0cc4538a00aa539bc9bb314a2e9bdf0e653e",
+          "size_bytes": 322
+        },
+        {
+          "filename": "llama_cpp_rinna_gpt2.patch",
+          "sha256": "c06a904c34270299c7e327dfa8e81d7ce37fd5045a38aee93c6bf2f2a14e4e08",
+          "size_bytes": 1907
+        }
+      ],
+      "sources": {
+        "bazel_build": {
+          "filename": "BUILD.llama_cpp.bazel",
+          "sha256": "31052d014e67ad7b3c9583fb004fa59a1786226821f641fbdcde275187441891",
+          "size_bytes": 5568
+        },
+        "quantizer_target": {
+          "filename": "BUILD.bazel",
+          "sha256": "4ee6ad4916e34ea9f3b773d3126e3f9ef3a92657a217bae5bca6c9e8571bd37a",
+          "size_bytes": 5144
+        },
+        "wrapper": {
+          "filename": "llama_cpp_q4_k_m.cc",
+          "sha256": "ec30854eac8c4a0f5d06cafc32759d68b50a39a69f4dfc0813d278cdc2c44b2e",
+          "size_bytes": 2181
+        }
+      }
+    }
+  },
+  "gguf_metadata": {
+    "absent_fields": [
+      "tokenizer.ggml.cls_token_id",
+      "tokenizer.ggml.normalizer_lowercase"
+    ],
+    "arrays": {
+      "general.languages": [
+        "ja"
+      ],
+      "general.tags": [
+        "gpt2",
+        "text-generation",
+        "lm",
+        "nlp"
+      ]
+    },
+    "field_types": {
+      "GGUF.kv_count": [
+        "UINT64"
+      ],
+      "GGUF.tensor_count": [
+        "UINT64"
+      ],
+      "GGUF.version": [
+        "UINT32"
+      ],
+      "general.architecture": [
+        "STRING"
+      ],
+      "general.dataset.0.name": [
+        "STRING"
+      ],
+      "general.dataset.1.name": [
+        "STRING"
+      ],
+      "general.dataset.count": [
+        "UINT32"
+      ],
+      "general.file_type": [
+        "UINT32"
+      ],
+      "general.finetune": [
+        "STRING"
+      ],
+      "general.languages": [
+        "ARRAY",
+        "STRING"
+      ],
+      "general.license": [
+        "STRING"
+      ],
+      "general.name": [
+        "STRING"
+      ],
+      "general.organization": [
+        "STRING"
+      ],
+      "general.quantization_version": [
+        "UINT32"
+      ],
+      "general.size_label": [
+        "STRING"
+      ],
+      "general.tags": [
+        "ARRAY",
+        "STRING"
+      ],
+      "general.type": [
+        "STRING"
+      ],
+      "gpt2.attention.head_count": [
+        "UINT32"
+      ],
+      "gpt2.attention.layer_norm_epsilon": [
+        "FLOAT32"
+      ],
+      "gpt2.block_count": [
+        "UINT32"
+      ],
+      "gpt2.context_length": [
+        "UINT32"
+      ],
+      "gpt2.embedding_length": [
+        "UINT32"
+      ],
+      "gpt2.feed_forward_length": [
+        "UINT32"
+      ],
+      "tokenizer.ggml.add_space_prefix": [
+        "BOOL"
+      ],
+      "tokenizer.ggml.bos_token_id": [
+        "UINT32"
+      ],
+      "tokenizer.ggml.eos_token_id": [
+        "UINT32"
+      ],
+      "tokenizer.ggml.mask_token_id": [
+        "UINT32"
+      ],
+      "tokenizer.ggml.model": [
+        "STRING"
+      ],
+      "tokenizer.ggml.padding_token_id": [
+        "UINT32"
+      ],
+      "tokenizer.ggml.pre": [
+        "STRING"
+      ],
+      "tokenizer.ggml.precompiled_charsmap": [
+        "ARRAY",
+        "UINT8"
+      ],
+      "tokenizer.ggml.remove_extra_whitespaces": [
+        "BOOL"
+      ],
+      "tokenizer.ggml.scores": [
+        "ARRAY",
+        "FLOAT32"
+      ],
+      "tokenizer.ggml.seperator_token_id": [
+        "UINT32"
+      ],
+      "tokenizer.ggml.token_type": [
+        "ARRAY",
+        "INT32"
+      ],
+      "tokenizer.ggml.tokens": [
+        "ARRAY",
+        "STRING"
+      ],
+      "tokenizer.ggml.unknown_token_id": [
+        "UINT32"
+      ]
+    },
+    "scalars": {
+      "GGUF.kv_count": 34,
+      "GGUF.tensor_count": 76,
+      "GGUF.version": 3,
+      "general.architecture": "gpt2",
+      "general.dataset.0.name": "Cc100",
+      "general.dataset.1.name": "Wikipedia",
+      "general.dataset.count": 2,
+      "general.finetune": "8e91527b3276e0565154935e84a08bf0137ed99f",
+      "general.license": "mit",
+      "general.name": "Japanese Gpt2 Xsmall",
+      "general.organization": "Rinna",
+      "general.quantization_version": 2,
+      "general.size_label": "37M",
+      "general.type": "model",
+      "gpt2.attention.head_count": 8,
+      "gpt2.attention.layer_norm_epsilon": 0.00001,
+      "gpt2.block_count": 6,
+      "gpt2.context_length": 1024,
+      "gpt2.embedding_length": 512,
+      "gpt2.feed_forward_length": 2304,
+      "tokenizer.ggml.add_space_prefix": true,
+      "tokenizer.ggml.bos_token_id": 1,
+      "tokenizer.ggml.eos_token_id": 2,
+      "tokenizer.ggml.mask_token_id": 6,
+      "tokenizer.ggml.model": "t5",
+      "tokenizer.ggml.padding_token_id": 3,
+      "tokenizer.ggml.pre": "default",
+      "tokenizer.ggml.remove_extra_whitespaces": true,
+      "tokenizer.ggml.seperator_token_id": 5,
+      "tokenizer.ggml.unknown_token_id": 0
+    }
+  },
+  "model_config_expectations": {
+    "activation_function": "gelu_new",
+    "architectures": [
+      "GPT2LMHeadModel"
+    ],
+    "bos_token_id": 1,
+    "eos_token_id": 2,
+    "layer_norm_epsilon": 0.00001,
+    "model_type": "gpt2",
+    "n_ctx": 1024,
+    "n_embd": 512,
+    "n_head": 8,
+    "n_inner": 2304,
+    "n_layer": 6,
+    "n_positions": 1024,
+    "scale_attn_weights": true,
+    "vocab_size": 32000
+  },
+  "schema_version": 2,
+  "source_files": {
+    "config": {
+      "filename": "config.json",
+      "sha256": "97c629a9c8f141b1f384e819e6f9ab9f50be62fd50e8f8e64e6e5856aa49de15",
+      "size_bytes": 845
+    },
+    "sentencepiece": {
+      "filename": "spiece.model",
+      "sha256": "b5cbdfa8aa7c54c8c5af85b78c309c54a5f2749a20468bf6f60eee007fe6fec1",
+      "size_bytes": 805634
+    },
+    "special_tokens": {
+      "filename": "special_tokens_map.json",
+      "sha256": "a4fdf54099a0e4b6d81bff96557662ef8ef3ccd9e5a5fbdb8117b33fe1c608b5",
+      "size_bytes": 153
+    },
+    "tokenizer_config": {
+      "filename": "tokenizer_config.json",
+      "sha256": "bea5023449df29f226cc37cd583f7317758256a343ac042dfa141d55fe57c464",
+      "size_bytes": 282
+    },
+    "weights": {
+      "filename": "model.safetensors",
+      "sha256": "06662948dfa3227e3a42200787f28e86657d0f1e37a4ba1439452419581a4229",
+      "size_bytes": 155892312
+    }
+  },
+  "source_model": "rinna/japanese-gpt2-xsmall",
+  "source_revision": "8e91527b3276e0565154935e84a08bf0137ed99f",
+  "tensor_layout": {
+    "absent_gguf_tensors": [
+      "output.weight"
+    ],
+    "block_count": 6,
+    "block_tensors": [
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.attn_norm.weight",
+        "gguf_data_shape": [
+          512
+        ],
+        "gguf_shape": [
+          512
+        ],
+        "source": "transformer.h.{block}.ln_1.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          512
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.attn_norm.bias",
+        "gguf_data_shape": [
+          512
+        ],
+        "gguf_shape": [
+          512
+        ],
+        "source": "transformer.h.{block}.ln_1.bias",
+        "source_dtype": "float32",
+        "source_shape": [
+          512
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F16",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.attn_qkv.weight",
+        "gguf_data_shape": [
+          1536,
+          512
+        ],
+        "gguf_shape": [
+          512,
+          1536
+        ],
+        "source": "transformer.h.{block}.attn.c_attn.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          512,
+          1536
+        ],
+        "transpose": true
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.attn_qkv.bias",
+        "gguf_data_shape": [
+          1536
+        ],
+        "gguf_shape": [
+          1536
+        ],
+        "source": "transformer.h.{block}.attn.c_attn.bias",
+        "source_dtype": "float32",
+        "source_shape": [
+          1536
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F16",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.attn_output.weight",
+        "gguf_data_shape": [
+          512,
+          512
+        ],
+        "gguf_shape": [
+          512,
+          512
+        ],
+        "source": "transformer.h.{block}.attn.c_proj.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          512,
+          512
+        ],
+        "transpose": true
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.attn_output.bias",
+        "gguf_data_shape": [
+          512
+        ],
+        "gguf_shape": [
+          512
+        ],
+        "source": "transformer.h.{block}.attn.c_proj.bias",
+        "source_dtype": "float32",
+        "source_shape": [
+          512
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.ffn_norm.weight",
+        "gguf_data_shape": [
+          512
+        ],
+        "gguf_shape": [
+          512
+        ],
+        "source": "transformer.h.{block}.ln_2.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          512
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.ffn_norm.bias",
+        "gguf_data_shape": [
+          512
+        ],
+        "gguf_shape": [
+          512
+        ],
+        "source": "transformer.h.{block}.ln_2.bias",
+        "source_dtype": "float32",
+        "source_shape": [
+          512
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F16",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.ffn_up.weight",
+        "gguf_data_shape": [
+          2304,
+          512
+        ],
+        "gguf_shape": [
+          512,
+          2304
+        ],
+        "source": "transformer.h.{block}.mlp.c_fc.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          512,
+          2304
+        ],
+        "transpose": true
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.ffn_up.bias",
+        "gguf_data_shape": [
+          2304
+        ],
+        "gguf_shape": [
+          2304
+        ],
+        "source": "transformer.h.{block}.mlp.c_fc.bias",
+        "source_dtype": "float32",
+        "source_shape": [
+          2304
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F16",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.ffn_down.weight",
+        "gguf_data_shape": [
+          512,
+          2304
+        ],
+        "gguf_shape": [
+          2304,
+          512
+        ],
+        "source": "transformer.h.{block}.mlp.c_proj.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          2304,
+          512
+        ],
+        "transpose": true
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "blk.{block}.ffn_down.bias",
+        "gguf_data_shape": [
+          512
+        ],
+        "gguf_shape": [
+          512
+        ],
+        "source": "transformer.h.{block}.mlp.c_proj.bias",
+        "source_dtype": "float32",
+        "source_shape": [
+          512
+        ],
+        "transpose": false
+      }
+    ],
+    "excluded_buffer_templates": [
+      {
+        "source": "transformer.h.{block}.attn.bias",
+        "source_dtype": "uint8",
+        "source_shape": [
+          1,
+          1,
+          1024,
+          1024
+        ]
+      },
+      {
+        "source": "transformer.h.{block}.attn.masked_bias",
+        "source_dtype": "float32",
+        "source_shape": []
+      }
+    ],
+    "gguf_tensor_count": 76,
+    "global_tensors": [
+      {
+        "artifact_types": {
+          "f16": "F16",
+          "f32": "F32"
+        },
+        "gguf": "token_embd.weight",
+        "gguf_data_shape": [
+          32000,
+          512
+        ],
+        "gguf_shape": [
+          512,
+          32000
+        ],
+        "source": "transformer.wte.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          32000,
+          512
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "position_embd.weight",
+        "gguf_data_shape": [
+          1024,
+          512
+        ],
+        "gguf_shape": [
+          512,
+          1024
+        ],
+        "source": "transformer.wpe.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          1024,
+          512
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "output_norm.weight",
+        "gguf_data_shape": [
+          512
+        ],
+        "gguf_shape": [
+          512
+        ],
+        "source": "transformer.ln_f.weight",
+        "source_dtype": "float32",
+        "source_shape": [
+          512
+        ],
+        "transpose": false
+      },
+      {
+        "artifact_types": {
+          "f16": "F32",
+          "f32": "F32"
+        },
+        "gguf": "output_norm.bias",
+        "gguf_data_shape": [
+          512
+        ],
+        "gguf_shape": [
+          512
+        ],
+        "source": "transformer.ln_f.bias",
+        "source_dtype": "float32",
+        "source_shape": [
+          512
+        ],
+        "transpose": false
+      }
+    ],
+    "learned_parameter_count": 37398016,
+    "source_metadata": {
+      "format": "pt"
+    },
+    "source_tensor_count": 88
+  },
+  "tokenizer": {
+    "add_space_prefix_field": "tokenizer.ggml.add_space_prefix",
+    "config_expectations": {
+      "additional_special_tokens": [],
+      "do_lower_case": true,
+      "extra_ids": 0,
+      "sp_model_kwargs": {},
+      "tokenizer_class": "T5Tokenizer"
+    },
+    "gguf_array_fields": {
+      "precompiled_charsmap": "tokenizer.ggml.precompiled_charsmap",
+      "scores": "tokenizer.ggml.scores",
+      "tokens": "tokenizer.ggml.tokens",
+      "types": "tokenizer.ggml.token_type"
+    },
+    "normalizer_charsmap_sha256": "cab969cc39d743f8402e6fd752a0916e71839bcb27171ca72191336b7f71b4bc",
+    "normalizer_charsmap_size_bytes": 237538,
+    "remove_extra_whitespaces_field": "tokenizer.ggml.remove_extra_whitespaces",
+    "sentencepiece_model_type": 1,
+    "special_tokens": [
+      {
+        "id": 0,
+        "json_key": "unk_token",
+        "metadata_key": "tokenizer.ggml.unknown_token_id",
+        "model_config_key": null,
+        "name": "unknown",
+        "piece": "<unk>"
+      },
+      {
+        "id": 1,
+        "json_key": "bos_token",
+        "metadata_key": "tokenizer.ggml.bos_token_id",
+        "model_config_key": "bos_token_id",
+        "name": "bos",
+        "piece": "<s>"
+      },
+      {
+        "id": 2,
+        "json_key": "eos_token",
+        "metadata_key": "tokenizer.ggml.eos_token_id",
+        "model_config_key": "eos_token_id",
+        "name": "eos",
+        "piece": "</s>"
+      },
+      {
+        "id": 3,
+        "json_key": "pad_token",
+        "metadata_key": "tokenizer.ggml.padding_token_id",
+        "model_config_key": null,
+        "name": "pad",
+        "piece": "[PAD]"
+      },
+      {
+        "id": 4,
+        "json_key": "cls_token",
+        "metadata_key": null,
+        "model_config_key": null,
+        "name": "cls",
+        "piece": "[CLS]"
+      },
+      {
+        "id": 5,
+        "json_key": "sep_token",
+        "metadata_key": "tokenizer.ggml.seperator_token_id",
+        "model_config_key": null,
+        "name": "sep",
+        "piece": "[SEP]"
+      },
+      {
+        "id": 6,
+        "json_key": "mask_token",
+        "metadata_key": "tokenizer.ggml.mask_token_id",
+        "model_config_key": null,
+        "name": "mask",
+        "piece": "[MASK]"
+      }
+    ],
+    "token_type_counts": {
+      "1": 31993,
+      "2": 1,
+      "3": 6
+    },
+    "token_type_ids": {
+      "byte": 6,
+      "control": 3,
+      "normal": 1,
+      "unknown": 2,
+      "unused": 5
+    },
+    "vocabulary_size": 32000
+  }
+}

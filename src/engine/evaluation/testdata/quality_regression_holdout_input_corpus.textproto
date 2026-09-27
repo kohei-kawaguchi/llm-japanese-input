@@ -1,0 +1,307 @@
+schema_version: 1
+identity {
+  role: HOLDOUT
+  source {
+    benchmark_name: "Mozc quality regression holdout"
+    source_revision: "851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+    source_relative_path: "src/data/test/quality_regression_test/regression.tsv"
+    source_sha256: "72c838c5422f04c8246114074ea9c82e577155e8d7ef653a21c2dbb75bb3dff3"
+    creator: "Google Inc. and Mozc contributors"
+    source_url: "https://github.com/google/mozc/blob/851c3fe33060d2a6090363e4d7ec44fafde2c03d/src/data/test/quality_regression_test/regression.tsv"
+    license_identifier: "BSD-3-Clause"
+    license_url: "https://github.com/google/mozc/blob/851c3fe33060d2a6090363e4d7ec44fafde2c03d/LICENSE"
+    upstream_dataset_url: "https://github.com/google/mozc/tree/851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+    changes_notice: "Filtered to parsed Conversion Expected rank-zero rows, Windows-normalized expected values, and separated input and answer corpora."
+  }
+  parser_definition_version: 1
+  normalization_definition_version: 1
+  import_config_sha256: "3cfb88ca988d9c46c3bca3095c9e8ee3b61cb43fce6df3c5be0d4ce100abbba5"
+}
+cases {
+  source_line: 2
+  reading: "たしました"
+}
+cases {
+  source_line: 3
+  reading: "こじんよう"
+}
+cases {
+  source_line: 4
+  reading: "からめて"
+}
+cases {
+  source_line: 5
+  reading: "はなしていた"
+}
+cases {
+  source_line: 6
+  reading: "はなしています"
+}
+cases {
+  source_line: 7
+  reading: "でましたら"
+}
+cases {
+  source_line: 8
+  reading: "あきのことである"
+}
+cases {
+  source_line: 9
+  reading: "むしろふろでて"
+}
+cases {
+  source_line: 11
+  reading: "あおいそらに"
+}
+cases {
+  source_line: 12
+  reading: "なんどか"
+}
+cases {
+  source_line: 13
+  reading: "ごたんとうしゃ"
+}
+cases {
+  source_line: 14
+  reading: "しょうがいぐらんどすらむ"
+}
+cases {
+  source_line: 15
+  reading: "しょうじき"
+}
+cases {
+  source_line: 16
+  reading: "かいます"
+}
+cases {
+  source_line: 17
+  reading: "みておくれ"
+}
+cases {
+  source_line: 18
+  reading: "たちきえ"
+}
+cases {
+  source_line: 19
+  reading: "たちぎえ"
+}
+cases {
+  source_line: 20
+  reading: "みつけしだい"
+}
+cases {
+  source_line: 21
+  reading: "かってに"
+}
+cases {
+  source_line: 22
+  reading: "くまもととながの"
+}
+cases {
+  source_line: 23
+  reading: "わかいんだから"
+}
+cases {
+  source_line: 24
+  reading: "しんでない"
+}
+cases {
+  source_line: 25
+  reading: "ごじゆうに"
+}
+cases {
+  source_line: 26
+  reading: "きょうごうせい"
+}
+cases {
+  source_line: 27
+  reading: "どうがん"
+}
+cases {
+  source_line: 28
+  reading: "さそおう"
+}
+cases {
+  source_line: 29
+  reading: "これいがいにも"
+}
+cases {
+  source_line: 30
+  reading: "てきしているものは"
+}
+cases {
+  source_line: 31
+  reading: "いかなければ"
+}
+cases {
+  source_line: 33
+  reading: "おおすにいく"
+}
+cases {
+  source_line: 34
+  reading: "たいじんかんけい"
+}
+cases {
+  source_line: 35
+  reading: "たいじんすきる"
+}
+cases {
+  source_line: 36
+  reading: "ねおちつうわ"
+}
+cases {
+  source_line: 37
+  reading: "おきてねがおみてた"
+}
+cases {
+  source_line: 38
+  reading: "ほかのようじもできた"
+}
+cases {
+  source_line: 39
+  reading: "きょうきゅうりょうび！"
+}
+cases {
+  source_line: 40
+  reading: "みたことないとりいる"
+}
+cases {
+  source_line: 63
+  reading: "おふろはいりません"
+}
+cases {
+  source_line: 64
+  reading: "おちゃはいりません"
+}
+cases {
+  source_line: 66
+  reading: "おきにめしたなら"
+}
+cases {
+  source_line: 67
+  reading: "ことここにいたる"
+}
+cases {
+  source_line: 68
+  reading: "みもふたもない"
+}
+cases {
+  source_line: 69
+  reading: "にのくがつげない"
+}
+cases {
+  source_line: 70
+  reading: "けがのこうみょう"
+}
+cases {
+  source_line: 73
+  reading: "ふこうちゅうのさいわい"
+}
+cases {
+  source_line: 74
+  reading: "まったなし"
+}
+cases {
+  source_line: 75
+  reading: "こうかふこうか"
+}
+cases {
+  source_line: 76
+  reading: "こともなげに"
+}
+cases {
+  source_line: 77
+  reading: "やぶからぼうに"
+}
+cases {
+  source_line: 79
+  reading: "のるかそるか"
+}
+cases {
+  source_line: 80
+  reading: "おしもおされもせぬ"
+}
+cases {
+  source_line: 81
+  reading: "おしもおされぬ"
+}
+cases {
+  source_line: 82
+  reading: "ぬきさしならぬ"
+}
+cases {
+  source_line: 83
+  reading: "へんむてき"
+}
+cases {
+  source_line: 84
+  reading: "そうむてき"
+}
+cases {
+  source_line: 85
+  reading: "かこつ"
+}
+cases {
+  source_line: 87
+  reading: "えらんだかさ"
+}
+cases {
+  source_line: 88
+  reading: "そういういみなの"
+}
+cases {
+  source_line: 89
+  reading: "おさとうとおす"
+}
+cases {
+  source_line: 90
+  reading: "こちらいえにつきました"
+}
+cases {
+  source_line: 91
+  reading: "あのたなにあります"
+}
+cases {
+  source_line: 92
+  reading: "せいをだす"
+}
+cases {
+  source_line: 93
+  reading: "びーるはいた"
+}
+cases {
+  source_line: 94
+  reading: "くつはいた"
+}
+cases {
+  source_line: 95
+  reading: "ともだちのしんちょうをはかる"
+}
+cases {
+  source_line: 96
+  reading: "きのうのゆうしょくはてんぷらだった"
+}
+cases {
+  source_line: 97
+  reading: "いえにはやくかえる"
+}
+cases {
+  source_line: 98
+  reading: "てんきがいいからせんたくしよう"
+}
+cases {
+  source_line: 99
+  reading: "あめがふるかもしれない"
+}
+cases {
+  source_line: 100
+  reading: "きのうはどのくらいねましたか"
+}
+cases {
+  source_line: 101
+  reading: "こんどのしゅじゅつはいつですか"
+}
+cases {
+  source_line: 102
+  reading: "けんかをしてしまったのであやまりたい"
+}

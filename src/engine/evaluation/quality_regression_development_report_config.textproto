@@ -1,0 +1,197 @@
+schema_version: 2
+frozen_corpus_schema_version: 1
+answer_corpus_schema_version: 1
+score_artifact_schema_version: 2
+report_schema_version: 2
+expected_corpus_identity {
+  role: DEVELOPMENT
+  source {
+    benchmark_name: "Mozc OSS quality regression development"
+    source_revision: "851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+    source_relative_path: "src/data/test/quality_regression_test/oss.tsv"
+    source_sha256: "053a43e72d174da43b351278cadc471abe08cea9fe98829dafe3d152580fcff0"
+    creator: "Google Inc. and Mozc contributors"
+    source_url: "https://github.com/google/mozc/blob/851c3fe33060d2a6090363e4d7ec44fafde2c03d/src/data/test/quality_regression_test/oss.tsv"
+    license_identifier: "BSD-3-Clause"
+    license_url: "https://github.com/google/mozc/blob/851c3fe33060d2a6090363e4d7ec44fafde2c03d/LICENSE"
+    upstream_dataset_url: "https://github.com/google/mozc/tree/851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+    changes_notice: "Filtered to parsed Conversion Expected rank-zero rows, Windows-normalized expected values, stable-deduplicated exact key and expected-value pairs, and separated input and answer corpora."
+  }
+  parser_definition_version: 1
+  normalization_definition_version: 1
+  import_config_sha256: "3cfb88ca988d9c46c3bca3095c9e8ee3b61cb43fce6df3c5be0d4ce100abbba5"
+}
+frozen_corpus_sha256: "44c9a08d748f2cef5c8428b1101f490c2719db34e533ba1cda3cee9b12b41c59"
+answer_corpus_sha256: "8d76595da3ccaa609903fc48a84e1ef47ed179c3936ebad06e6beaf242bd0d79"
+models {
+  ordinal: 0
+  source_model: "rinna/japanese-gpt2-xsmall"
+  source_revision: "8e91527b3276e0565154935e84a08bf0137ed99f"
+  parameter_count: 37398016
+  objective_scores_sha256: "de91b14952c2fe0e73700d3456055a91eb85697d9daf1bd13cec022cc2d8b46e"
+  score_identity {
+    score_config_sha256: "dbe549df3b047f7c0efed38a1fa1088d3a305fd628a9d65fc688f23c4a01dc3b"
+    execution_config_sha256: "c0bca67765f3ad26bc16495d4dde60daa07cd1d8cd37d3c12b46999e59f24a9f"
+    frozen_corpus_sha256: "44c9a08d748f2cef5c8428b1101f490c2719db34e533ba1cda3cee9b12b41c59"
+    native_coverage_suite_sha256: "706bbe8c4c15e1cfb5fbec781afe28a3661ad3659c60d3dcabd03ba3912aad29"
+    score_definition_version: 2
+    numeric_profile: DEVELOPMENT_NUMERIC_PROFILE_CONFIGURED
+    layout: DEVELOPMENT_EVALUATION_SHARED_TRIE
+  }
+  objectives {
+    objective: STRUCTURED_WITH_TARGET
+    manifest_filename: "manifest-f16-structured-with-target-v1.textproto"
+    manifest_sha256: "2209e8ebcc9876e9427d934f3b9d739a65fb498d2160d64d742fc719a45271eb"
+    selection_eligible: false
+  }
+  objectives {
+    objective: STRUCTURED_WITHOUT_TARGET
+    manifest_filename: "manifest-f16-structured-without-target-v1.textproto"
+    manifest_sha256: "66c620673895d5462539b8c2073c8d4f1615c51c09895d85c9336246c0c08bff"
+    selection_eligible: true
+  }
+  objectives {
+    objective: NATURAL_TEXT_ONLY
+    manifest_filename: "manifest-f16-natural-text-only-v1.textproto"
+    manifest_sha256: "be316282bcf1e031b55228a8f99c78dda7b19961828c56fd5bf70f90881657f9"
+    selection_eligible: true
+  }
+}
+models {
+  ordinal: 1
+  source_model: "Qwen/Qwen2.5-0.5B"
+  source_revision: "060db6499f32faf8b98477b0a26969ef7d8b9987"
+  parameter_count: 494032768
+  objective_scores_sha256: "e6df5795092a3938f2618c167c1d8fd91940bed6df2ad4cfc5b5b0aab65e2b7d"
+  score_identity {
+    score_config_sha256: "7a3ee7f7fb9da7c03774853a56916ac402d215d32b19d748d25f02d9e69e52e3"
+    execution_config_sha256: "2f9134a7e91d55e4374a451bec1e753c3281bf25f4a9b7081b9b9d785e28a6a6"
+    frozen_corpus_sha256: "44c9a08d748f2cef5c8428b1101f490c2719db34e533ba1cda3cee9b12b41c59"
+    native_coverage_suite_sha256: "54cc4f4c2ca586facfc15ffaedfba803cee9b2a27e70116c6bf86913faae74b8"
+    score_definition_version: 2
+    numeric_profile: DEVELOPMENT_NUMERIC_PROFILE_CONFIGURED
+    layout: DEVELOPMENT_EVALUATION_SHARED_TRIE
+  }
+  objectives {
+    objective: STRUCTURED_WITH_TARGET
+    manifest_filename: "manifest-f16-structured-with-target-v1.textproto"
+    manifest_sha256: "27519d110115b045ffe191aacf7ae071d96baa522a7ecc29a27c503d3cc30ee2"
+    selection_eligible: false
+  }
+  objectives {
+    objective: STRUCTURED_WITHOUT_TARGET
+    manifest_filename: "manifest-f16-structured-without-target-v1.textproto"
+    manifest_sha256: "1f5a3e0380c476fe6542363760a251fadd9f7a80717184d11a809bed0a42337f"
+    selection_eligible: true
+  }
+  objectives {
+    objective: NATURAL_TEXT_ONLY
+    manifest_filename: "manifest-f16-natural-text-only-v1.textproto"
+    manifest_sha256: "483c9ac4731c19cd51afdd8eab001834512839ac2fe21a515441b5ecfe35ceae"
+    selection_eligible: true
+  }
+}
+expected_case_count: 219
+expected_baseline_correct_count: 164
+minimum_net_gain_cases: 5
+maximum_baseline_correct_regressions: 3
+metric_definition_version: 2
+exact_bootstrap_definition_version: 1
+clean_key_copy_definition_version: 1
+selection_policy_version: 2
+calibrations {
+  ordinal: 0
+  aggregation: DEVELOPMENT_FULL_CONTINUATION_SUM
+  mozc_order_prior_microlog_probability: 0
+  exact_key_copy_penalty_microlog_probability: 0
+}
+calibrations {
+  ordinal: 1
+  aggregation: DEVELOPMENT_FULL_CONTINUATION_SUM
+  mozc_order_prior_microlog_probability: 0
+  exact_key_copy_penalty_microlog_probability: 100000000
+}
+calibrations {
+  ordinal: 2
+  aggregation: DEVELOPMENT_FULL_CONTINUATION_SUM
+  mozc_order_prior_microlog_probability: 250000
+  exact_key_copy_penalty_microlog_probability: 0
+}
+calibrations {
+  ordinal: 3
+  aggregation: DEVELOPMENT_FULL_CONTINUATION_SUM
+  mozc_order_prior_microlog_probability: 250000
+  exact_key_copy_penalty_microlog_probability: 100000000
+}
+calibrations {
+  ordinal: 4
+  aggregation: DEVELOPMENT_FULL_CONTINUATION_SUM
+  mozc_order_prior_microlog_probability: 500000
+  exact_key_copy_penalty_microlog_probability: 0
+}
+calibrations {
+  ordinal: 5
+  aggregation: DEVELOPMENT_FULL_CONTINUATION_SUM
+  mozc_order_prior_microlog_probability: 500000
+  exact_key_copy_penalty_microlog_probability: 100000000
+}
+calibrations {
+  ordinal: 6
+  aggregation: DEVELOPMENT_FULL_CONTINUATION_SUM
+  mozc_order_prior_microlog_probability: 1000000
+  exact_key_copy_penalty_microlog_probability: 0
+}
+calibrations {
+  ordinal: 7
+  aggregation: DEVELOPMENT_FULL_CONTINUATION_SUM
+  mozc_order_prior_microlog_probability: 1000000
+  exact_key_copy_penalty_microlog_probability: 100000000
+}
+calibrations {
+  ordinal: 8
+  aggregation: DEVELOPMENT_CONTINUATION_MEAN
+  mozc_order_prior_microlog_probability: 0
+  exact_key_copy_penalty_microlog_probability: 0
+}
+calibrations {
+  ordinal: 9
+  aggregation: DEVELOPMENT_CONTINUATION_MEAN
+  mozc_order_prior_microlog_probability: 0
+  exact_key_copy_penalty_microlog_probability: 100000000
+}
+calibrations {
+  ordinal: 10
+  aggregation: DEVELOPMENT_CONTINUATION_MEAN
+  mozc_order_prior_microlog_probability: 250000
+  exact_key_copy_penalty_microlog_probability: 0
+}
+calibrations {
+  ordinal: 11
+  aggregation: DEVELOPMENT_CONTINUATION_MEAN
+  mozc_order_prior_microlog_probability: 250000
+  exact_key_copy_penalty_microlog_probability: 100000000
+}
+calibrations {
+  ordinal: 12
+  aggregation: DEVELOPMENT_CONTINUATION_MEAN
+  mozc_order_prior_microlog_probability: 500000
+  exact_key_copy_penalty_microlog_probability: 0
+}
+calibrations {
+  ordinal: 13
+  aggregation: DEVELOPMENT_CONTINUATION_MEAN
+  mozc_order_prior_microlog_probability: 500000
+  exact_key_copy_penalty_microlog_probability: 100000000
+}
+calibrations {
+  ordinal: 14
+  aggregation: DEVELOPMENT_CONTINUATION_MEAN
+  mozc_order_prior_microlog_probability: 1000000
+  exact_key_copy_penalty_microlog_probability: 0
+}
+calibrations {
+  ordinal: 15
+  aggregation: DEVELOPMENT_CONTINUATION_MEAN
+  mozc_order_prior_microlog_probability: 1000000
+  exact_key_copy_penalty_microlog_probability: 100000000
+}

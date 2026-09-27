@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "source": {
+    "benchmark_name": "AJIMEE-Bench",
+    "revision": "401666cd56d1a570c2021798b64b6da4396bfd45",
+    "relative_path": "JWTD_v2/v1/evaluation_items.json",
+    "sha256": "e9eb668fd6aa14b1e26436f429b5550108af0a1dfd443b8cea0bcb3ab3028fca",
+    "creator": "azooKey/AJIMEE-Bench contributors",
+    "source_url": "https://github.com/azooKey/AJIMEE-Bench/tree/401666cd56d1a570c2021798b64b6da4396bfd45",
+    "license_identifier": "CC-BY-SA-3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "upstream_dataset_url": "https://nlp.ist.i.kyoto-u.ac.jp/?日本語Wikipedia入力誤りデータセット",
+    "changes_notice": "The source JSON was transformed into separated deterministic protobuf input and answer corpora; original_text and split chunk contents were omitted."
+  },
+  "expected_counts": {
+    "total": 200,
+    "with_context": 100,
+    "without_context": 100
+  },
+  "source_fields": {
+    "source_index": "index",
+    "complete_reading": "input",
+    "preceding_context": "context_text",
+    "accepted_outputs": "expected_output",
+    "original_text_poison": "original_text",
+    "split_data": "splitted_input_for_limited_input_length"
+  }
+}

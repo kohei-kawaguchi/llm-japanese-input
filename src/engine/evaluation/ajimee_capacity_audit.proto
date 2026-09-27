@@ -1,0 +1,175 @@
+// Copyright 2026 LLM Japanese Input Authors
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//     * Neither the name of LLM Japanese Input Authors nor the names of its
+// contributors may be used to endorse or promote products derived from this
+// software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+
+package mozc.engine.evaluation;
+
+enum AjimeeCapacityAuditOutcome {
+  AJIMEE_CAPACITY_AUDIT_OUTCOME_UNSPECIFIED = 0;
+  AJIMEE_CAPACITY_AUDIT_PASS = 1;
+  AJIMEE_CAPACITY_AUDIT_REQUEST_LIMIT_EXCEEDED = 2;
+  AJIMEE_CAPACITY_AUDIT_ERROR = 3;
+}
+
+enum AjimeeCanonicalStatusCode {
+  AJIMEE_STATUS_OK = 0;
+  AJIMEE_STATUS_CANCELLED = 1;
+  AJIMEE_STATUS_UNKNOWN = 2;
+  AJIMEE_STATUS_INVALID_ARGUMENT = 3;
+  AJIMEE_STATUS_DEADLINE_EXCEEDED = 4;
+  AJIMEE_STATUS_NOT_FOUND = 5;
+  AJIMEE_STATUS_ALREADY_EXISTS = 6;
+  AJIMEE_STATUS_PERMISSION_DENIED = 7;
+  AJIMEE_STATUS_RESOURCE_EXHAUSTED = 8;
+  AJIMEE_STATUS_FAILED_PRECONDITION = 9;
+  AJIMEE_STATUS_ABORTED = 10;
+  AJIMEE_STATUS_OUT_OF_RANGE = 11;
+  AJIMEE_STATUS_UNIMPLEMENTED = 12;
+  AJIMEE_STATUS_INTERNAL = 13;
+  AJIMEE_STATUS_UNAVAILABLE = 14;
+  AJIMEE_STATUS_DATA_LOSS = 15;
+  AJIMEE_STATUS_UNAUTHENTICATED = 16;
+}
+
+enum AjimeeRequestLimit {
+  AJIMEE_REQUEST_LIMIT_UNSPECIFIED = 0;
+  AJIMEE_REQUEST_SEGMENTS = 1;
+  AJIMEE_REQUEST_CANDIDATES = 2;
+  AJIMEE_REQUEST_STRING_BYTES = 3;
+}
+
+enum AjimeeCapacityLimit {
+  AJIMEE_CAPACITY_LIMIT_UNSPECIFIED = 0;
+  AJIMEE_SERIALIZED_RECORD_BYTES = 1;
+  AJIMEE_NORMALIZED_RECORD_BYTES = 2;
+  AJIMEE_FULL_RECORD_TOKENS = 3;
+  AJIMEE_SEGMENTS_PER_DECODE = 4;
+  AJIMEE_SEQUENCES_PER_DECODE = 5;
+  AJIMEE_INPUT_NODES_PER_DECODE = 6;
+  AJIMEE_OUTPUT_ROWS_PER_DECODE = 7;
+  AJIMEE_RESERVED_OUTPUT_ROWS_PER_DECODE = 8;
+  AJIMEE_OUTPUT_LOGIT_BYTES_PER_DECODE = 9;
+}
+
+enum AjimeeSegmentCapacityDisposition {
+  AJIMEE_SEGMENT_CAPACITY_DISPOSITION_UNSPECIFIED = 0;
+  AJIMEE_SEGMENT_CAPACITY_SELECTED = 1;
+  AJIMEE_SEGMENT_CAPACITY_OMITTED_CAPACITY = 2;
+}
+
+message AjimeeCapacityAuditConfig {
+  required uint32 schema_version = 1;
+  required uint32 frozen_corpus_schema_version = 2;
+  required uint32 capacity_audit_schema_version = 3;
+  required string frozen_corpus_sha256 = 4;
+  required uint32 expected_case_count = 5;
+  required uint32 model_manifest_schema_version = 6;
+  required string model_manifest_sha256 = 7;
+  required string gguf_file_name = 8;
+  required string gguf_sha256 = 9;
+  required string tokenizer_sha256 = 10;
+  required string quantization = 11;
+  required string source_revision = 12;
+  required string runtime_revision = 13;
+}
+
+message AjimeeCapacityAuditIdentity {
+  required string frozen_corpus_sha256 = 1;
+  required string model_manifest_sha256 = 2;
+  required string gguf_file_name = 3;
+  required string gguf_sha256 = 4;
+  required string tokenizer_sha256 = 5;
+  required string quantization = 6;
+  required string source_revision = 7;
+  required string runtime_revision = 8;
+}
+
+message AjimeeCapacityAuditUsage {
+  required uint64 request_segment_count = 1;
+  required uint64 request_candidate_count = 2;
+  required uint64 request_unprotected_candidate_count = 3;
+  required uint64 request_rankable_segment_count = 4;
+  required uint64 request_string_bytes = 5;
+  required uint64 max_unprotected_candidates_in_segment = 6;
+  required uint64 window_candidate_count = 7;
+  required uint64 candidates_omitted_by_window = 8;
+  required uint64 selected_segment_count = 9;
+  required uint64 selected_candidate_count = 10;
+  required uint64 candidates_omitted_by_capacity = 11;
+  required uint64 segments_omitted_by_capacity = 12;
+  required uint64 decode_batch_count = 13;
+  required uint64 max_selected_serialized_record_bytes = 14;
+  required uint64 max_selected_normalized_record_bytes = 15;
+  required uint64 max_selected_full_record_tokens = 16;
+  required uint64 max_segments_in_decode = 17;
+  required uint64 max_sequences_in_decode = 18;
+  required uint64 max_input_nodes_in_decode = 19;
+  required uint64 max_output_rows_in_decode = 20;
+  required uint64 max_reserved_output_rows_in_decode = 21;
+  required uint64 max_output_logit_bytes_in_decode = 22;
+}
+
+message AjimeeRequestLimitViolation {
+  required AjimeeRequestLimit limit = 1;
+  required uint64 observed = 2;
+  required uint64 allowed = 3;
+}
+
+message AjimeeCapacityViolation {
+  required AjimeeCapacityLimit limit = 1;
+  required uint64 observed = 2;
+  required uint64 allowed = 3;
+}
+
+message AjimeeSegmentCapacityDiagnostic {
+  required uint64 segment_id = 1;
+  required uint64 unprotected_candidate_count = 2;
+  required uint64 window_candidate_count = 3;
+  required uint64 selected_candidate_count = 4;
+  required uint64 omitted_by_window = 5;
+  required uint64 omitted_by_capacity = 6;
+  required AjimeeSegmentCapacityDisposition disposition = 7;
+  optional AjimeeCapacityViolation first_limiter = 8;
+}
+
+message AjimeeCapacityAuditCaseResult {
+  required uint64 source_index = 1;
+  required AjimeeCapacityAuditOutcome outcome = 2;
+  required AjimeeCanonicalStatusCode canonical_status_code = 3;
+  optional AjimeeCapacityAuditUsage usage = 4;
+  optional AjimeeRequestLimitViolation request_limit_violation = 5;
+  repeated AjimeeSegmentCapacityDiagnostic segments = 6;
+}
+
+message AjimeeCapacityAudit {
+  required uint32 schema_version = 1;
+  required AjimeeCapacityAuditIdentity identity = 2;
+  required bool all_passed = 3;
+  repeated AjimeeCapacityAuditCaseResult cases = 4;
+}

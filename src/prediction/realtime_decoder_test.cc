@@ -1,0 +1,276 @@
+// Copyright 2010-2021, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#include "prediction/realtime_decoder.h"
+
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "absl/strings/string_view.h"
+#include "converter/attribute.h"
+#include "converter/converter_mock.h"
+#include "converter/immutable_converter_interface.h"
+#include "converter/inner_segment.h"
+#include "converter/segments.h"
+#include "data_manager/testing/mock_data_manager.h"
+#include "prediction/result.h"
+#include "request/conversion_request.h"
+#include "request/options.h"
+#include "testing/gmock.h"
+#include "testing/gunit.h"
+
+namespace mozc::prediction {
+
+using ::mozc::converter::Attribute;
+using ::testing::_;
+using ::testing::DoAll;
+using ::testing::Return;
+using ::testing::SetArgPointee;
+using ::testing::Truly;
+
+// Simple immutable converter mock for the realtime conversion test
+class MockImmutableConverter : public ImmutableConverterInterface {
+ public:
+  MockImmutableConverter() = default;
+  ~MockImmutableConverter() override = default;
+
+  MOCK_METHOD(bool, Convert,
+              (const ConversionOptions& options, Segments* segments),
+              (const, override));
+
+  static bool ConvertImpl(const ConversionOptions& options,
+                          Segments* segments) {
+    if (!segments || segments->conversion_segments_size() != 1 ||
+        segments->conversion_segment(0).key().empty()) {
+      return false;
+    }
+    absl::string_view key = segments->conversion_segment(0).key();
+    Segment* segment = segments->mutable_conversion_segment(0);
+    converter::Candidate* candidate = segment->add_candidate();
+    candidate->value = key;
+    candidate->key = key;
+    return true;
+  }
+};
+
+class MockRealtimeDecoder : public RealtimeDecoder {
+ public:
+  using RealtimeDecoder::RealtimeDecoder;
+
+  MOCK_METHOD(std::vector<Result>, Decode, (const ConversionRequest& request),
+              (const, override));
+};
+
+TEST(RealtimeDecoderTest, Decode) {
+  MockConverter converter;
+  MockImmutableConverter immutable_converter;
+
+  const RealtimeDecoder decoder(immutable_converter, converter);
+
+  constexpr absl::string_view kKey = "わたしのなまえはなかのです";
+
+  // Set up mock converter
+  {
+    // Make segments like:
+    // "わたしの"    | "なまえは" | "なかのです"
+    // "Watashino" | "Namaeha" | "Nakanodesu"
+    Segments segments;
+
+    auto add_segment = [&segments](absl::string_view key,
+                                   absl::string_view value) {
+      Segment* segment = segments.add_segment();
+      segment->set_key(key);
+      converter::Candidate* candidate = segment->add_candidate();
+      candidate->key = std::string(key);
+      candidate->value = std::string(value);
+    };
+
+    add_segment("わたしの", "Watashino");
+    add_segment("なまえは", "Namaeha");
+    add_segment("なかのです", "Nakanodesu");
+
+    EXPECT_CALL(converter, StartConversion(_, _))
+        .WillOnce(DoAll(SetArgPointee<1>(segments), Return(true)));
+  }
+  // Set up mock immutable converter
+  {
+    Segments segments;
+    Segment* segment = segments.add_segment();
+    segment->set_key("わたしのなまえはなかのです");
+    converter::Candidate* candidate = segment->add_candidate();
+    candidate->value = "私の名前は中野です";
+    candidate->key = "わたしのなまえはなかのです";
+    candidate->inner_segment_boundary = converter::BuildInnerSegmentBoundary(
+        {{12, 6, 9, 3},    // "わたしの, 私の", "わたし, 私"
+         {12, 9, 9, 6},    // "なまえは, 名前は", "なまえ, 名前"
+         {15, 12, 9, 6}},  // "なかのです, 中野です", "なかの, 中野"
+        candidate->key, candidate->value);
+    EXPECT_EQ(candidate->inner_segment_boundary.size(), 3);
+    EXPECT_CALL(immutable_converter, Convert(_, _))
+        .WillRepeatedly(DoAll(SetArgPointee<1>(segments), Return(true)));
+  }
+
+  // A test case with use_actual_converter_for_realtime_conversion being
+  // false, i.e., realtime conversion result is generated by
+  // ImmutableConverterMock.
+  {
+    Segments segments;
+
+    Segment* seg = segments.add_segment();
+    seg->set_key(kKey);
+    seg->set_segment_type(Segment::FREE);
+
+    // User history predictor can add candidates before dictionary predictor
+    segments.mutable_conversion_segment(0)->add_candidate()->value = "history1";
+    segments.mutable_conversion_segment(0)->add_candidate()->value = "history2";
+
+    ConversionRequest::Options options;
+    options.max_conversion_candidates_size = 10;
+    options.use_actual_converter_for_realtime_conversion = false;
+    options.request_type = ConversionRequest::PREDICTION;
+
+    const ConversionRequest convreq =
+        ConversionRequestBuilder().SetOptions(std::move(options)).Build();
+
+    std::vector<Result> results = decoder.Decode(convreq);
+    ASSERT_EQ(results.size(), 1);
+    EXPECT_EQ(results[0].GetPredictionTypesForTesting(),
+              Attribute::REALTIME_CONVERSION);
+    EXPECT_EQ(results[0].key, kKey);
+    EXPECT_EQ(results[0].inner_segment_boundary.size(), 3);
+    EXPECT_TRUE(results[0].attributes & Attribute::NO_VARIANTS_EXPANSION);
+  }
+
+  // A test case with use_actual_converter_for_realtime_conversion being
+  // true, i.e., realtime conversion result is generated by MockConverter.
+  {
+    Segments segments;
+    Segment* seg = segments.add_segment();
+    seg->set_key(kKey);
+    seg->set_segment_type(Segment::FREE);
+
+    // User history predictor can add candidates before dictionary predictor
+    segments.mutable_conversion_segment(0)->add_candidate()->value = "history1";
+    segments.mutable_conversion_segment(0)->add_candidate()->value = "history2";
+
+    ConversionRequest::Options options;
+    options.max_conversion_candidates_size = 10;
+    options.use_actual_converter_for_realtime_conversion = true;
+    options.request_type = ConversionRequest::PREDICTION;
+
+    const ConversionRequest convreq =
+        ConversionRequestBuilder().SetOptions(std::move(options)).Build();
+    std::vector<Result> results = decoder.Decode(convreq);
+
+    // When |request.use_actual_converter_for_realtime_conversion| is true,
+    // the extra label REALTIME_TOP is expected to be added.
+    ASSERT_EQ(2, results.size());
+    bool realtime_top_found = false;
+    for (size_t i = 0; i < results.size(); ++i) {
+      EXPECT_TRUE(results[i].attributes & Attribute::REALTIME_CONVERSION);
+      EXPECT_TRUE(results[i].attributes & Attribute::NO_VARIANTS_EXPANSION);
+      if (results[i].key == kKey &&
+          results[i].value == "WatashinoNamaehaNakanodesu" &&
+          results[i].inner_segment_boundary.size() == 3) {
+        EXPECT_TRUE(results[i].attributes & Attribute::REALTIME_TOP);
+        realtime_top_found = true;
+      }
+    }
+    EXPECT_TRUE(realtime_top_found);
+  }
+
+  // Test case when suppress_realtime_conversion_with_converter flag is true.
+  {
+    ConversionRequest::Options options;
+    options.max_conversion_candidates_size = 10;
+    options.use_actual_converter_for_realtime_conversion = true;
+    options.request_type = ConversionRequest::PREDICTION;
+
+    commands::Request request;
+    request.mutable_decoder_experiment_params()
+        ->set_suppress_realtime_conversion_with_converter(true);
+
+    const ConversionRequest convreq = ConversionRequestBuilder()
+                                          .SetRequestView(request)
+                                          .SetOptions(std::move(options))
+                                          .Build();
+
+    std::vector<Result> results = decoder.Decode(convreq);
+
+    // Converter call is suppressed, so only 1 result from ImmutableConverter
+    // is returned (no REALTIME_TOP).
+    ASSERT_EQ(results.size(), 1);
+    EXPECT_EQ(results[0].GetPredictionTypesForTesting(),
+              Attribute::REALTIME_CONVERSION);
+    EXPECT_EQ(results[0].key, kKey);
+  }
+}
+
+TEST(RealtimeDecoderTest, DecodeSuffix) {
+  MockConverter converter;
+  MockImmutableConverter immutable_converter;
+
+  const MockRealtimeDecoder decoder(immutable_converter, converter);
+
+  std::vector<Result> results(1);
+  results[0].value = "さんに";
+  results[0].key = "さんに";
+  results[0].cost = 1000;
+
+  for (const uint16_t prefix_rid : {0, 20, 100}) {
+    // Only called once as the result is cached.
+    EXPECT_CALL(
+        decoder, Decode(Truly([&](const ConversionRequest& req) {
+          const ConversionRequest::Options options = req.options();
+          return (options.max_conversion_candidates_size == 1 &&
+                  !options.create_partial_candidates &&
+                  !options.kana_modifier_insensitive_conversion &&
+                  !options.use_actual_converter_for_realtime_conversion &&
+                  options.bos_id == prefix_rid &&
+                  (prefix_rid > 0 == options.disable_prefix_penalty) &&
+                  req.key() == results[0].key);
+        })))
+        .WillOnce(Return(results));
+
+    for (int i = 0; i < 10; ++i) {
+      const ConversionRequest convreq = ConversionRequestBuilder().Build();
+      const auto result =
+          decoder.DecodeSuffix(convreq, prefix_rid, "さんに").value();
+      EXPECT_EQ(result.key, results[0].key);
+      EXPECT_EQ(result.value, results[0].value);
+      EXPECT_EQ(result.cost, results[0].cost);
+    }
+  }
+}
+
+}  // namespace mozc::prediction

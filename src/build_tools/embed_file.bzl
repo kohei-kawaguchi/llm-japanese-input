@@ -1,0 +1,61 @@
+# Copyright 2010-2021, Google Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""mozc_embed_file macro to embed binary files as C++ variables."""
+
+load("//bazel:run_build_tool.bzl", "mozc_run_build_tool")
+
+def mozc_embed_file(name, srcs, out, var_name, as_string_view = False, skip_until = None, **kwargs):
+    """Generates a C++ source file defining a variable containing the input file's contents.
+
+    Args:
+      name: The name of the rule.
+      srcs: The input file(s) to embed.
+      out: The name of the generated C++ source file.
+      var_name: The name of the C++ variable to define.
+      as_string_view: If True, defines the variable as an absl::string_view instead of a raw array.
+      skip_until: If specified, skips lines until the string provided is encountered in a line.
+      **kwargs: Additional arguments to pass to the underlying rule.
+    """
+    args = ["--name=" + var_name]
+    if as_string_view:
+        args.append("--as_string_view")
+    if skip_until:
+        args.append("--skip_until=" + skip_until)
+
+    mozc_run_build_tool(
+        name = name,
+        srcs = {
+            "--input": srcs,
+        },
+        args = args,
+        outs = {"--output": out},
+        tool = "//build_tools:embed_file",
+        **kwargs
+    )

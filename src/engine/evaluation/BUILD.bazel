@@ -1,0 +1,1418 @@
+# Copyright 2026 LLM Japanese Input Authors
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in the
+# documentation and/or other materials provided with the distribution.
+#     * Neither the name of LLM Japanese Input Authors nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+load("@com_google_protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
+load("@com_google_protobuf//bazel:py_proto_library.bzl", "py_proto_library")
+load("@rules_python//python:defs.bzl", "py_test")
+load(
+    "//:build_defs.bzl",
+    "mozc_cc_binary",
+    "mozc_cc_library",
+    "mozc_cc_test",
+    "mozc_py_binary",
+    "mozc_py_library",
+    "mozc_select",
+)
+
+package(default_visibility = ["//visibility:private"])
+
+exports_files(
+    [
+        "ajimee_capacity_audit_config.textproto",
+        "ajimee_freezer_config.textproto",
+        "ajimee_quality_report_config.textproto",
+        "ajimee_semantic_runner_config.textproto",
+        "quality_regression_development_report_config.textproto",
+        "ajimee_source_config.json",
+        "quality_regression_development_baseline_report_config.textproto",
+        "quality_regression_development_config.textproto",
+        "quality_regression_qwen_development_config.textproto",
+        "quality_regression_development_score_runner_config.textproto",
+        "quality_regression_qwen_development_score_runner_config.textproto",
+        "quality_regression_development_freezer_config.textproto",
+        "quality_regression_holdout_freezer_config.textproto",
+        "quality_regression_importer_config.textproto",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+proto_library(
+    name = "evaluation_artifact_proto",
+    srcs = ["evaluation_artifact.proto"],
+)
+
+cc_proto_library(
+    name = "evaluation_artifact_cc_proto",
+    deps = [":evaluation_artifact_proto"],
+)
+
+py_proto_library(
+    name = "evaluation_artifact_py_pb2",
+    deps = [":evaluation_artifact_proto"],
+)
+
+proto_library(
+    name = "frozen_candidate_ranker_proto",
+    srcs = ["frozen_candidate_ranker.proto"],
+)
+
+cc_proto_library(
+    name = "frozen_candidate_ranker_cc_proto",
+    deps = [":frozen_candidate_ranker_proto"],
+)
+
+mozc_cc_library(
+    name = "frozen_candidate_ranker_util",
+    testonly = True,
+    srcs = ["frozen_candidate_ranker_util.cc"],
+    hdrs = ["frozen_candidate_ranker_util.h"],
+    deps = [
+        ":evaluation_protobuf_util",
+        ":frozen_candidate_ranker_cc_proto",
+        "//base/strings:unicode",
+        "//converter:candidate_ranker",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
+
+mozc_cc_test(
+    name = "frozen_candidate_ranker_util_test",
+    size = "small",
+    srcs = ["frozen_candidate_ranker_util_test.cc"],
+    deps = [
+        ":frozen_candidate_ranker_cc_proto",
+        ":frozen_candidate_ranker_util",
+        "//base/protobuf:message",
+        "//converter:candidate_ranker",
+        "//testing:gunit_main",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
+
+py_proto_library(
+    name = "frozen_candidate_ranker_py_pb2",
+    deps = [":frozen_candidate_ranker_proto"],
+)
+
+proto_library(
+    name = "exact_quality_metrics_proto",
+    srcs = ["exact_quality_metrics.proto"],
+)
+
+cc_proto_library(
+    name = "exact_quality_metrics_cc_proto",
+    deps = [":exact_quality_metrics_proto"],
+)
+
+py_proto_library(
+    name = "exact_quality_metrics_py_pb2",
+    deps = [":exact_quality_metrics_proto"],
+)
+
+proto_library(
+    name = "ajimee_corpus_proto",
+    srcs = ["ajimee_corpus.proto"],
+    deps = [":evaluation_artifact_proto"],
+)
+
+cc_proto_library(
+    name = "ajimee_corpus_cc_proto",
+    deps = [":ajimee_corpus_proto"],
+)
+
+py_proto_library(
+    name = "ajimee_corpus_py_pb2",
+    deps = [":ajimee_corpus_proto"],
+)
+
+proto_library(
+    name = "ajimee_frozen_corpus_proto",
+    srcs = ["ajimee_frozen_corpus.proto"],
+    deps = [
+        ":evaluation_artifact_proto",
+        ":frozen_candidate_ranker_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "ajimee_frozen_corpus_cc_proto",
+    deps = [":ajimee_frozen_corpus_proto"],
+)
+
+proto_library(
+    name = "ajimee_capacity_audit_proto",
+    srcs = ["ajimee_capacity_audit.proto"],
+)
+
+cc_proto_library(
+    name = "ajimee_capacity_audit_cc_proto",
+    deps = [":ajimee_capacity_audit_proto"],
+)
+
+proto_library(
+    name = "ajimee_semantic_results_proto",
+    srcs = ["ajimee_semantic_results.proto"],
+    deps = [":ajimee_capacity_audit_proto"],
+)
+
+cc_proto_library(
+    name = "ajimee_semantic_results_cc_proto",
+    deps = [":ajimee_semantic_results_proto"],
+)
+
+mozc_cc_library(
+    name = "evaluation_clock_util",
+    srcs = ["evaluation_clock_util.cc"],
+    hdrs = ["evaluation_clock_util.h"],
+    deps = [
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+mozc_cc_library(
+    name = "evaluation_protobuf_util",
+    srcs = ["evaluation_protobuf_util.cc"],
+    hdrs = ["evaluation_protobuf_util.h"],
+    deps = [
+        "//base/protobuf:coded_stream",
+        "//base/protobuf:descriptor",
+        "//base/protobuf:message",
+        "//base/protobuf:text_format",
+        "//base/protobuf:zero_copy_stream_impl",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_library(
+    name = "ajimee_artifact_util",
+    srcs = ["ajimee_artifact_util.cc"],
+    hdrs = ["ajimee_artifact_util.h"],
+    deps = [
+        ":evaluation_protobuf_util",
+        "//base:file_util",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+        "@llama_cpp//:sha256",
+    ],
+)
+
+mozc_cc_library(
+    name = "ajimee_frozen_corpus_util",
+    testonly = True,
+    srcs = ["ajimee_frozen_corpus_util.cc"],
+    hdrs = ["ajimee_frozen_corpus_util.h"],
+    deps = [
+        ":ajimee_frozen_corpus_cc_proto",
+        ":evaluation_artifact_cc_proto",
+        ":evaluation_clock_util",
+        ":frozen_candidate_ranker_cc_proto",
+        ":frozen_candidate_ranker_util",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+mozc_cc_test(
+    name = "ajimee_frozen_corpus_util_test",
+    size = "small",
+    srcs = ["ajimee_frozen_corpus_util_test.cc"],
+    deps = [
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        ":frozen_candidate_ranker_util",
+        "//testing:gunit_main",
+        "@com_google_absl//absl/status",
+    ],
+)
+
+mozc_cc_library(
+    name = "ajimee_capacity_audit",
+    testonly = True,
+    srcs = ["ajimee_capacity_audit.cc"],
+    hdrs = ["ajimee_capacity_audit.h"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_capacity_audit_cc_proto",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":frozen_candidate_ranker_cc_proto",
+        ":frozen_candidate_ranker_util",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "@com_google_absl//absl/functional:function_ref",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_library(
+    name = "ajimee_semantic_results",
+    testonly = True,
+    srcs = ["ajimee_semantic_results.cc"],
+    hdrs = ["ajimee_semantic_results.h"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_capacity_audit",
+        ":ajimee_capacity_audit_cc_proto",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":ajimee_semantic_results_cc_proto",
+        ":frozen_candidate_ranker_util",
+        "//converter:candidate_ranker",
+        "@com_google_absl//absl/functional:function_ref",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
+
+mozc_cc_test(
+    name = "ajimee_semantic_results_test",
+    size = "small",
+    srcs = ["ajimee_semantic_results_test.cc"],
+    data = ["ajimee_semantic_runner_config.textproto"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_capacity_audit",
+        ":ajimee_capacity_audit_cc_proto",
+        ":ajimee_corpus_cc_proto",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":ajimee_semantic_results",
+        ":ajimee_semantic_results_cc_proto",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        "//base:file_util",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
+
+mozc_cc_binary(
+    name = "run_ajimee_semantics",
+    testonly = True,
+    srcs = ["run_ajimee_semantics_main.cc"],
+    tags = ["manual"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_capacity_audit",
+        ":ajimee_capacity_audit_cc_proto",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":ajimee_semantic_results",
+        ":ajimee_semantic_results_cc_proto",
+        "//base:file_util",
+        "//base:init_mozc",
+        "//converter:candidate_ranker",
+        "//engine:llama_candidate_ranker",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)
+
+py_proto_library(
+    name = "ajimee_frozen_corpus_py_pb2",
+    deps = [":ajimee_frozen_corpus_proto"],
+)
+
+py_proto_library(
+    name = "ajimee_capacity_audit_py_pb2",
+    deps = [":ajimee_capacity_audit_proto"],
+)
+
+py_proto_library(
+    name = "ajimee_semantic_results_py_pb2",
+    deps = [":ajimee_semantic_results_proto"],
+)
+
+proto_library(
+    name = "ajimee_quality_report_proto",
+    srcs = ["ajimee_quality_report.proto"],
+    deps = [
+        ":ajimee_capacity_audit_proto",
+        ":ajimee_semantic_results_proto",
+        ":evaluation_artifact_proto",
+        ":exact_quality_metrics_proto",
+    ],
+)
+
+py_proto_library(
+    name = "ajimee_quality_report_py_pb2",
+    deps = [":ajimee_quality_report_proto"],
+)
+
+mozc_py_library(
+    name = "ajimee_quality_report",
+    srcs = ["ajimee_quality_report.py"],
+    deps = [
+        ":ajimee_capacity_audit_py_pb2",
+        ":ajimee_corpus_py_pb2",
+        ":ajimee_frozen_corpus_py_pb2",
+        ":ajimee_quality_report_py_pb2",
+        ":ajimee_semantic_results_py_pb2",
+        ":evaluation_artifact_py_pb2",
+        ":exact_quality_metrics_py_pb2",
+        ":frozen_candidate_ranker_py_pb2",
+    ],
+)
+
+mozc_py_binary(
+    name = "report_ajimee_quality",
+    testonly = True,
+    srcs = ["report_ajimee_quality_main.py"],
+    tags = ["manual"],
+    deps = [":ajimee_quality_report"],
+)
+
+mozc_py_library(
+    name = "report_ajimee_quality_main",
+    testonly = True,
+    srcs = ["report_ajimee_quality_main.py"],
+    deps = [":ajimee_quality_report"],
+)
+
+py_test(
+    name = "ajimee_quality_report_test",
+    size = "small",
+    srcs = ["ajimee_quality_report_test.py"],
+    data = [
+        "ajimee_capacity_audit_config.textproto",
+        "ajimee_freezer_config.textproto",
+        "ajimee_quality_report_config.textproto",
+    ],
+    deps = [
+        ":ajimee_capacity_audit_py_pb2",
+        ":ajimee_corpus_py_pb2",
+        ":ajimee_frozen_corpus_py_pb2",
+        ":ajimee_quality_report",
+        ":ajimee_quality_report_py_pb2",
+        ":ajimee_semantic_results_py_pb2",
+        ":frozen_candidate_ranker_py_pb2",
+        ":report_ajimee_quality_main",
+    ],
+)
+
+proto_library(
+    name = "quality_regression_corpus_proto",
+    srcs = ["quality_regression_corpus.proto"],
+    deps = [":evaluation_artifact_proto"],
+)
+
+cc_proto_library(
+    name = "quality_regression_corpus_cc_proto",
+    deps = [":quality_regression_corpus_proto"],
+)
+
+py_proto_library(
+    name = "quality_regression_corpus_py_pb2",
+    deps = [":quality_regression_corpus_proto"],
+)
+
+proto_library(
+    name = "quality_regression_baseline_report_proto",
+    srcs = ["quality_regression_baseline_report.proto"],
+    deps = [
+        ":exact_quality_metrics_proto",
+        ":quality_regression_corpus_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "quality_regression_baseline_report_cc_proto",
+    deps = [":quality_regression_baseline_report_proto"],
+)
+
+proto_library(
+    name = "quality_regression_development_report_proto",
+    srcs = ["quality_regression_development_report.proto"],
+    deps = [
+        ":exact_quality_metrics_proto",
+        ":quality_regression_corpus_proto",
+        ":quality_regression_objective_evaluation_proto",
+        "//engine:candidate_ranker_model_proto",
+    ],
+)
+
+py_proto_library(
+    name = "quality_regression_development_report_py_pb2",
+    deps = [":quality_regression_development_report_proto"],
+)
+
+mozc_py_library(
+    name = "quality_regression_development_report",
+    srcs = ["quality_regression_development_report.py"],
+    deps = [
+        ":exact_quality_metrics_py_pb2",
+        ":frozen_candidate_ranker_py_pb2",
+        ":quality_regression_corpus_py_pb2",
+        ":quality_regression_development_report_py_pb2",
+        ":quality_regression_frozen_corpus_py_pb2",
+        ":quality_regression_objective_evaluation_py_pb2",
+        "//engine:candidate_ranker_model_py_pb2",
+    ],
+)
+
+mozc_py_binary(
+    name = "report_quality_regression_development",
+    testonly = True,
+    srcs = ["report_quality_regression_development_main.py"],
+    tags = ["manual"],
+    deps = [":quality_regression_development_report"],
+)
+
+mozc_py_library(
+    name = "report_quality_regression_development_main",
+    testonly = True,
+    srcs = ["report_quality_regression_development_main.py"],
+    deps = [":quality_regression_development_report"],
+)
+
+py_test(
+    name = "quality_regression_development_report_test",
+    size = "small",
+    srcs = ["quality_regression_development_report_test.py"],
+    data = ["quality_regression_development_report_config.textproto"],
+    deps = [
+        ":frozen_candidate_ranker_py_pb2",
+        ":quality_regression_corpus_py_pb2",
+        ":quality_regression_development_report",
+        ":quality_regression_development_report_py_pb2",
+        ":quality_regression_frozen_corpus_py_pb2",
+        ":quality_regression_objective_evaluation_py_pb2",
+        ":report_quality_regression_development_main",
+        "//engine:candidate_ranker_model_py_pb2",
+    ],
+)
+
+mozc_cc_library(
+    name = "quality_regression_corpus_util",
+    srcs = ["quality_regression_corpus_util.cc"],
+    hdrs = ["quality_regression_corpus_util.h"],
+    deps = [
+        ":evaluation_artifact_cc_proto",
+        ":evaluation_protobuf_util",
+        ":quality_regression_corpus_cc_proto",
+        "//base/strings:unicode",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_library(
+    name = "quality_regression_importer",
+    srcs = ["quality_regression_importer.cc"],
+    hdrs = ["quality_regression_importer.h"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        "//base:text_normalizer",
+        "//base/strings:unicode",
+        "//converter:quality_regression_util",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+mozc_cc_test(
+    name = "quality_regression_importer_test",
+    size = "small",
+    srcs = ["quality_regression_importer_test.cc"],
+    data = [
+        "quality_regression_importer_config.textproto",
+        "//data/test/quality_regression_test:oss.tsv",
+        "//data/test/quality_regression_test:regression.tsv",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        ":quality_regression_importer",
+        "//base:file_util",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_binary(
+    name = "import_quality_regression",
+    srcs = ["import_quality_regression_main.cc"],
+    tags = ["manual"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_importer",
+        "//base:file_util",
+        "//base:init_mozc",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)
+
+mozc_cc_test(
+    name = "ajimee_capacity_audit_test",
+    size = "small",
+    srcs = ["ajimee_capacity_audit_test.cc"],
+    data = ["ajimee_capacity_audit_config.textproto"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_capacity_audit",
+        ":ajimee_capacity_audit_cc_proto",
+        ":ajimee_corpus_cc_proto",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        "//base:file_util",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
+
+mozc_cc_binary(
+    name = "audit_ajimee_capacity",
+    testonly = True,
+    srcs = ["audit_ajimee_capacity_main.cc"],
+    tags = ["manual"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_capacity_audit",
+        ":ajimee_capacity_audit_cc_proto",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        "//base:file_util",
+        "//base:init_mozc",
+        "//converter:candidate_ranker",
+        "//engine:llama_candidate_ranker",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)
+
+mozc_cc_library(
+    name = "ajimee_freezer",
+    testonly = True,
+    srcs = ["ajimee_freezer.cc"],
+    hdrs = ["ajimee_freezer.h"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_corpus_cc_proto",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":evaluation_artifact_cc_proto",
+        ":evaluation_freezer",
+        ":frozen_candidate_ranker_cc_proto",
+        "//base/strings:japanese",
+        "//converter:converter_interface",
+        "//protocol:commands_cc_proto",
+        "//protocol:config_cc_proto",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+mozc_cc_test(
+    name = "ajimee_freezer_test",
+    size = "small",
+    srcs = ["ajimee_freezer_test.cc"],
+    data = ["ajimee_freezer_config.textproto"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_corpus_cc_proto",
+        ":ajimee_freezer",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        "//base:clock",
+        "//base:clock_mock",
+        "//base:file_util",
+        "//converter:converter_mock",
+        "//converter:segments",
+        "//protocol:commands_cc_proto",
+        "//protocol:config_cc_proto",
+        "//request:conversion_request",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+mozc_cc_binary(
+    name = "freeze_ajimee",
+    testonly = True,
+    srcs = ["freeze_ajimee_main.cc"],
+    tags = ["manual"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":ajimee_corpus_cc_proto",
+        ":ajimee_freezer",
+        ":ajimee_frozen_corpus_cc_proto",
+        ":ajimee_frozen_corpus_util",
+        ":evaluation_freezer_runtime",
+        "//base:file_util",
+        "//base:init_mozc",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)
+
+mozc_py_library(
+    name = "ajimee_importer",
+    srcs = ["ajimee_importer.py"],
+    deps = [
+        ":ajimee_corpus_py_pb2",
+        ":evaluation_artifact_py_pb2",
+    ],
+)
+
+mozc_py_binary(
+    name = "import_ajimee",
+    srcs = ["import_ajimee_main.py"],
+    deps = [":ajimee_importer"],
+)
+
+py_test(
+    name = "ajimee_importer_test",
+    size = "small",
+    srcs = ["ajimee_importer_test.py"],
+    data = [
+        "ajimee_source_config.json",
+        "testdata/ajimee_synthetic.json",
+        "testdata/ajimee_synthetic_config.json",
+    ],
+    deps = [
+        ":ajimee_corpus_py_pb2",
+        ":ajimee_importer",
+    ],
+)
+
+mozc_cc_library(
+    name = "evaluation_freezer",
+    testonly = True,
+    srcs = ["evaluation_freezer.cc"],
+    hdrs = ["evaluation_freezer.h"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_clock_util",
+        ":frozen_candidate_ranker_cc_proto",
+        "//base:clock_mock",
+        "//base/protobuf:message",
+        "//composer",
+        "//composer:table",
+        "//config:config_handler",
+        "//converter:candidate_ranker",
+        "//converter:converter_interface",
+        "//converter:segments",
+        "//protocol:commands_cc_proto",
+        "//protocol:config_cc_proto",
+        "//request:conversion_request",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+mozc_cc_library(
+    name = "evaluation_freezer_runtime",
+    testonly = True,
+    srcs = ["evaluation_freezer_runtime.cc"],
+    hdrs = ["evaluation_freezer_runtime.h"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_freezer",
+        "//base:clock_mock",
+        "//base:file_util",
+        "//base:system_util",
+        "//base/file:temp_dir",
+        "//converter:converter_interface",
+        "//data_manager",
+        "//engine",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+mozc_cc_test(
+    name = "evaluation_freezer_test",
+    size = "small",
+    srcs = ["evaluation_freezer_test.cc"],
+    deps = [
+        ":evaluation_freezer",
+        ":frozen_candidate_ranker_cc_proto",
+        "//base:clock",
+        "//base:clock_mock",
+        "//converter:candidate_ranker",
+        "//converter:converter_mock",
+        "//converter:segments",
+        "//protocol:config_cc_proto",
+        "//request:conversion_request",
+        "//testing:gunit_main",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+mozc_cc_test(
+    name = "evaluation_freezer_runtime_test",
+    size = "small",
+    srcs = ["evaluation_freezer_runtime_test.cc"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_freezer_runtime",
+        "//base:clock",
+        "//base:clock_mock",
+        "//base:file_util",
+        "//base:system_util",
+        "//base/file:temp_dir",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+proto_library(
+    name = "quality_regression_frozen_corpus_proto",
+    srcs = ["quality_regression_frozen_corpus.proto"],
+    deps = [
+        ":evaluation_artifact_proto",
+        ":frozen_candidate_ranker_proto",
+        ":quality_regression_corpus_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "quality_regression_frozen_corpus_cc_proto",
+    deps = [":quality_regression_frozen_corpus_proto"],
+)
+
+py_proto_library(
+    name = "quality_regression_frozen_corpus_py_pb2",
+    deps = [":quality_regression_frozen_corpus_proto"],
+)
+
+mozc_cc_library(
+    name = "quality_regression_frozen_corpus_util",
+    testonly = True,
+    srcs = ["quality_regression_frozen_corpus_util.cc"],
+    hdrs = ["quality_regression_frozen_corpus_util.h"],
+    deps = [
+        ":evaluation_artifact_cc_proto",
+        ":evaluation_clock_util",
+        ":evaluation_protobuf_util",
+        ":frozen_candidate_ranker_cc_proto",
+        ":frozen_candidate_ranker_util",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        ":quality_regression_frozen_corpus_cc_proto",
+        "//base/protobuf:message",
+        "//base/strings:unicode",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_library(
+    name = "quality_regression_baseline_report",
+    testonly = True,
+    srcs = ["quality_regression_baseline_report.cc"],
+    hdrs = ["quality_regression_baseline_report.h"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":exact_quality_metrics_cc_proto",
+        ":quality_regression_baseline_report_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_util",
+        "//base/protobuf:message",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_test(
+    name = "quality_regression_baseline_report_test",
+    size = "small",
+    srcs = ["quality_regression_baseline_report_test.cc"],
+    data = [
+        "quality_regression_development_baseline_report_config.textproto",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":exact_quality_metrics_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        ":quality_regression_baseline_report",
+        ":quality_regression_baseline_report_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_cc_proto",
+        "//base:file_util",
+        "//base/protobuf:descriptor",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
+
+mozc_cc_test(
+    name = "quality_regression_baseline_report_command_test",
+    size = "small",
+    srcs = ["quality_regression_baseline_report_command_test.cc"],
+    data = [":report_quality_regression_development_baseline"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        ":quality_regression_baseline_report",
+        ":quality_regression_baseline_report_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_cc_proto",
+        "//base:file_util",
+        "//base/file:temp_dir",
+        "//base/win32:wide_char",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_binary(
+    name = "report_quality_regression_development_baseline",
+    testonly = True,
+    srcs = ["report_quality_regression_development_baseline_main.cc"],
+    tags = ["manual"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":quality_regression_baseline_report",
+        ":quality_regression_baseline_report_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_cc_proto",
+        "//base:file_util",
+        "//base:init_mozc",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)
+
+proto_library(
+    name = "quality_regression_objective_evaluation_proto",
+    srcs = ["quality_regression_objective_evaluation.proto"],
+    deps = ["//engine:candidate_ranker_model_proto"],
+)
+
+cc_proto_library(
+    name = "quality_regression_objective_evaluation_cc_proto",
+    deps = [":quality_regression_objective_evaluation_proto"],
+)
+
+py_proto_library(
+    name = "quality_regression_objective_evaluation_py_pb2",
+    deps = [":quality_regression_objective_evaluation_proto"],
+)
+
+mozc_cc_library(
+    name = "quality_regression_development_config",
+    testonly = True,
+    srcs = ["quality_regression_development_config.cc"],
+    hdrs = ["quality_regression_development_config.h"],
+    deps = [
+        ":evaluation_protobuf_util",
+        ":quality_regression_corpus_util",
+        ":quality_regression_frozen_corpus_util",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//base/strings:unicode",
+        "//engine:candidate_ranker_model",
+        "//engine:candidate_ranker_model_cc_proto",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/types:span",
+    ],
+)
+
+mozc_cc_test(
+    name = "quality_regression_development_config_test",
+    size = "small",
+    srcs = ["quality_regression_development_config_test.cc"],
+    data = ["quality_regression_development_config.textproto"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":quality_regression_development_config",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//base:file_util",
+        "//base/protobuf:descriptor",
+        "//engine:candidate_ranker_model_cc_proto",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
+
+mozc_cc_library(
+    name = "quality_regression_native_coverage",
+    testonly = True,
+    srcs = ["quality_regression_native_coverage.cc"],
+    hdrs = ["quality_regression_native_coverage.h"],
+    deps = [
+        ":evaluation_protobuf_util",
+        ":frozen_candidate_ranker_cc_proto",
+        ":frozen_candidate_ranker_util",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        ":quality_regression_development_config",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_util",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "@com_google_absl//absl/functional:function_ref",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_library(
+    name = "quality_regression_development_scores",
+    testonly = True,
+    srcs = ["quality_regression_development_scores.cc"],
+    hdrs = ["quality_regression_development_scores.h"],
+    deps = [
+        ":evaluation_protobuf_util",
+        ":frozen_candidate_ranker_util",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        ":quality_regression_development_config",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_native_coverage",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "//engine:candidate_ranker_model_cc_proto",
+        "@com_google_absl//absl/functional:function_ref",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+        "@com_google_absl//absl/types:span",
+    ],
+)
+
+mozc_cc_test(
+    name = "quality_regression_development_scores_test",
+    size = "small",
+    srcs = ["quality_regression_development_scores_test.cc"],
+    data = ["quality_regression_development_score_runner_config.textproto"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_development_scores",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_native_coverage",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//base:file_util",
+        "//base/protobuf:descriptor",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "//engine:candidate_ranker_model_cc_proto",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+mozc_cc_binary(
+    name = "run_quality_regression_development_scores",
+    testonly = True,
+    srcs = ["run_quality_regression_development_scores_main.cc"],
+    tags = ["manual"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":quality_regression_development_config",
+        ":quality_regression_development_scores",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_native_coverage",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//base:file_util",
+        "//base:init_mozc",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "//engine:candidate_ranker_model_cc_proto",
+        "//engine:llama_candidate_ranker",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:string_view",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)
+
+mozc_cc_test(
+    name = "quality_regression_development_scores_command_test",
+    size = "small",
+    srcs = ["quality_regression_development_scores_command_test.cc"],
+    data = [":run_quality_regression_development_scores"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//base:file_util",
+        "//base/file:temp_dir",
+        "//base/win32:wide_char",
+        "//engine:candidate_ranker_model_cc_proto",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_test(
+    name = "quality_regression_native_coverage_test",
+    size = "small",
+    srcs = ["quality_regression_native_coverage_test.cc"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        ":frozen_candidate_ranker_util",
+        ":quality_regression_development_config",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_native_coverage",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "//engine:candidate_ranker_model_cc_proto",
+        "//testing:gunit_main",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+mozc_cc_test(
+    name = "quality_regression_native_coverage_command_test",
+    size = "small",
+    srcs = ["quality_regression_native_coverage_command_test.cc"],
+    data = [":audit_quality_regression_development_native_coverage"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//base:file_util",
+        "//base/file:temp_dir",
+        "//base/win32:wide_char",
+        "//engine:candidate_ranker_model_cc_proto",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_binary(
+    name = "audit_quality_regression_development_native_coverage",
+    testonly = True,
+    srcs = [
+        "audit_quality_regression_development_native_coverage_main.cc",
+    ],
+    tags = ["manual"],
+    deps = [
+        ":ajimee_artifact_util",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_development_config",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_util",
+        ":quality_regression_native_coverage",
+        ":quality_regression_objective_evaluation_cc_proto",
+        "//base:file_util",
+        "//base:init_mozc",
+        "//converter:candidate_ranker",
+        "//engine:candidate_ranker_model",
+        "//engine:candidate_ranker_model_cc_proto",
+        "//engine:llama_candidate_ranker",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:string_view",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)
+
+mozc_cc_library(
+    name = "quality_regression_freezer",
+    testonly = True,
+    srcs = ["quality_regression_freezer.cc"],
+    hdrs = ["quality_regression_freezer.h"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":evaluation_artifact_cc_proto",
+        ":evaluation_freezer",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_util",
+        "//converter:converter_interface",
+        "//protocol:commands_cc_proto",
+        "//protocol:config_cc_proto",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+mozc_cc_test(
+    name = "quality_regression_freezer_test",
+    size = "small",
+    srcs = ["quality_regression_freezer_test.cc"],
+    data = [
+        "quality_regression_development_freezer_config.textproto",
+        "quality_regression_holdout_freezer_config.textproto",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_artifact_cc_proto",
+        ":evaluation_freezer",
+        ":frozen_candidate_ranker_cc_proto",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        ":quality_regression_freezer",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_util",
+        "//base:file_util",
+        "//base/protobuf:message",
+        "//converter:converter_mock",
+        "//converter:segments",
+        "//protocol:commands_cc_proto",
+        "//protocol:config_cc_proto",
+        "//request:conversion_request",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_binary(
+    name = "freeze_quality_regression",
+    testonly = True,
+    srcs = ["freeze_quality_regression_main.cc"],
+    tags = ["manual"],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":evaluation_freezer",
+        ":evaluation_freezer_runtime",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_freezer",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_util",
+        "//base:file_util",
+        "//base:init_mozc",
+        "//protocol:commands_cc_proto",
+        "//protocol:config_cc_proto",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:string_view",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)
+
+mozc_cc_test(
+    name = "quality_regression_freezer_command_test",
+    size = "small",
+    srcs = ["quality_regression_freezer_command_test.cc"],
+    data = [
+        "quality_regression_development_freezer_config.textproto",
+        "quality_regression_holdout_freezer_config.textproto",
+        "testdata/quality_regression_development_input_corpus.textproto",
+        "testdata/quality_regression_holdout_input_corpus.textproto",
+        ":freeze_quality_regression",
+        "//data_manager/oss:mozc.data",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    deps = [
+        ":ajimee_artifact_util",
+        ":quality_regression_corpus_cc_proto",
+        ":quality_regression_corpus_util",
+        ":quality_regression_frozen_corpus_cc_proto",
+        ":quality_regression_frozen_corpus_util",
+        "//base:file_util",
+        "//base/file:temp_dir",
+        "//base/win32:wide_char",
+        "//testing:gunit_main",
+        "//testing:mozctest",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+mozc_cc_binary(
+    name = "zenz_candidate_ranker_benchmark",
+    testonly = True,
+    srcs = ["zenz_candidate_ranker_benchmark_main.cc"],
+    tags = ["manual"],
+    deps = [
+        ":ajimee_frozen_corpus_cc_proto",
+        ":frozen_candidate_ranker_cc_proto",
+        ":frozen_candidate_ranker_util",
+        ":quality_regression_frozen_corpus_cc_proto",
+        "//base:file_util",
+        "//base:init_mozc",
+        "//converter:candidate_ranker",
+        "//engine:zenz_candidate_ranker",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/time",
+    ] + mozc_select(windows = [
+        "//base/win32:utf8_console_argv",
+    ]),
+)

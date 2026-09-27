@@ -1,0 +1,157 @@
+// Copyright 2026 LLM Japanese Input Authors
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//     * Neither the name of LLM Japanese Input Authors nor the names of its
+// contributors may be used to endorse or promote products derived from this
+// software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+
+package mozc.engine;
+
+message CandidateRankerModelManifest {
+  message ScoringTemplate {
+    enum ContextPolicy {
+      CONTEXT_POLICY_UNSPECIFIED = 0;
+      MOZC_BASELINE_SUBSTITUTION = 1;
+    }
+
+    enum TextNormalization {
+      TEXT_NORMALIZATION_UNSPECIFIED = 0;
+      NONE = 1;
+      PYTHON_UNICODE_14_SCALAR_LOWER = 2;
+    }
+
+    enum RecordLayout {
+      RECORD_LAYOUT_UNSPECIFIED = 0;
+      STRUCTURED_WITH_TARGET = 1;
+      STRUCTURED_WITHOUT_TARGET = 2;
+      NATURAL_TEXT_ONLY = 3;
+    }
+
+    required string version = 1;
+    required uint32 bos_token_id = 2;
+    required uint32 terminal_token_id = 3;
+    required string mode_prefix = 4;
+    required string suggestion_mode = 5;
+    required string prediction_mode = 6;
+    required string conversion_mode = 7;
+    required string field_separator = 8;
+    required string reading_prefix = 9;
+    required string segment_key_prefix = 10;
+    required string text_prefix = 11;
+    required TextNormalization text_normalization = 12;
+    required ContextPolicy context_policy = 13;
+    required RecordLayout record_layout = 14;
+  }
+
+  message Limits {
+    reserved "max_candidates_per_segment", "max_rankable_segments",
+        "max_candidate_sequences", "aggregate_input_node_limit",
+        "aggregate_output_row_limit", "max_output_logit_bytes";
+    required uint32 max_selected_candidates_per_segment = 1;
+    required uint32 max_segments_per_decode = 2;
+    reserved 3, 4, 5;
+    reserved "per_prompt_token_limit", "aggregate_batch_token_limit",
+        "per_prompt_byte_limit";
+    required uint32 max_sequences_per_decode = 6;
+    required uint32 per_record_byte_limit = 7;
+    required uint32 per_record_token_limit = 8;
+    required uint32 per_decode_input_node_limit = 9;
+    required uint32 per_decode_output_row_limit = 10;
+    required uint64 max_decode_output_logit_bytes = 11;
+    required uint32 max_request_segments = 12;
+    required uint32 max_request_candidates = 13;
+    required uint64 max_request_string_bytes = 14;
+  }
+
+  message BoundedExecutionPolicy {
+    enum CandidateWindowPolicy {
+      CANDIDATE_WINDOW_POLICY_UNSPECIFIED = 0;
+      MOZC_ORDER_UNPROTECTED_PREFIX = 1;
+    }
+
+    enum CapacityReductionPolicy {
+      CAPACITY_REDUCTION_POLICY_UNSPECIFIED = 0;
+      LONGEST_FEASIBLE_UNPROTECTED_PREFIX_OR_OMIT_SEGMENT = 1;
+    }
+
+    enum DecodePackingPolicy {
+      DECODE_PACKING_POLICY_UNSPECIFIED = 0;
+      SEGMENT_ID_ORDER_GREEDY_WHOLE_SEGMENTS = 1;
+    }
+
+    required CandidateWindowPolicy candidate_window_policy = 1;
+    required CapacityReductionPolicy capacity_reduction_policy = 2;
+    required DecodePackingPolicy decode_packing_policy = 3;
+  }
+
+  message Runtime {
+    enum ExecutionDevice {
+      EXECUTION_DEVICE_UNSPECIFIED = 0;
+      CPU = 1;
+    }
+
+    enum KvStorage {
+      KV_STORAGE_UNSPECIFIED = 0;
+      reserved 1, 2;
+      reserved "SEPARATE_SEQUENCE", "SHARED";
+      UNIFIED = 3;
+    }
+
+    required ExecutionDevice execution_device = 1;
+    required KvStorage kv_storage = 2;
+    required uint32 micro_batch_token_capacity = 3;
+    required uint32 decode_thread_count = 4;
+    required uint32 batch_thread_count = 5;
+    required bool use_memory_map = 6;
+    required bool use_memory_lock = 7;
+    required bool check_tensors = 8;
+  }
+
+  message Artifacts {
+    required string source_model = 1;
+    required string source_revision = 2;
+    required string source_weight_sha256 = 3;
+    required string tokenizer_sha256 = 4;
+    required string gguf_file_name = 5;
+    required string gguf_sha256 = 6;
+    required string quantization = 7;
+    repeated string model_license_references = 8;
+
+    required string runtime_name = 9;
+    required string runtime_revision = 10;
+    required string runtime_source_archive_sha256 = 11;
+    repeated string runtime_license_references = 12;
+  }
+
+  required uint32 schema_version = 1;
+  reserved 2;
+  reserved "prompt";
+  required Limits limits = 3;
+  required Runtime runtime = 4;
+  required Artifacts artifacts = 5;
+  required ScoringTemplate scoring_template = 6;
+  required BoundedExecutionPolicy bounded_execution_policy = 7;
+}

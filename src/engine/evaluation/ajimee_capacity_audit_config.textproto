@@ -1,0 +1,13 @@
+schema_version: 1
+frozen_corpus_schema_version: 2
+capacity_audit_schema_version: 1
+frozen_corpus_sha256: "9b1656a48ed3cfbf1577b7a404688affb49b793f9c556ba2d2fb46b41238c61c"
+expected_case_count: 200
+model_manifest_schema_version: 4
+model_manifest_sha256: "f4d7e53eb14110c855fe684f34ee536465f7eae6601f9555859ccce28edfb465"
+gguf_file_name: "rinna-xsmall-q4_k_m.gguf"
+gguf_sha256: "3c53d019a0ff0832ff5f7b08508e8b5c3b78b747871060deb2db3375fcfb6677"
+tokenizer_sha256: "b5cbdfa8aa7c54c8c5af85b78c309c54a5f2749a20468bf6f60eee007fe6fec1"
+quantization: "Q4_K_M"
+source_revision: "8e91527b3276e0565154935e84a08bf0137ed99f"
+runtime_revision: "1511ce3bc3f087376c8526b4ad07100bfabb277f"

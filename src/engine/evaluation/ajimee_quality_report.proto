@@ -1,0 +1,139 @@
+// Copyright 2026 LLM Japanese Input Authors
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//     * Neither the name of LLM Japanese Input Authors nor the names of its
+// contributors may be used to endorse or promote products derived from this
+// software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+
+package mozc.engine.evaluation;
+
+import "engine/evaluation/ajimee_capacity_audit.proto";
+import "engine/evaluation/ajimee_semantic_results.proto";
+import "engine/evaluation/evaluation_artifact.proto";
+import "engine/evaluation/exact_quality_metrics.proto";
+
+enum AjimeeReportSlice {
+  AJIMEE_REPORT_SLICE_UNSPECIFIED = 0;
+  AJIMEE_REPORT_OVERALL = 1;
+  AJIMEE_REPORT_HAS_CONTEXT = 2;
+  AJIMEE_REPORT_NO_CONTEXT = 3;
+}
+
+message AjimeeQualityReportConfig {
+  required uint32 schema_version = 1;
+  required uint32 answer_corpus_schema_version = 2;
+  required uint32 frozen_corpus_schema_version = 3;
+  required uint32 capacity_audit_schema_version = 4;
+  required uint32 semantic_results_schema_version = 5;
+  required uint32 quality_report_schema_version = 6;
+  required string input_corpus_sha256 = 7;
+  required string answer_corpus_sha256 = 8;
+  required string frozen_corpus_sha256 = 9;
+  required string capacity_audit_config_sha256 = 10;
+  required string capacity_audit_sha256 = 11;
+  required string semantic_results_sha256 = 12;
+  required uint32 expected_case_count = 13;
+  required uint32 expected_context_case_count = 14;
+  required uint32 expected_no_context_case_count = 15;
+  required EvaluationSourceIdentity expected_source = 16;
+  required uint32 metric_definition_version = 17;
+  required uint32 exact_bootstrap_definition_version = 18;
+}
+
+message AjimeeMetricSlice {
+  required AjimeeReportSlice slice = 1;
+  required uint64 case_count = 2;
+  required uint64 semantic_success_count = 3;
+  required uint64 backend_error_count = 4;
+  required uint64 invalid_response_count = 5;
+  required uint64 oracle_covered_count = 6;
+  required uint64 baseline_correct_count = 7;
+  required uint64 effective_model_correct_count = 8;
+  required uint64 retained_correct_count = 9;
+  required uint64 win_count = 10;
+  required uint64 regression_count = 11;
+  required uint64 unchanged_incorrect_count = 12;
+  required CharacterError baseline_character_error = 13;
+  required CharacterError effective_model_character_error = 14;
+  required ExactPairedBootstrap paired_bootstrap = 15;
+  required ExactRatio baseline_accuracy = 16;
+  required ExactRatio effective_model_accuracy = 17;
+  required ExactRatio accuracy_gain = 18;
+  required ExactRatio oracle_coverage = 19;
+  optional ExactRatio baseline_conditional_accuracy = 20;
+  optional ExactRatio model_conditional_accuracy = 21;
+  optional ExactRatio retention = 22;
+}
+
+message AjimeeDecodeBatchHistogramBin {
+  required uint64 batch_count = 1;
+  required uint64 case_count = 2;
+}
+
+message AjimeeCapacityLimiterSummary {
+  required AjimeeCapacityLimit limit = 1;
+  required uint64 case_count = 2;
+  required uint64 segment_count = 3;
+  required uint64 omitted_candidate_count = 4;
+}
+
+message AjimeeCapacityCoverageSlice {
+  required AjimeeReportSlice slice = 1;
+  required uint64 case_count = 2;
+  required uint64 pass_count = 3;
+  required uint64 request_limit_count = 4;
+  required uint64 audit_error_count = 5;
+  required AjimeeCapacityAuditUsage summed_usage = 6;
+  required AjimeeCapacityAuditUsage maximum_usage = 7;
+  required uint64 cases_with_window_omission = 8;
+  required uint64 cases_with_candidate_capacity_omission = 9;
+  required uint64 cases_with_segment_capacity_omission = 10;
+  repeated AjimeeDecodeBatchHistogramBin decode_batch_histogram = 11;
+  repeated AjimeeCapacityLimiterSummary limiter_summaries = 12;
+}
+
+message AjimeeQualityReportIdentity {
+  required string report_config_sha256 = 1;
+  required string input_corpus_sha256 = 2;
+  required string answer_corpus_sha256 = 3;
+  required string frozen_corpus_sha256 = 4;
+  required string capacity_audit_config_sha256 = 5;
+  required string capacity_audit_sha256 = 6;
+  required string semantic_results_sha256 = 7;
+  required EvaluationSourceIdentity source = 8;
+  required AjimeeCapacityAuditIdentity capacity_audit_identity = 9;
+  required AjimeeSemanticNumericProfile numeric_profile = 10;
+  required uint32 metric_definition_version = 11;
+  required uint32 bootstrap_definition_version = 12;
+}
+
+message AjimeeQualityReport {
+  required uint32 schema_version = 1;
+  required AjimeeQualityReportIdentity identity = 2;
+  required bool semantic_all_success = 3;
+  repeated AjimeeMetricSlice metric_slices = 4;
+  repeated AjimeeCapacityCoverageSlice capacity_coverage_slices = 5;
+}

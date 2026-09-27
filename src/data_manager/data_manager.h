@@ -1,0 +1,235 @@
+// Copyright 2010-2021, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#ifndef MOZC_DATA_MANAGER_DATA_MANAGER_H_
+#define MOZC_DATA_MANAGER_DATA_MANAGER_H_
+
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+#include <tuple>
+#include <utility>
+
+#include "absl/container/flat_hash_map.h"
+#include "absl/status/status.h"
+#include "absl/status/statusor.h"
+#include "absl/strings/string_view.h"
+#include "absl/types/span.h"
+#include "base/mmap.h"
+
+namespace mozc {
+
+class DataSetReader;  // Forward-declare this as it is used privately.
+
+// This data manager parses a data set file image and extracts each data
+// (dictionary, LM, etc.).
+// TODO(noriyukit): Migrate all the embedded data managers, such as
+// oss/oss_data_manager.h, to this one.
+class DataManager {
+ public:
+  static absl::string_view GetDataSetMagicNumber(absl::string_view type);
+
+  // Creates an instance of *const* DataManager from a data set file or returns
+  // error status on failure.
+  using DMStatusOr = absl::StatusOr<std::unique_ptr<const DataManager>>;
+
+  static DMStatusOr CreateFromFile(absl::string_view path);
+  static DMStatusOr CreateFromFile(absl::string_view path,
+                                   absl::string_view magic);
+
+  static DMStatusOr CreateFromArray(absl::string_view array);
+  static DMStatusOr CreateFromArray(absl::string_view array,
+                                    absl::string_view magic);
+  static DMStatusOr CreateFromArray(absl::string_view array,
+                                    size_t magic_length);
+
+  static DMStatusOr CreateUserPosManagerDataFromArray(absl::string_view array,
+                                                      absl::string_view magic);
+  static DMStatusOr CreateUserPosManagerDataFromFile(absl::string_view path,
+                                                     absl::string_view magic);
+
+  DataManager(const DataManager&) = delete;
+  DataManager& operator=(const DataManager&) = delete;
+  virtual ~DataManager() = default;
+
+  virtual std::optional<std::string> GetFilename() const { return filename_; }
+
+  virtual absl::Span<const uint16_t> GetPosMatcherData() const;
+
+  // [token_array_data, string_array_data]
+  virtual std::array<absl::string_view, 2> GetUserPosData() const;
+
+  virtual absl::string_view GetConnectorData() const;
+
+  virtual absl::string_view GetSystemDictionaryData() const;
+
+  virtual absl::Span<const uint32_t> GetSuggestionFilterData() const;
+
+  // [collocation_data, collocation_suppression_data]
+  virtual std::array<absl::string_view, 2> GetCollocationData() const;
+
+  virtual absl::Span<const uint8_t> GetPosGroupData() const;
+
+  // [l_num_elements,  r_num_elements, l_table, r_table, bitarray_data,
+  // boundary_data]
+  virtual std::tuple<size_t, size_t, absl::Span<const uint16_t>,
+                     absl::Span<const uint16_t>, absl::Span<const char>,
+                     absl::Span<const uint16_t>>
+  GetSegmenterData() const;
+
+  virtual absl::string_view GetCounterSuffixSortedArray() const;
+
+  // [key_array_data, value_array_data, token_array_data]
+  virtual std::array<absl::string_view, 3> GetSuffixDictionaryData() const;
+
+  // [value_array_data, error_array_data, correction_array_data]
+  virtual std::array<absl::string_view, 3> GetReadingCorrectionData() const;
+
+  // [token_array_data, string_array_data]
+  virtual std::array<absl::string_view, 2> GetSymbolRewriterData() const;
+
+  // [token_array_data, string_array_data]
+  virtual std::array<absl::string_view, 2> GetEmoticonRewriterData() const;
+
+  // [token_array_data, string_array_data]
+  virtual std::array<absl::string_view, 2> GetEmojiRewriterData() const;
+
+  // [token_array_data, string_array_data, variant_type_array_data,
+  //  variant_token_array_data, variant_string_array_data,
+  //  noun_prefix_token_array_data, noun_prefix_string_array_data]
+  virtual std::array<absl::string_view, 7> GetSingleKanjiRewriterData() const;
+
+  // [token_array_data, string_array_data]
+  virtual std::array<absl::string_view, 2> GetA11yDescriptionRewriterData()
+      const;
+
+  // [zero_query_token_array_data,zero_query_string_array_data,
+  //  zero_query_number_token_array_data, zero_query_number_string_array_data]
+  virtual std::array<absl::string_view, 4> GetZeroQueryData() const;
+
+#ifndef NO_USAGE_REWRITER
+  // [base_conjugation_suffix_data, conjugation_suffix_data,
+  //  conjugation_index_data, usage_items_data, string_array_data]
+  virtual std::array<absl::string_view, 5> GetUsageRewriterData() const;
+#endif  // NO_USAGE_REWRITER
+
+  virtual absl::string_view GetDataVersion() const;
+
+  virtual std::optional<std::pair<size_t, size_t>> GetOffsetAndSize(
+      absl::string_view name) const;
+
+ protected:
+  DataManager() = default;
+  friend std::unique_ptr<DataManager> std::make_unique<DataManager>();
+
+  // Parses |array| and extracts byte blocks of data set.  The |array| must
+  // outlive this instance.  The second version specifies a custom magic number
+  // to expect (e.g., mock data set has a different magic number).
+  // The third version specifies the length of the magic number in bytes.
+
+  absl::Status InitFromArray(absl::string_view array);
+  absl::Status InitFromArray(absl::string_view array, absl::string_view magic);
+  absl::Status InitFromArray(absl::string_view array, size_t magic_length);
+
+  // The same as above InitFromArray() but the data is loaded using mmap, which
+  // is owned in this instance.
+  absl::Status InitFromFile(absl::string_view path);
+  absl::Status InitFromFile(absl::string_view path, absl::string_view magic);
+
+  // The same as above InitFromArray() but only parses data set for user pos
+  // manager.  For mozc runtime modules, use InitFromArray() because this method
+  // is only for build tools, e.g., rewriter/dictionary_generator.cc (some build
+  // tools depend on user pos data to create outputs, so we need to handle
+  // partial data set).
+  absl::Status InitUserPosManagerDataFromArray(absl::string_view array,
+                                               absl::string_view magic);
+  absl::Status InitUserPosManagerDataFromFile(absl::string_view path,
+                                              absl::string_view magic);
+
+ private:
+  absl::Status InitFromReader(const DataSetReader& reader);
+
+  std::optional<std::string> filename_ = std::nullopt;
+  Mmap mmap_;
+  absl::string_view pos_matcher_data_;
+  absl::string_view user_pos_token_array_data_;
+  absl::string_view user_pos_string_array_data_;
+  absl::string_view connection_data_;
+  absl::string_view dictionary_data_;
+  absl::string_view suggestion_filter_data_;
+  absl::string_view collocation_data_;
+  absl::string_view collocation_suppression_data_;
+  absl::string_view pos_group_data_;
+  absl::string_view boundary_data_;
+  size_t segmenter_compressed_lsize_;
+  size_t segmenter_compressed_rsize_;
+  absl::string_view segmenter_ltable_;
+  absl::string_view segmenter_rtable_;
+  absl::string_view segmenter_bitarray_;
+  absl::string_view counter_suffix_data_;
+  absl::string_view suffix_key_array_data_;
+  absl::string_view suffix_value_array_data_;
+  absl::string_view suffix_token_array_data_;
+  absl::string_view reading_correction_value_array_data_;
+  absl::string_view reading_correction_error_array_data_;
+  absl::string_view reading_correction_correction_array_data_;
+  absl::string_view symbol_token_array_data_;
+  absl::string_view symbol_string_array_data_;
+  absl::string_view emoticon_token_array_data_;
+  absl::string_view emoticon_string_array_data_;
+  absl::string_view emoji_token_array_data_;
+  absl::string_view emoji_string_array_data_;
+  absl::string_view single_kanji_token_array_data_;
+  absl::string_view single_kanji_string_array_data_;
+  absl::string_view single_kanji_variant_type_data_;
+  absl::string_view single_kanji_variant_token_array_data_;
+  absl::string_view single_kanji_variant_string_array_data_;
+  absl::string_view single_kanji_noun_prefix_token_array_data_;
+  absl::string_view single_kanji_noun_prefix_string_array_data_;
+  absl::string_view a11y_description_token_array_data_;
+  absl::string_view a11y_description_string_array_data_;
+  absl::string_view zero_query_token_array_data_;
+  absl::string_view zero_query_string_array_data_;
+  absl::string_view zero_query_number_token_array_data_;
+  absl::string_view zero_query_number_string_array_data_;
+  absl::string_view usage_base_conjugation_suffix_data_;
+  absl::string_view usage_conjugation_suffix_data_;
+  absl::string_view usage_conjugation_index_data_;
+  absl::string_view usage_items_data_;
+  absl::string_view usage_string_array_data_;
+  absl::string_view data_version_;
+  absl::flat_hash_map<std::string, std::pair<size_t, size_t>> offset_and_size_;
+};
+
+}  // namespace mozc
+
+#endif  // MOZC_DATA_MANAGER_DATA_MANAGER_H_

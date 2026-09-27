@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "source_model": "rinna/japanese-gpt2-xsmall",
+  "source_revision": "8e91527b3276e0565154935e84a08bf0137ed99f",
+  "source_weight_sha256": "06662948dfa3227e3a42200787f28e86657d0f1e37a4ba1439452419581a4229",
+  "tokenizer_sha256": "b5cbdfa8aa7c54c8c5af85b78c309c54a5f2749a20468bf6f60eee007fe6fec1",
+  "f32_gguf_sha256": "b7f36bcf7fa6e13ef434f8a95080f5892df131f7841abc611f975e2736a82ddd",
+  "bos_token_id": 1,
+  "vocabulary_size": 32000,
+  "rtol": 0.0001,
+  "atol": 0.0001,
+  "cases": [
+    {
+      "name": "japanese_conversion",
+      "record": "MODE=CONVERSION\nREADING=きょうはいいてんき\nSEGMENT=きょう\nTEXT=今日は良い天気です。"
+    },
+    {
+      "name": "japanese_suggestion",
+      "record": "MODE=SUGGESTION\nREADING=あめ\nSEGMENT=あめ\nTEXT=明日は雨が降ります。"
+    },
+    {
+      "name": "japanese_prediction",
+      "record": "MODE=PREDICTION\nREADING=こうしょう\nSEGMENT=こうしょう\nTEXT=契約条件を交渉する。"
+    },
+    {
+      "name": "unicode_scalar_lower",
+      "record": "MODE=CONVERSION\nREADING=ABCİ\nSEGMENT=ＡＢＣ\nTEXT=ΟΣ Mix １２３ [PAD]"
+    },
+    {
+      "name": "whitespace_and_normalization",
+      "record": "MODE=CONVERSION\nREADING=てすと\nSEGMENT=テスト\nTEXT=前文\t 候補  \n後文"
+    },
+    {
+      "name": "long_japanese_context",
+      "record": "MODE=PREDICTION\nREADING=とうきょう\nSEGMENT=とうきょう\nTEXT=東京都では公共交通機関の運行状況を確認しながら、利用者が安全に移動できるよう継続的に案内を更新しています。"
+    }
+  ]
+}

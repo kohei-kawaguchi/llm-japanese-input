@@ -1,0 +1,895 @@
+schema_version: 1
+identity {
+  role: DEVELOPMENT
+  source {
+    benchmark_name: "Mozc OSS quality regression development"
+    source_revision: "851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+    source_relative_path: "src/data/test/quality_regression_test/oss.tsv"
+    source_sha256: "053a43e72d174da43b351278cadc471abe08cea9fe98829dafe3d152580fcff0"
+    creator: "Google Inc. and Mozc contributors"
+    source_url: "https://github.com/google/mozc/blob/851c3fe33060d2a6090363e4d7ec44fafde2c03d/src/data/test/quality_regression_test/oss.tsv"
+    license_identifier: "BSD-3-Clause"
+    license_url: "https://github.com/google/mozc/blob/851c3fe33060d2a6090363e4d7ec44fafde2c03d/LICENSE"
+    upstream_dataset_url: "https://github.com/google/mozc/tree/851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+    changes_notice: "Filtered to parsed Conversion Expected rank-zero rows, Windows-normalized expected values, stable-deduplicated exact key and expected-value pairs, and separated input and answer corpora."
+  }
+  parser_definition_version: 1
+  normalization_definition_version: 1
+  import_config_sha256: "3cfb88ca988d9c46c3bca3095c9e8ee3b61cb43fce6df3c5be0d4ce100abbba5"
+}
+cases {
+  source_line: 54
+  reading: "だっくすふんとはたんそくです。"
+}
+cases {
+  source_line: 55
+  reading: "おわりをむかえた"
+}
+cases {
+  source_line: 56
+  reading: "かねのなるき"
+}
+cases {
+  source_line: 59
+  reading: "いわせるな"
+}
+cases {
+  source_line: 60
+  reading: "ならには"
+}
+cases {
+  source_line: 61
+  reading: "かいごかんせい"
+}
+cases {
+  source_line: 62
+  reading: "けんざかいには"
+}
+cases {
+  source_line: 63
+  reading: "あいてをたたきのめす"
+}
+cases {
+  source_line: 64
+  reading: "けいししている"
+}
+cases {
+  source_line: 65
+  reading: "おきなわこうくうびるでぃんぐ"
+}
+cases {
+  source_line: 66
+  reading: "とっぷちーむ"
+}
+cases {
+  source_line: 73
+  reading: "うわぎをしちゃくする"
+}
+cases {
+  source_line: 75
+  reading: "こうせいろうどうしょう"
+}
+cases {
+  source_line: 76
+  reading: "こくどこうつうしょう"
+}
+cases {
+  source_line: 77
+  reading: "しょうひしゃちょう"
+}
+cases {
+  source_line: 78
+  reading: "きょうたい"
+}
+cases {
+  source_line: 79
+  reading: "きどく"
+}
+cases {
+  source_line: 83
+  reading: "ぜんくつ"
+}
+cases {
+  source_line: 92
+  reading: "うきついちばん"
+}
+cases {
+  source_line: 93
+  reading: "うつだ"
+}
+cases {
+  source_line: 95
+  reading: "このいやほんはていおんすくなめときいている"
+}
+cases {
+  source_line: 98
+  reading: "ばくそうする"
+}
+cases {
+  source_line: 99
+  reading: "ゆうきがひつようだ"
+}
+cases {
+  source_line: 100
+  reading: "ばーべきゅー"
+}
+cases {
+  source_line: 103
+  reading: "わかりづらくなる"
+}
+cases {
+  source_line: 104
+  reading: "そういうこと"
+}
+cases {
+  source_line: 108
+  reading: "りょうほう"
+}
+cases {
+  source_line: 110
+  reading: "しゅうせいされずにいた"
+}
+cases {
+  source_line: 111
+  reading: "これぐらいだとおもいます"
+}
+cases {
+  source_line: 112
+  reading: "なんかいかやっているので"
+}
+cases {
+  source_line: 115
+  reading: "てんいんにきけよ"
+}
+cases {
+  source_line: 116
+  reading: "これがぶなんそうだった"
+}
+cases {
+  source_line: 117
+  reading: "そんなにうつくしいひとだとはおもわなかったので"
+}
+cases {
+  source_line: 118
+  reading: "ゆうきがいります"
+}
+cases {
+  source_line: 119
+  reading: "いっしょにいたいので"
+}
+cases {
+  source_line: 122
+  reading: "それをきにしたら"
+}
+cases {
+  source_line: 123
+  reading: "それはきにしないほうがいい"
+}
+cases {
+  source_line: 124
+  reading: "それをきにしないなら"
+}
+cases {
+  source_line: 125
+  reading: "からはなしたけど"
+}
+cases {
+  source_line: 126
+  reading: "そうなったぶんだけでも"
+}
+cases {
+  source_line: 127
+  reading: "こうかんじょうほう"
+}
+cases {
+  source_line: 128
+  reading: "ちゅうもんじきにもよるけど"
+}
+cases {
+  source_line: 129
+  reading: "しあげはあしたにしよう"
+}
+cases {
+  source_line: 130
+  reading: "あせをすいそうなので"
+}
+cases {
+  source_line: 131
+  reading: "ひびきがゆたかになる"
+}
+cases {
+  source_line: 133
+  reading: "むこうのかんがえもよくきいてくれ"
+}
+cases {
+  source_line: 134
+  reading: "こうつうりょうだってそっちのほうがおおい"
+}
+cases {
+  source_line: 143
+  reading: "しはいよくがおおきいひとだ"
+}
+cases {
+  source_line: 144
+  reading: "よくよくかんがえたら"
+}
+cases {
+  source_line: 145
+  reading: "ごきぶりをたいじした"
+}
+cases {
+  source_line: 146
+  reading: "にほんいちのやまはふじさんです"
+}
+cases {
+  source_line: 147
+  reading: "としをとるとびょういんのはなしばかりになる"
+}
+cases {
+  source_line: 151
+  reading: "てきみかたかんけいなく"
+}
+cases {
+  source_line: 153
+  reading: "みにゅうりょくのもじを"
+}
+cases {
+  source_line: 154
+  reading: "このしょうひんをかいたい"
+}
+cases {
+  source_line: 155
+  reading: "ひとのひょうかをきにするな"
+}
+cases {
+  source_line: 156
+  reading: "よくえいぎょうびはっそうに"
+}
+cases {
+  source_line: 157
+  reading: "おおもとのじしょでは"
+}
+cases {
+  source_line: 158
+  reading: "さいりようしてください"
+}
+cases {
+  source_line: 159
+  reading: "さいちぇっくしてください"
+}
+cases {
+  source_line: 160
+  reading: "さいあくせすしてください"
+}
+cases {
+  source_line: 161
+  reading: "さいあたっくしてください"
+}
+cases {
+  source_line: 162
+  reading: "さいわりびきしてください"
+}
+cases {
+  source_line: 163
+  reading: "ここからさきは"
+}
+cases {
+  source_line: 164
+  reading: "あさひがでてきたので"
+}
+cases {
+  source_line: 165
+  reading: "ここでおわるはずがないのに"
+}
+cases {
+  source_line: 166
+  reading: "ここでかうから"
+}
+cases {
+  source_line: 167
+  reading: "5まんえんごえのしょうひん"
+}
+cases {
+  source_line: 168
+  reading: "せんぱいごえをめざす"
+}
+cases {
+  source_line: 169
+  reading: "あしきたぐん"
+}
+cases {
+  source_line: 170
+  reading: "たごうら"
+}
+cases {
+  source_line: 175
+  reading: "そざいがぷらすちっくなので"
+}
+cases {
+  source_line: 176
+  reading: "よろしくおねがいします"
+}
+cases {
+  source_line: 179
+  reading: "がいこくめーかーのものはからだにあわない"
+}
+cases {
+  source_line: 181
+  reading: "1つめのはなしは"
+}
+cases {
+  source_line: 182
+  reading: "えいえいじてん"
+}
+cases {
+  source_line: 183
+  reading: "ぱーせんとにかんさんすると"
+}
+cases {
+  source_line: 184
+  reading: "あらいながらもこんごにきたい"
+}
+cases {
+  source_line: 185
+  reading: "かうかちがあるとおもうなら"
+}
+cases {
+  source_line: 186
+  reading: "みにおぼえのない"
+}
+cases {
+  source_line: 188
+  reading: "さかもとりゅういち"
+}
+cases {
+  source_line: 191
+  reading: "とっけつ"
+}
+cases {
+  source_line: 192
+  reading: "とっくつ"
+}
+cases {
+  source_line: 195
+  reading: "れいわがんねん"
+}
+cases {
+  source_line: 197
+  reading: "やくたたず"
+}
+cases {
+  source_line: 198
+  reading: "むびゅう"
+}
+cases {
+  source_line: 199
+  reading: "むびゅうせい"
+}
+cases {
+  source_line: 200
+  reading: "ごびゅう"
+}
+cases {
+  source_line: 206
+  reading: "あかつきにふねをいだす"
+}
+cases {
+  source_line: 211
+  reading: "なぞめいてて"
+}
+cases {
+  source_line: 222
+  reading: "ひらぶんでおくる"
+}
+cases {
+  source_line: 223
+  reading: "ごかんそう"
+}
+cases {
+  source_line: 225
+  reading: "こういしつ"
+}
+cases {
+  source_line: 226
+  reading: "にようそにんしょう"
+}
+cases {
+  source_line: 227
+  reading: "たようそにんしょう"
+}
+cases {
+  source_line: 228
+  reading: "ぎんこうこうざのかいせつ"
+}
+cases {
+  source_line: 229
+  reading: "きんとれ"
+}
+cases {
+  source_line: 230
+  reading: "おくぶたえ"
+}
+cases {
+  source_line: 231
+  reading: "にほんじゅう"
+}
+cases {
+  source_line: 232
+  reading: "にっぽんじゅう"
+}
+cases {
+  source_line: 234
+  reading: "こういんしょう"
+}
+cases {
+  source_line: 237
+  reading: "にだんかいうせつ"
+}
+cases {
+  source_line: 238
+  reading: "にだんかいにんしょう"
+}
+cases {
+  source_line: 239
+  reading: "ひともうけ"
+}
+cases {
+  source_line: 240
+  reading: "ひゃっきん"
+}
+cases {
+  source_line: 243
+  reading: "おきのくに"
+}
+cases {
+  source_line: 244
+  reading: "ごきはちどう"
+}
+cases {
+  source_line: 245
+  reading: "びんごのくに"
+}
+cases {
+  source_line: 249
+  reading: "りゅうこうごたいしょう"
+}
+cases {
+  source_line: 255
+  reading: "ぜんざいさん"
+}
+cases {
+  source_line: 256
+  reading: "あんぜんせいのこうじょう"
+}
+cases {
+  source_line: 258
+  reading: "へんしんまち"
+}
+cases {
+  source_line: 259
+  reading: "ゆうせんでもむせんでも"
+}
+cases {
+  source_line: 260
+  reading: "さぶすく"
+}
+cases {
+  source_line: 262
+  reading: "ばうんしゃ"
+}
+cases {
+  source_line: 263
+  reading: "しんしょかいふうざい"
+}
+cases {
+  source_line: 264
+  reading: "あいしんかくら"
+}
+cases {
+  source_line: 265
+  reading: "らのべ"
+}
+cases {
+  source_line: 266
+  reading: "なごやとばし"
+}
+cases {
+  source_line: 270
+  reading: "しんちょうにはこぶ"
+}
+cases {
+  source_line: 271
+  reading: "ぎろんになんしょくをしめす"
+}
+cases {
+  source_line: 277
+  reading: "こうばいりょくへいか"
+}
+cases {
+  source_line: 278
+  reading: "ろーまじぶんをかく"
+}
+cases {
+  source_line: 293
+  reading: "りねーむ"
+}
+cases {
+  source_line: 294
+  reading: "はいたしょり"
+}
+cases {
+  source_line: 295
+  reading: "じきしょうそう"
+}
+cases {
+  source_line: 296
+  reading: "りまいんど"
+}
+cases {
+  source_line: 302
+  reading: "かんりめいがら"
+}
+cases {
+  source_line: 309
+  reading: "くわたけいすけ"
+}
+cases {
+  source_line: 310
+  reading: "きかいがとまる"
+}
+cases {
+  source_line: 311
+  reading: "せいどがひくい"
+}
+cases {
+  source_line: 312
+  reading: "きほんかのように"
+}
+cases {
+  source_line: 313
+  reading: "おもしろいねえ"
+}
+cases {
+  source_line: 314
+  reading: "てきかみかたか"
+}
+cases {
+  source_line: 315
+  reading: "かれはみかたなのか"
+}
+cases {
+  source_line: 318
+  reading: "くうしゅうごう"
+}
+cases {
+  source_line: 319
+  reading: "たいしょうがい"
+}
+cases {
+  source_line: 321
+  reading: "けっていこう"
+}
+cases {
+  source_line: 322
+  reading: "さいしゅうこう"
+}
+cases {
+  source_line: 323
+  reading: "しゅうせいこう"
+}
+cases {
+  source_line: 331
+  reading: "とりそこなって"
+}
+cases {
+  source_line: 335
+  reading: "いっきょうたじゃく"
+}
+cases {
+  source_line: 336
+  reading: "よとういっきょう"
+}
+cases {
+  source_line: 337
+  reading: "もどりち"
+}
+cases {
+  source_line: 338
+  reading: "こころここにあらず"
+}
+cases {
+  source_line: 340
+  reading: "じょうきょうをちゅうしする"
+}
+cases {
+  source_line: 345
+  reading: "くうぐんしょうこう"
+}
+cases {
+  source_line: 346
+  reading: "へんきんまち"
+}
+cases {
+  source_line: 354
+  reading: "よねずけんし"
+}
+cases {
+  source_line: 357
+  reading: "いほうせいがそきゃくされる"
+}
+cases {
+  source_line: 360
+  reading: "あおぞらぎんこう"
+}
+cases {
+  source_line: 361
+  reading: "ゆうちょぎんこう"
+}
+cases {
+  source_line: 372
+  reading: "とうししんたくこうざをかいせつ"
+}
+cases {
+  source_line: 373
+  reading: "でーたをせっしゅする"
+}
+cases {
+  source_line: 379
+  reading: "げんしきょうさんしゅぎ"
+}
+cases {
+  source_line: 396
+  reading: "はくしかてい"
+}
+cases {
+  source_line: 399
+  reading: "さいじょうひでき"
+}
+cases {
+  source_line: 401
+  reading: "もくさじんじゃ"
+}
+cases {
+  source_line: 402
+  reading: "もとにもどして"
+}
+cases {
+  source_line: 403
+  reading: "ひんてぃんぐ"
+}
+cases {
+  source_line: 404
+  reading: "こめだこーひーてん"
+}
+cases {
+  source_line: 405
+  reading: "はなよりだんご"
+}
+cases {
+  source_line: 415
+  reading: "いちおく"
+}
+cases {
+  source_line: 416
+  reading: "もがく"
+}
+cases {
+  source_line: 417
+  reading: "もがいて"
+}
+cases {
+  source_line: 428
+  reading: "じんじょうしょう"
+}
+cases {
+  source_line: 431
+  reading: "ちょうせんかいきょう"
+}
+cases {
+  source_line: 432
+  reading: "かじょうわん"
+}
+cases {
+  source_line: 433
+  reading: "ぽるてぃちのおしむすめ"
+}
+cases {
+  source_line: 442
+  reading: "ごうしかいしゃ"
+}
+cases {
+  source_line: 443
+  reading: "きかんせっけい"
+}
+cases {
+  source_line: 444
+  reading: "れいたくだいがく"
+}
+cases {
+  source_line: 446
+  reading: "ちゅうごくこうていいん"
+}
+cases {
+  source_line: 447
+  reading: "きたにっぽんしんぶんはい"
+}
+cases {
+  source_line: 448
+  reading: "こうぶんかいせきき"
+}
+cases {
+  source_line: 449
+  reading: "とかさくせん"
+}
+cases {
+  source_line: 450
+  reading: "すみけし"
+}
+cases {
+  source_line: 451
+  reading: "いりなかえき"
+}
+cases {
+  source_line: 452
+  reading: "ごかんかんじ"
+}
+cases {
+  source_line: 453
+  reading: "CJKごかんかんじ"
+}
+cases {
+  source_line: 454
+  reading: "とうごうかんじ"
+}
+cases {
+  source_line: 455
+  reading: "CJKとうごうかんじ"
+}
+cases {
+  source_line: 456
+  reading: "CJKごかんようもじ"
+}
+cases {
+  source_line: 457
+  reading: "こうきぶしゅ"
+}
+cases {
+  source_line: 458
+  reading: "ちゅうおんじぼ"
+}
+cases {
+  source_line: 462
+  reading: "かんじこうせいきじゅつもじ"
+}
+cases {
+  source_line: 463
+  reading: "かわきもの"
+}
+cases {
+  source_line: 464
+  reading: "そけんのらんよう"
+}
+cases {
+  source_line: 465
+  reading: "こうそけんのらんよう"
+}
+cases {
+  source_line: 466
+  reading: "だいじょうぶか"
+}
+cases {
+  source_line: 467
+  reading: "じみんとうそうさいせん"
+}
+cases {
+  source_line: 468
+  reading: "せっていかえるか"
+}
+cases {
+  source_line: 470
+  reading: "とくにはございません"
+}
+cases {
+  source_line: 471
+  reading: "とくにはありません"
+}
+cases {
+  source_line: 472
+  reading: "めのまえ"
+}
+cases {
+  source_line: 473
+  reading: "ひとこない"
+}
+cases {
+  source_line: 474
+  reading: "いいごえん"
+}
+cases {
+  source_line: 475
+  reading: "まいとしこうれい"
+}
+cases {
+  source_line: 476
+  reading: "まんがよんだり"
+}
+cases {
+  source_line: 477
+  reading: "じんこうにかいしゃする"
+}
+cases {
+  source_line: 478
+  reading: "いいごえんがあれば"
+}
+cases {
+  source_line: 479
+  reading: "にせんえんさつ"
+}
+cases {
+  source_line: 480
+  reading: "ごせんえんさつ"
+}
+cases {
+  source_line: 481
+  reading: "いちまんえんさつ"
+}
+cases {
+  source_line: 482
+  reading: "いちまん"
+}
+cases {
+  source_line: 485
+  reading: "もどりちのかた"
+}
+cases {
+  source_line: 486
+  reading: "あちらがわ"
+}
+cases {
+  source_line: 487
+  reading: "こちらがわ"
+}
+cases {
+  source_line: 488
+  reading: "さんじゅっぷん"
+}
+cases {
+  source_line: 489
+  reading: "ぷらちなでびっと"
+}
+cases {
+  source_line: 490
+  reading: "あいこんかえるか"
+}
+cases {
+  source_line: 491
+  reading: "だいせいか"
+}
+cases {
+  source_line: 492
+  reading: "たな"
+}
+cases {
+  source_line: 493
+  reading: "びよういんだい"
+}
+cases {
+  source_line: 496
+  reading: "ゆうどかんすう"
+}
+cases {
+  source_line: 498
+  reading: "おんらいんしょっぴんぐ"
+}
+cases {
+  source_line: 499
+  reading: "おやどだい"
+}
+cases {
+  source_line: 500
+  reading: "あしたはなにする"
+}
+cases {
+  source_line: 501
+  reading: "かねはらって"
+}

@@ -1,0 +1,11 @@
+diff --git a/ggml/src/ggml-cpu/vec.h b/ggml/src/ggml-cpu/vec.h
+--- a/ggml/src/ggml-cpu/vec.h
++++ b/ggml/src/ggml-cpu/vec.h
+@@ -43,7 +43,6 @@ inline static ggml_float ggml_sve_sum_f32x2(svfloat32_t sum_lo, svfloat32_t sum
+ }
+ #endif
+ 
+-#define GGML_GELU_FP16
+ #define GGML_GELU_QUICK_FP16
+ 
+ #define GGML_SOFT_MAX_UNROLL 4

@@ -1,0 +1,214 @@
+# Copyright 2010-2021, Google Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Static x64 CPU runtime for llama.cpp on Windows MSVC and Linux gcc.
+# https://github.com/ggml-org/llama.cpp
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+licenses(["notice"])
+
+exports_files(["LICENSE"])
+
+filegroup(
+    name = "license_files",
+    srcs = [
+        "LICENSE",
+        "vendor/hash/rotate-bits/LICENSE.md",
+        "vendor/hash/sha256/LICENSE",
+        "@//bazel:llama_cpp_additional_notices.txt",
+    ],
+)
+
+HOST_X86_64 = select({
+    "@platforms//os:windows": ["@platforms//cpu:x86_64"],
+    "@platforms//os:linux": ["@platforms//cpu:x86_64"],
+    "//conditions:default": ["@platforms//:incompatible"],
+})
+
+MSVC_COPTS = select({
+    "@platforms//os:windows": [
+        "/arch:AVX2",
+        "/bigobj",
+    ],
+    "//conditions:default": [],
+})
+
+HOST_DEFINES = select({
+    "@platforms//os:windows": ["_CRT_SECURE_NO_WARNINGS"],
+    "@platforms//os:linux": ["_GNU_SOURCE"],
+    "//conditions:default": [],
+})
+
+GGML_CPU_LINKOPTS = select({
+    "@platforms//os:windows": ["Advapi32.lib"],
+    "@platforms//os:linux": [
+        "-ldl",
+        "-lpthread",
+        "-lm",
+    ],
+    "//conditions:default": [],
+})
+
+cc_library(
+    name = "sha256",
+    srcs = ["vendor/hash/sha256/sha256.c"],
+    hdrs = [
+        "vendor/hash/rotate-bits/rotate-bits.h",
+        "vendor/hash/sha256/sha256.h",
+    ],
+    includes = ["vendor/hash"],
+    target_compatible_with = HOST_X86_64,
+)
+
+GGML_COMMON_DEFINES = [
+    "GGML_SCHED_MAX_COPIES=4",
+] + HOST_DEFINES
+
+cc_library(
+    name = "ggml_base",
+    srcs = [
+        "ggml/src/ggml.c",
+        "ggml/src/ggml.cpp",
+        "ggml/src/ggml-alloc.c",
+        "ggml/src/ggml-backend.cpp",
+        "ggml/src/ggml-backend-meta.cpp",
+        "ggml/src/ggml-opt.cpp",
+        "ggml/src/ggml-quants.c",
+        "ggml/src/ggml-threading.cpp",
+        "ggml/src/gguf.cpp",
+    ],
+    hdrs = [
+        "ggml/include/ggml.h",
+        "ggml/include/ggml-alloc.h",
+        "ggml/include/ggml-backend.h",
+        "ggml/include/ggml-cpp.h",
+        "ggml/include/ggml-cpu.h",
+        "ggml/include/ggml-opt.h",
+        "ggml/include/gguf.h",
+        "ggml/src/ggml-cpu/ggml-cpu-impl.h",
+    ] + glob(["ggml/src/*.h"]),
+    copts = MSVC_COPTS,
+    includes = [
+        "ggml/include",
+        "ggml/src",
+    ],
+    linkstatic = True,
+    local_defines = GGML_COMMON_DEFINES + [
+        'GGML_COMMIT=\\"1511ce3bc3f087376c8526b4ad07100bfabb277f\\"',
+        'GGML_VERSION=\\"0.20.2\\"',
+    ],
+    target_compatible_with = HOST_X86_64,
+)
+
+cc_library(
+    name = "ggml_cpu",
+    srcs = [
+        "ggml/src/ggml-cpu/amx/amx.cpp",
+        "ggml/src/ggml-cpu/amx/mmq.cpp",
+        "ggml/src/ggml-cpu/arch/x86/quants.c",
+        "ggml/src/ggml-cpu/arch/x86/repack.cpp",
+        "ggml/src/ggml-cpu/binary-ops.cpp",
+        "ggml/src/ggml-cpu/ggml-cpu.c",
+        "ggml/src/ggml-cpu/ggml-cpu.cpp",
+        "ggml/src/ggml-cpu/hbm.cpp",
+        "ggml/src/ggml-cpu/llamafile/sgemm.cpp",
+        "ggml/src/ggml-cpu/ops.cpp",
+        "ggml/src/ggml-cpu/quants.c",
+        "ggml/src/ggml-cpu/repack.cpp",
+        "ggml/src/ggml-cpu/traits.cpp",
+        "ggml/src/ggml-cpu/unary-ops.cpp",
+        "ggml/src/ggml-cpu/vec.cpp",
+    ],
+    hdrs = glob(
+        [
+            "ggml/src/ggml-cpu/**/*.h",
+        ],
+        exclude = [
+            "ggml/src/ggml-cpu/ggml-cpu-impl.h",
+        ],
+    ),
+    copts = MSVC_COPTS,
+    includes = [
+        "ggml/include",
+        "ggml/src",
+        "ggml/src/ggml-cpu",
+    ],
+    linkopts = GGML_CPU_LINKOPTS,
+    linkstatic = True,
+    local_defines = GGML_COMMON_DEFINES + [
+        "GGML_USE_CPU_REPACK=1",
+        "GGML_USE_LLAMAFILE=1",
+    ],
+    target_compatible_with = HOST_X86_64,
+    deps = [":ggml_base"],
+)
+
+cc_library(
+    name = "ggml",
+    srcs = [
+        "ggml/src/ggml-backend-reg.cpp",
+    ],
+    copts = MSVC_COPTS,
+    defines = ["GGML_USE_CPU=1"],
+    linkstatic = True,
+    local_defines = GGML_COMMON_DEFINES + ["GGML_STATIC_BACKENDS_ONLY=1"],
+    target_compatible_with = HOST_X86_64,
+    deps = [
+        ":ggml_base",
+        ":ggml_cpu",
+    ],
+)
+
+cc_library(
+    name = "llama",
+    srcs = glob([
+        "src/*.cpp",
+        "src/models/*.cpp",
+    ]),
+    hdrs = glob([
+        "include/*.h",
+        "src/*.h",
+        "src/models/*.h",
+    ]),
+    copts = MSVC_COPTS,
+    includes = [
+        "include",
+        "src",
+    ],
+    linkstatic = True,
+    local_defines = HOST_DEFINES + [
+        'LLAMA_COMMIT=\\"1511ce3bc3f087376c8526b4ad07100bfabb277f\\"',
+        'LLAMA_VERSION=\\"0.1.2\\"',
+    ],
+    target_compatible_with = HOST_X86_64,
+    deps = [":ggml"],
+)

@@ -1,0 +1,945 @@
+{
+  "run_names": [
+    "run1",
+    "run2"
+  ],
+  "disagreement_count": 125,
+  "disagreements": [
+    {
+      "source_line": 54,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 55,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 56,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 59,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 60,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 63,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 64,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 65,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 78,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 79,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 83,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 93,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 95,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 98,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 99,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 103,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 104,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 108,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 110,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 111,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 112,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 115,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 116,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 117,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 118,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 119,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 122,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 123,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 125,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 126,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 127,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 128,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 129,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 130,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 131,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 133,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 134,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 144,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 145,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 146,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 147,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 153,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 154,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 155,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 156,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 157,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 158,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 159,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 160,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 161,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 162,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 163,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 164,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 165,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 166,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 167,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 168,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 169,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 175,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 179,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 181,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 183,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 184,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 185,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 200,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 206,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 222,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 223,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 229,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 234,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 239,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 255,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 256,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 258,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 259,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 266,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 270,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 278,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 295,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 310,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 311,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 312,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 313,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 314,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 315,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 319,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 322,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 323,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 331,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 336,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 338,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 340,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 346,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 357,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 372,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 373,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 402,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 432,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 433,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 444,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 454,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 464,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 465,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 466,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 467,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 468,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 470,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 471,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 473,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 474,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 476,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 477,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 478,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 479,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 480,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 481,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 486,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 487,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 488,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 490,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 491,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 492,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 493,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 499,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    },
+    {
+      "source_line": 500,
+      "run_names": [
+        "run1",
+        "run2"
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "run_name": "run1",
+      "metrics": {
+        "case_count": 219,
+        "baseline_correct_count": 164,
+        "model_correct_count": 196,
+        "retained_correct_count": 159,
+        "win_count": 37,
+        "regression_count": 5,
+        "unchanged_incorrect_count": 18,
+        "mozc_correct_exact_key_regression_count": 0,
+        "clean_key_copy_promotion_count": 6,
+        "baseline_character_error_sum": 115,
+        "model_character_error_sum": 41,
+        "reference_unicode_scalar_count": 1300,
+        "net_gain_cases": 32,
+        "paired_bootstrap": {
+          "definition_version": 1,
+          "sample_size": 219,
+          "win_count": 37,
+          "regression_count": 5,
+          "tie_count": 177,
+          "lower_gain_cases": 20,
+          "upper_gain_cases": 44,
+          "gain_denominator_cases": 219
+        },
+        "development_gate_passed": false
+      }
+    },
+    {
+      "run_name": "run2",
+      "metrics": {
+        "case_count": 219,
+        "baseline_correct_count": 164,
+        "model_correct_count": 197,
+        "retained_correct_count": 161,
+        "win_count": 36,
+        "regression_count": 3,
+        "unchanged_incorrect_count": 19,
+        "mozc_correct_exact_key_regression_count": 0,
+        "clean_key_copy_promotion_count": 5,
+        "baseline_character_error_sum": 115,
+        "model_character_error_sum": 34,
+        "reference_unicode_scalar_count": 1300,
+        "net_gain_cases": 33,
+        "paired_bootstrap": {
+          "definition_version": 1,
+          "sample_size": 219,
+          "win_count": 36,
+          "regression_count": 3,
+          "tie_count": 180,
+          "lower_gain_cases": 22,
+          "upper_gain_cases": 45,
+          "gain_denominator_cases": 219
+        },
+        "development_gate_passed": false
+      }
+    }
+  ],
+  "any_development_gate_passed": false
+}

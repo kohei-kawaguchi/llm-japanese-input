@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "source_model": "Qwen/Qwen2.5-0.5B",
+  "source_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+  "source_weight_sha256": "88c142557820ccad55bb59756bfcfcf891de9cc6202816bd346445188a0ed342",
+  "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+  "f16_gguf_sha256": "deeea35e08e9426b0995c0762224b3bb3440e929c807621416cae267e31006dc",
+  "bos_token_id": 151643,
+  "vocabulary_size": 151936,
+  "rtol": 0.02,
+  "atol": 0.125,
+  "cases": [
+    {
+      "name": "japanese_natural_text",
+      "record": "今日は良い天気です。"
+    },
+    {
+      "name": "japanese_conversion",
+      "record": "種類:変換\n読み:きょうはいいてんき\n対象:きょう\n文:今日は良い天気です。"
+    },
+    {
+      "name": "whitespace_and_unicode",
+      "record": "前文\t 候補 １２３ ABC\n後文"
+    }
+  ]
+}

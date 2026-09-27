@@ -1,0 +1,676 @@
+// Copyright 2010-2021, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <iostream>
+#include <memory>
+#include <ostream>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <utility>
+#include <vector>
+
+#include "absl/base/no_destructor.h"
+#include "absl/flags/flag.h"
+#include "absl/log/check.h"
+#include "absl/log/log.h"
+#include "absl/strings/str_cat.h"
+#include "absl/strings/str_format.h"
+#include "absl/strings/str_join.h"
+#include "absl/strings/str_split.h"
+#include "absl/strings/string_view.h"
+#include "base/container/flat_set.h"
+#include "base/file_stream.h"
+#include "base/file_util.h"
+#include "base/init_mozc.h"
+#include "base/number_util.h"
+#include "base/protobuf/text_format.h"
+#include "base/system_util.h"
+#include "composer/composer.h"
+#include "config/config_handler.h"
+#include "converter/attribute.h"
+#include "converter/candidate.h"
+#include "converter/converter_interface.h"
+#include "converter/pos_id_printer.h"
+#include "converter/segments.h"
+#include "data_manager/data_manager.h"
+#include "engine/engine.h"
+#include "engine/supplemental_model_interface.h"
+#include "protocol/commands.pb.h"
+#include "protocol/config.pb.h"
+#include "protocol/engine_builder.pb.h"
+#include "request/conversion_request.h"
+#include "request/request_test_util.h"
+
+#ifndef NDEBUG
+#define MOZC_DEBUG
+#endif  // NDEBUG
+
+ABSL_FLAG(int32_t, max_conversion_candidates_size, 200,
+          "maximum candidates size");
+ABSL_FLAG(std::string, user_profile_dir, "", "path to user profile directory");
+ABSL_FLAG(std::string, engine_name, "default",
+          "Shortcut to select engine_data_path from name: (default|oss|mock)");
+ABSL_FLAG(std::string, engine_type, "desktop", "Engine type: (desktop|mobile)");
+ABSL_FLAG(size_t, max_candidates_to_show, 100,
+          "Max number of candidates to show per segment");
+ABSL_FLAG(bool, show_meta_candidates, false, "if true, show meta candidates");
+
+// Advanced options for data files.  These are automatically set when --engine
+// is used but they can be overridden by specifying these flags.
+ABSL_FLAG(std::string, engine_data_path, "",
+          "Path to engine data file. This overrides the default data path "
+          "for engine_name.");
+ABSL_FLAG(std::string, magic, "", "Expected magic number of data file");
+ABSL_FLAG(std::string, id_def, "",
+          "id.def file for POS IDs. If provided, show human readable "
+          "POS instead of ID number");
+ABSL_FLAG(std::string, decoder_experiment_params, "",
+          "If nonempty, a DecoderExperimentParams is parsed from this text "
+          "format and it is merged to the default value.");
+ABSL_FLAG(std::string, supplemental_model, "",
+          "Supplemental model file. Default model is used when this is empty.");
+
+namespace mozc {
+namespace {
+
+using ::mozc::converter::Candidate;
+
+int FindCandidate(const Segment& segment, absl::string_view value) {
+  for (int i = 0; i < segment.candidates_size(); ++i) {
+    if (segment.candidate(i).value == value) return i;
+  }
+  return -1;
+}
+
+std::string IdToString(int id) {
+  static const absl::NoDestructor<internal::PosIdPrinter> printer(
+      internal::PosIdPrinter(InputFileStream(absl::GetFlag(FLAGS_id_def))));
+  const absl::string_view pos_string = printer->IdToString(id);
+  if (pos_string.empty()) {
+    return absl::StrCat(id);
+  }
+  return absl::StrFormat("%s (%d)", pos_string, id);
+}
+
+std::string SegmentTypeToString(Segment::SegmentType type) {
+#define RETURN_STR(val) \
+  case Segment::val:    \
+    return #val
+  switch (type) {
+    RETURN_STR(FREE);
+    RETURN_STR(FIXED_BOUNDARY);
+    RETURN_STR(FIXED_VALUE);
+    RETURN_STR(SUBMITTED);
+    RETURN_STR(HISTORY);
+    default:
+      return "UNKNOWN";
+  }
+#undef RETURN_STR
+}
+
+std::string CandidateAttributesToString(uint32_t attrs) {
+  std::vector<std::string> v;
+#define ADD_STR(fieldname)                                                \
+  do {                                                                    \
+    if (attrs & converter::Attribute::fieldname) v.push_back(#fieldname); \
+  } while (false)
+
+  ADD_STR(BEST_CANDIDATE);
+  ADD_STR(RERANKED);
+  ADD_STR(NO_HISTORY_LEARNING);
+  ADD_STR(NO_SUGGEST_LEARNING);
+  ADD_STR(CONTEXT_SENSITIVE);
+  ADD_STR(SPELLING_CORRECTION);
+  ADD_STR(NO_VARIANTS_EXPANSION);
+  ADD_STR(NO_EXTRA_DESCRIPTION);
+  ADD_STR(REALTIME_CONVERSION);
+  ADD_STR(USER_DICTIONARY);
+  ADD_STR(COMMAND_CANDIDATE);
+  ADD_STR(PARTIALLY_KEY_CONSUMED);
+  ADD_STR(TYPING_CORRECTION);
+  ADD_STR(AUTO_PARTIAL_SUGGESTION);
+  ADD_STR(USER_HISTORY_PREDICTION);
+  ADD_STR(NO_MODIFICATION);
+  ADD_STR(USER_SEGMENT_HISTORY_REWRITER);
+
+#undef ADD_STR
+  return absl::StrJoin(v, " | ");
+}
+
+std::string NumberStyleToString(NumberUtil::NumberString::Style style) {
+#define RETURN_STR(val)               \
+  case NumberUtil::NumberString::val: \
+    return #val
+  switch (style) {
+    RETURN_STR(DEFAULT_STYLE);
+    RETURN_STR(NUMBER_SEPARATED_ARABIC_HALFWIDTH);
+    RETURN_STR(NUMBER_SEPARATED_ARABIC_FULLWIDTH);
+    RETURN_STR(NUMBER_ARABIC_AND_KANJI_HALFWIDTH);
+    RETURN_STR(NUMBER_ARABIC_AND_KANJI_FULLWIDTH);
+    RETURN_STR(NUMBER_KANJI);
+    RETURN_STR(NUMBER_OLD_KANJI);
+    RETURN_STR(NUMBER_ROMAN_CAPITAL);
+    RETURN_STR(NUMBER_ROMAN_SMALL);
+    RETURN_STR(NUMBER_CIRCLED);
+    RETURN_STR(NUMBER_KANJI_ARABIC);
+    RETURN_STR(NUMBER_HEX);
+    RETURN_STR(NUMBER_OCT);
+    RETURN_STR(NUMBER_BIN);
+    RETURN_STR(NUMBER_SUPERSCRIPT);
+    RETURN_STR(NUMBER_SUBSCRIPT);
+    default:
+      return "UNKNOWN";
+  }
+#undef RETURN_STR
+}
+
+std::string InnerSegmentBoundaryToString(const Candidate& cand) {
+  std::vector<std::string> pieces;
+  for (const auto& iter : cand.inner_segments()) {
+    pieces.push_back(absl::StrCat("<", iter.GetKey(), ", ", iter.GetValue(),
+                                  ", ", iter.GetContentKey(), ", ",
+                                  iter.GetContentValue(), ">"));
+  }
+  return absl::StrJoin(pieces, " | ");
+}
+
+void PrintCandidate(const Segment& parent, size_t candidates_size, int num,
+                    const Candidate& cand, std::ostream* os) {
+  std::vector<std::string> lines;
+  if (parent.key() != cand.key) {
+    lines.push_back("key: " + cand.key);
+  }
+  lines.push_back("content_vk: " + cand.content_value + "  " +
+                  cand.content_key);
+  lines.push_back(absl::StrFormat("cost: %d  scost: %d  wcost: %d", cand.cost,
+                                  cand.structure_cost, cand.wcost));
+  lines.push_back("lid: " + IdToString(cand.lid));
+  lines.push_back("rid: " + IdToString(cand.rid));
+  lines.push_back("attr: " + CandidateAttributesToString(cand.attributes));
+  lines.push_back("num_style: " + NumberStyleToString(cand.style));
+  const std::string segbdd_str = InnerSegmentBoundaryToString(cand);
+  if (!segbdd_str.empty()) {
+    lines.push_back("segbdd: " + segbdd_str);
+  }
+#ifdef MOZC_DEBUG
+  if (!cand.log.empty()) {
+    lines.push_back("log:");
+    for (absl::string_view line : absl::StrSplit(cand.log, '\n')) {
+      if (line.empty()) continue;
+      lines.push_back(absl::StrCat("    ", line));
+    }
+  }
+#endif  // MOZC_DEBUG
+
+  (*os) << "  " << num << '/' << candidates_size << " " << cand.value
+        << std::endl;
+  for (size_t i = 0; i < lines.size(); ++i) {
+    if (!lines[i].empty()) {
+      (*os) << "       " << lines[i] << std::endl;
+    }
+  }
+}
+
+void PrintSegment(size_t num, size_t segments_size, const Segment& segment,
+                  std::ostream* os) {
+  (*os) << "---------- Segment " << num << "/" << segments_size << " ["
+        << SegmentTypeToString(segment.segment_type()) << "] ----------"
+        << std::endl
+        << segment.key() << std::endl;
+  if (absl::GetFlag(FLAGS_show_meta_candidates)) {
+    for (int i = 0; i < segment.meta_candidates_size(); ++i) {
+      PrintCandidate(segment, segment.meta_candidates_size(), -i - 1,
+                     segment.meta_candidate(i), os);
+    }
+  }
+  const size_t n = std::min(segment.candidates_size(),
+                            absl::GetFlag(FLAGS_max_candidates_to_show));
+  for (size_t i = 0; i < n; ++i) {
+    PrintCandidate(segment, segment.candidates_size(), i, segment.candidate(i),
+                   os);
+  }
+}
+
+void PrintSegments(const Segments& segments, std::ostream* os) {
+  for (size_t i = 0; i < segments.segments_size(); ++i) {
+    PrintSegment(i, segments.segments_size(), segments.segment(i), os);
+  }
+}
+
+class ConverterMain {
+ public:
+  ConverterMain(std::unique_ptr<Engine> engine, commands::Request request,
+                config::Config config)
+      : engine_(std::move(engine)),
+        request_(std::move(request)),
+        config_(std::move(config)),
+        converter_(engine_->GetConverter()),
+        composer_(request_, config_) {}
+
+  void LoadSupplementalModel(std::string path);
+  void RunLoop();
+  std::string ExecCommandToString(absl::string_view line);
+
+ private:
+  bool ExecCommand(absl::string_view line, Segments* segments);
+
+  std::unique_ptr<Engine> engine_;
+  commands::Request request_;
+  config::Config config_;
+  std::shared_ptr<const ConverterInterface> converter_;
+  Segments segments_;
+  composer::Composer composer_;
+};
+
+constexpr absl::string_view kSupplementalModelDefaultPath =
+    // Empty for the OSS edition.
+    "";
+
+// When supplemental model is not enabled, the Load function is a no-op and
+// returns ACCEPTED that is 0 as the default value of the enum.
+constexpr EngineReloadResponse::Status kSupplementalModelExpectedStatus =
+    EngineReloadResponse::ACCEPTED;
+
+
+void ConverterMain::LoadSupplementalModel(std::string path) {
+  if (path.empty()) {
+    // Default spelling model
+    path = FileUtil::JoinPath(SystemUtil::GetProgramRunfilesDirectory(),
+                              kSupplementalModelDefaultPath);
+  }
+  EngineReloadRequest req;
+  req.set_file_path(path);
+  const EngineReloadResponse response =
+      engine_->GetModulesForTesting().GetSupplementalModel().Load(req);
+  CHECK_EQ(response.status(), kSupplementalModelExpectedStatus);
+  LOG(INFO) << "Set the supplemental model: path = " << path;
+}
+
+bool ConverterMain::ExecCommand(absl::string_view line, Segments* segments) {
+  std::vector<std::string> fields =
+      absl::StrSplit(line, absl::ByAnyChar("\t "), absl::SkipEmpty());
+
+#define CHECK_FIELDS_LENGTH(length) \
+  if (fields.size() < (length)) {   \
+    return false;                   \
+  }
+
+  CHECK_FIELDS_LENGTH(1);
+
+  ConversionRequest::Options options = {
+      .max_conversion_candidates_size =
+          absl::GetFlag(FLAGS_max_conversion_candidates_size),
+      .use_actual_converter_for_realtime_conversion = true,
+      .create_partial_candidates = request_.auto_partial_suggestion(),
+  };
+
+  absl::string_view func = fields[0];
+  if (func == "startconversion" || func == "start" || func == "s") {
+    options.request_type = ConversionRequest::CONVERSION;
+    options.create_partial_candidates = false;
+    CHECK_FIELDS_LENGTH(2);
+    composer_.Reset();
+    composer_.SetPreeditTextForTestOnly(fields[1]);
+    const ConversionRequest conversion_request =
+        ConversionRequestBuilder()
+            .SetComposer(composer_)
+            .SetRequestView(request_)
+            .SetConfigView(config_)
+            .SetOptions(std::move(options))
+            .Build();
+    return converter_->StartConversion(conversion_request, segments);
+  } else if (func == "reverseconversion" || func == "reverse" || func == "r") {
+    CHECK_FIELDS_LENGTH(2);
+    return converter_->StartReverseConversion(segments, fields[1]);
+  } else if (func == "startprediction" || func == "predict" || func == "p") {
+    options.request_type = ConversionRequest::PREDICTION;
+    if (fields.size() >= 2) {
+      composer_.Reset();
+      composer_.SetPreeditTextForTestOnly(fields[1]);
+    }
+    const ConversionRequest conversion_request =
+        ConversionRequestBuilder()
+            .SetComposer(composer_)
+            .SetRequestView(request_)
+            .SetConfigView(config_)
+            .SetOptions(std::move(options))
+            .Build();
+    return converter_->StartPrediction(conversion_request, segments);
+  } else if (func == "startsuggestion" || func == "suggest") {
+    options.request_type = ConversionRequest::SUGGESTION;
+    if (fields.size() >= 2) {
+      composer_.Reset();
+      composer_.SetPreeditTextForTestOnly(fields[1]);
+    }
+    const ConversionRequest conversion_request =
+        ConversionRequestBuilder()
+            .SetComposer(composer_)
+            .SetRequestView(request_)
+            .SetConfigView(config_)
+            .SetOptions(std::move(options))
+            .Build();
+    return converter_->StartPrediction(conversion_request, segments);
+  } else if (func == "finishconversion" || func == "finish") {
+    options.request_type = ConversionRequest::CONVERSION;
+    const ConversionRequest conversion_request =
+        ConversionRequestBuilder()
+            .SetComposer(composer_)
+            .SetRequestView(request_)
+            .SetConfigView(config_)
+            .SetOptions(std::move(options))
+            .Build();
+    converter_->FinishConversion(conversion_request, segments);
+    composer_.Reset();
+    return true;
+  } else if (func == "resetconversion" || func == "reset") {
+    converter_->ResetConversion(segments);
+    composer_.Reset();
+    return true;
+  } else if (func == "cancelconversion" || func == "cancel") {
+    converter_->CancelConversion(segments);
+    composer_.Reset();
+    return true;
+  } else if (func == "commitsegmentvalue" || func == "commit" || func == "c") {
+    CHECK_FIELDS_LENGTH(3);
+    return converter_->CommitSegmentValue(segments,
+                                          NumberUtil::SimpleAtoi(fields[1]),
+                                          NumberUtil::SimpleAtoi(fields[2]));
+  } else if (func == "commitallandfinish") {
+    for (int i = 0; i < segments->conversion_segments_size(); ++i) {
+      if (segments->conversion_segment(i).segment_type() !=
+          Segment::FIXED_VALUE) {
+        if (!(converter_->CommitSegmentValue(segments, i, 0))) return false;
+      }
+    }
+    options.request_type = ConversionRequest::CONVERSION;
+    const ConversionRequest conversion_request =
+        ConversionRequestBuilder()
+            .SetComposer(composer_)
+            .SetRequestView(request_)
+            .SetConfigView(config_)
+            .SetOptions(std::move(options))
+            .Build();
+    converter_->FinishConversion(conversion_request, segments);
+    composer_.Reset();
+    return true;
+  } else if (func == "focussegmentvalue" || func == "focus") {
+    CHECK_FIELDS_LENGTH(3);
+    return converter_->FocusSegmentValue(segments,
+                                         NumberUtil::SimpleAtoi(fields[1]),
+                                         NumberUtil::SimpleAtoi(fields[2]));
+  } else if (func == "commitfirstsegment") {
+    CHECK_FIELDS_LENGTH(2);
+    std::vector<size_t> singleton_vector;
+    singleton_vector.push_back(NumberUtil::SimpleAtoi(fields[1]));
+    return converter_->CommitSegments(segments, singleton_vector);
+  } else if (func == "resizesegment" || func == "resize") {
+    options.request_type = ConversionRequest::CONVERSION;
+    const ConversionRequest conversion_request =
+        ConversionRequestBuilder()
+            .SetComposer(composer_)
+            .SetRequestView(request_)
+            .SetConfigView(config_)
+            .SetOptions(std::move(options))
+            .Build();
+    if (fields.size() == 3) {
+      return converter_->ResizeSegment(segments, conversion_request,
+                                       NumberUtil::SimpleAtoi(fields[1]),
+                                       NumberUtil::SimpleAtoi(fields[2]));
+    }
+  } else if (func == "resizesegments" || func == "resizes") {
+    options.request_type = ConversionRequest::CONVERSION;
+    const ConversionRequest conversion_request =
+        ConversionRequestBuilder()
+            .SetComposer(composer_)
+            .SetRequestView(request_)
+            .SetConfigView(config_)
+            .SetOptions(std::move(options))
+            .Build();
+    if (fields.size() > 3) {
+      std::vector<uint8_t> new_arrays;
+      for (size_t i = 2; i < fields.size(); ++i) {
+        new_arrays.push_back(
+            static_cast<uint8_t>(NumberUtil::SimpleAtoi(fields[i])));
+      }
+      return converter_->ResizeSegments(segments, conversion_request,
+                                        NumberUtil::SimpleAtoi(fields[1]),
+                                        new_arrays);
+    }
+  } else if (func == "disableuserhistory") {
+    config_.set_history_learning_level(config::Config::NO_HISTORY);
+  } else if (func == "enableuserhistory") {
+    config_.set_history_learning_level(config::Config::DEFAULT_HISTORY);
+  } else if (func == "zeroquerysuggest" || func == "z") {
+    CHECK_FIELDS_LENGTH(3);  // command history_key history_value
+    if (!ExecCommand("reset", segments)) {
+      LOG(ERROR) << "Reset failed";
+      return false;
+    }
+    if (!ExecCommand(absl::StrFormat("predict %s", fields[1]), segments)) {
+      LOG(ERROR) << "Predict failed for context key " << fields[1];
+      return false;
+    }
+    const int index = FindCandidate(segments->conversion_segment(0), fields[2]);
+    if (index == -1) {
+      LOG(ERROR) << "Cannot find candidate " << fields[2];
+      return false;
+    }
+    if (!ExecCommand(absl::StrFormat("commit 0 %d", index), segments)) {
+      LOG(ERROR) << "commit failed";
+      return false;
+    }
+    if (!ExecCommand("finish", segments)) {
+      LOG(ERROR) << "finish failed";
+      return false;
+    }
+    if (!ExecCommand("predict", segments)) {
+      LOG(ERROR) << "predict from zero query failed";
+      return false;
+    }
+    return true;
+  } else {
+    LOG(WARNING) << "Unknown command: " << func;
+    return false;
+  }
+
+#undef CHECK_FIELDS_LENGTH
+  return true;
+}
+
+std::string ConverterMain::ExecCommandToString(absl::string_view line) {
+  std::ostringstream oss;
+  if (ExecCommand(line, &segments_)) {
+    PrintSegments(segments_, &oss);
+  } else {
+    oss << "ExecCommand() return false";
+  }
+  return oss.str();
+}
+
+std::pair<std::string, std::string> SelectDataFileFromName(
+    absl::string_view mozc_runfiles_dir, absl::string_view engine_name) {
+  struct {
+    absl::string_view engine_name;
+    absl::string_view path;
+    absl::string_view magic;
+  } kNameAndPath[] = {
+      {"default", "data_manager/oss/mozc.data", "\xEFMOZC\r\n"},
+      {"oss", "data_manager/oss/mozc.data", "\xEFMOZC\r\n"},
+      {"mock", "data_manager/testing/mock_mozc.data", "MOCK"},
+  };
+  for (const auto& entry : kNameAndPath) {
+    if (engine_name == entry.engine_name) {
+      return std::pair<std::string, std::string>(
+          FileUtil::JoinPath(mozc_runfiles_dir, entry.path), entry.magic);
+    }
+  }
+  return std::pair<std::string, std::string>("", "");
+}
+
+std::string SelectIdDefFromName(absl::string_view mozc_runfiles_dir,
+                                absl::string_view engine_name) {
+  struct {
+    absl::string_view engine_name;
+    absl::string_view path;
+  } kNameAndPath[] = {
+      {"default", "data/dictionary_oss/id.def"},
+      {"oss", "data/dictionary_oss/id.def"},
+      {"mock", "data/test/dictionary/id.def"},
+  };
+  for (const auto& entry : kNameAndPath) {
+    if (engine_name == entry.engine_name) {
+      return FileUtil::JoinPath(mozc_runfiles_dir, entry.path);
+    }
+  }
+  return "";
+}
+
+bool IsConsistentEngineNameAndType(absl::string_view engine_name,
+                                   absl::string_view engine_type) {
+  // `std::pair` doesn't have enough `constexpr` support (yet).
+  struct NameAndType {
+    absl::string_view name;
+    absl::string_view type;
+  };
+
+  constexpr auto kConsistentPairs = CreateFlatSet<NameAndType>(
+      {
+          {"oss", "desktop"},
+          {"mock", "desktop"},
+          {"mock", "mobile"},
+          {"default", "desktop"},
+          {"", "desktop"},
+          {"", "mobile"},
+      },
+      [](const NameAndType& l, const NameAndType& r) {
+        return std::tie(l.name, l.type) < std::tie(r.name, r.type);
+      });
+
+  return kConsistentPairs.contains(NameAndType{engine_name, engine_type});
+}
+
+void ConverterMain::RunLoop() {
+  CHECK(converter_);
+
+  std::string line;
+  while (!std::getline(std::cin, line).fail()) {
+    const std::string result = ExecCommandToString(line);
+    std::cout << result << std::endl;
+  }
+}
+
+}  // namespace
+}  // namespace mozc
+
+int main(int argc, char** argv) {
+  mozc::InitMozc(argv[0], &argc, &argv);
+
+  if (!absl::GetFlag(FLAGS_user_profile_dir).empty()) {
+    mozc::SystemUtil::SetUserProfileDirectory(
+        absl::GetFlag(FLAGS_user_profile_dir));
+  }
+
+  std::string mozc_runfiles_dir = ".";
+  if (absl::GetFlag(FLAGS_engine_data_path).empty()) {
+    const auto path_and_magic = mozc::SelectDataFileFromName(
+        mozc_runfiles_dir, absl::GetFlag(FLAGS_engine_name));
+    absl::SetFlag(&FLAGS_engine_data_path, path_and_magic.first);
+    absl::SetFlag(&FLAGS_magic, path_and_magic.second);
+  }
+  CHECK(!absl::GetFlag(FLAGS_engine_data_path).empty())
+      << "--engine_data_path or --engine is invalid: " << "--engine_data_path="
+      << absl::GetFlag(FLAGS_engine_data_path) << " "
+      << "--engine_name=" << absl::GetFlag(FLAGS_engine_name);
+
+  if (absl::GetFlag(FLAGS_id_def).empty()) {
+    std::string mozc_idfile_dir = ".";
+    absl::SetFlag(&FLAGS_id_def,
+                  mozc::SelectIdDefFromName(mozc_idfile_dir,
+                                            absl::GetFlag(FLAGS_engine_name)));
+  }
+
+  std::cout << "Engine type: " << absl::GetFlag(FLAGS_engine_type)
+            << "\nData file: " << absl::GetFlag(FLAGS_engine_data_path)
+            << "\nid.def: " << absl::GetFlag(FLAGS_id_def)
+            << "\nUser profile dir: " << absl::GetFlag(FLAGS_user_profile_dir)
+            << std::endl;
+
+  absl::StatusOr<std::unique_ptr<const mozc::DataManager>> data_manager =
+      absl::GetFlag(FLAGS_magic).empty()
+          ? mozc::DataManager::CreateFromFile(
+                absl::GetFlag(FLAGS_engine_data_path))
+          : mozc::DataManager::CreateFromFile(
+                absl::GetFlag(FLAGS_engine_data_path),
+                absl::GetFlag(FLAGS_magic));
+  CHECK_OK(data_manager);
+
+  mozc::config::Config config = mozc::config::ConfigHandler::DefaultConfig();
+  mozc::commands::Request request;
+  std::unique_ptr<mozc::Engine> engine =
+      mozc::Engine::CreateEngine(*std::move(data_manager)).value();
+  if (absl::GetFlag(FLAGS_engine_type) == "desktop") {
+    // Uses the default request for desktop.
+  } else if (absl::GetFlag(FLAGS_engine_type) == "mobile") {
+    mozc::request_test_util::FillMobileRequest(&request);
+    config.set_use_kana_modifier_insensitive_conversion(true);
+    config.set_use_typing_correction(true);
+  } else {
+    LOG(FATAL) << "Invalid type: --engine_type="
+               << absl::GetFlag(FLAGS_engine_type);
+  }
+
+  if (const std::string textproto =
+          absl::GetFlag(FLAGS_decoder_experiment_params);
+      !textproto.empty()) {
+    mozc::commands::DecoderExperimentParams params;
+    CHECK(mozc::protobuf::TextFormat::ParseFromString(textproto, &params))
+        << "Invalid DecoderExperimentParams: " << textproto;
+    request.mutable_decoder_experiment_params()->MergeFrom(params);
+    LOG(INFO) << "DecoderExperimentParams was set:\n"
+              << request.decoder_experiment_params();
+  }
+
+  if (!mozc::IsConsistentEngineNameAndType(absl::GetFlag(FLAGS_engine_name),
+                                           absl::GetFlag(FLAGS_engine_type))) {
+    LOG(WARNING) << "Engine name and type do not match.";
+  }
+
+  mozc::ConverterMain converter_main(std::move(engine), std::move(request),
+                                     std::move(config));
+
+  std::string supplemental_model_path = absl::GetFlag(FLAGS_supplemental_model);
+  converter_main.LoadSupplementalModel(std::move(supplemental_model_path));
+
+  converter_main.RunLoop();
+  return 0;
+}

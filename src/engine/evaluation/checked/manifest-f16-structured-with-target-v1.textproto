@@ -1,0 +1,61 @@
+schema_version: 5
+limits {
+  max_selected_candidates_per_segment: 26
+  max_segments_per_decode: 8
+  max_sequences_per_decode: 64
+  per_record_byte_limit: 4096
+  per_record_token_limit: 256
+  per_decode_input_node_limit: 4096
+  per_decode_output_row_limit: 512
+  max_decode_output_logit_bytes: 311164928
+  max_request_segments: 64
+  max_request_candidates: 2048
+  max_request_string_bytes: 1048576
+}
+runtime {
+  execution_device: CPU
+  kv_storage: UNIFIED
+  micro_batch_token_capacity: 256
+  decode_thread_count: 4
+  batch_thread_count: 4
+  use_memory_map: true
+  use_memory_lock: false
+  check_tensors: true
+}
+artifacts {
+  source_model: "Qwen/Qwen2.5-0.5B"
+  source_revision: "060db6499f32faf8b98477b0a26969ef7d8b9987"
+  source_weight_sha256: "88c142557820ccad55bb59756bfcfcf891de9cc6202816bd346445188a0ed342"
+  tokenizer_sha256: "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+  gguf_file_name: "qwen2.5-0.5b-f16.gguf"
+  gguf_sha256: "deeea35e08e9426b0995c0762224b3bb3440e929c807621416cae267e31006dc"
+  quantization: "F16"
+  model_license_references: "LICENSE"
+  model_license_references: "README.md"
+  runtime_name: "llama.cpp"
+  runtime_revision: "1511ce3bc3f087376c8526b4ad07100bfabb277f"
+  runtime_source_archive_sha256: "820c78508ee7a8234f4b928d182f6ff0a3d19f58a92f1e69795f93ae0dc46d16"
+  runtime_license_references: "LICENSE"
+  runtime_license_references: "bazel/llama_cpp_additional_notices.txt"
+}
+scoring_template {
+  version: "qwen2.5-0.5b-base-continuation-v1"
+  bos_token_id: 151643
+  terminal_token_id: 151643
+  mode_prefix: "種類:"
+  suggestion_mode: "候補"
+  prediction_mode: "予測"
+  conversion_mode: "変換"
+  field_separator: "\n"
+  reading_prefix: "読み:"
+  segment_key_prefix: "対象:"
+  text_prefix: "文:"
+  text_normalization: NONE
+  context_policy: MOZC_BASELINE_SUBSTITUTION
+  record_layout: STRUCTURED_WITH_TARGET
+}
+bounded_execution_policy {
+  candidate_window_policy: MOZC_ORDER_UNPROTECTED_PREFIX
+  capacity_reduction_policy: LONGEST_FEASIBLE_UNPROTECTED_PREFIX_OR_OMIT_SEGMENT
+  decode_packing_policy: SEGMENT_ID_ORDER_GREEDY_WHOLE_SEGMENTS
+}

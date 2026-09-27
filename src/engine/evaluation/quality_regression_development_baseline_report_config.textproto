@@ -1,0 +1,26 @@
+schema_version: 1
+frozen_corpus_schema_version: 1
+answer_corpus_schema_version: 1
+report_schema_version: 1
+expected_corpus_identity {
+  role: DEVELOPMENT
+  source {
+    benchmark_name: "Mozc OSS quality regression development"
+    source_revision: "851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+    source_relative_path: "src/data/test/quality_regression_test/oss.tsv"
+    source_sha256: "053a43e72d174da43b351278cadc471abe08cea9fe98829dafe3d152580fcff0"
+    creator: "Google Inc. and Mozc contributors"
+    source_url: "https://github.com/google/mozc/blob/851c3fe33060d2a6090363e4d7ec44fafde2c03d/src/data/test/quality_regression_test/oss.tsv"
+    license_identifier: "BSD-3-Clause"
+    license_url: "https://github.com/google/mozc/blob/851c3fe33060d2a6090363e4d7ec44fafde2c03d/LICENSE"
+    upstream_dataset_url: "https://github.com/google/mozc/tree/851c3fe33060d2a6090363e4d7ec44fafde2c03d"
+    changes_notice: "Filtered to parsed Conversion Expected rank-zero rows, Windows-normalized expected values, stable-deduplicated exact key and expected-value pairs, and separated input and answer corpora."
+  }
+  parser_definition_version: 1
+  normalization_definition_version: 1
+  import_config_sha256: "3cfb88ca988d9c46c3bca3095c9e8ee3b61cb43fce6df3c5be0d4ce100abbba5"
+}
+frozen_corpus_sha256: "44c9a08d748f2cef5c8428b1101f490c2719db34e533ba1cda3cee9b12b41c59"
+answer_corpus_sha256: "8d76595da3ccaa609903fc48a84e1ef47ed179c3936ebad06e6beaf242bd0d79"
+expected_case_count: 219
+expected_correct_count: 164

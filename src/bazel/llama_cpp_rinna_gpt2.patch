@@ -1,0 +1,38 @@
+diff --git a/conversion/gpt2.py b/conversion/gpt2.py
+--- a/conversion/gpt2.py
++++ b/conversion/gpt2.py
+@@ -15,11 +15,25 @@ if TYPE_CHECKING:
+ class GPT2Model(TextModel):
+     model_arch = gguf.MODEL_ARCH.GPT2
+ 
++    def set_vocab(self):
++        if (self.dir_model / "spiece.model").is_file():
++            from .t5 import T5Model
++            from transformers import AutoTokenizer
++
++            T5Model.set_vocab(self)
++            tokenizer = AutoTokenizer.from_pretrained(self.dir_model, use_fast=False)
++            self.gguf_writer.add_unk_token_id(tokenizer.unk_token_id)
++            self.gguf_writer.add_pad_token_id(tokenizer.pad_token_id)
++            self.gguf_writer.add_sep_token_id(tokenizer.sep_token_id)
++            self.gguf_writer.add_mask_token_id(tokenizer.mask_token_id)
++            return
++        super().set_vocab()
++
+     def set_gguf_parameters(self):
+         self.gguf_writer.add_block_count(self.block_count)
+         self.gguf_writer.add_context_length(self.hparams["n_ctx"])
+         self.gguf_writer.add_embedding_length(self.hparams["n_embd"])
+-        self.gguf_writer.add_feed_forward_length(4 * self.hparams["n_embd"])
++        self.gguf_writer.add_feed_forward_length(self.hparams.get("n_inner", 4 * self.hparams["n_embd"]))
+         self.gguf_writer.add_head_count(self.hparams["n_head"])
+         self.gguf_writer.add_layer_norm_eps(self.hparams["layer_norm_epsilon"])
+         self.gguf_writer.add_file_type(self.ftype)
+@@ -27,7 +41,6 @@ class GPT2Model(TextModel):
+     def modify_tensors(self, data_torch: Tensor, name: str, bid: int | None) -> Iterable[tuple[str, Tensor]]:
+         # we don't need these
+         if name.endswith((".attn.bias", ".attn.masked_bias")):
+-            yield from super().modify_tensors(data_torch, name, bid)
+             return
+ 
+         if name.endswith((".c_attn.weight", ".c_proj.weight", ".c_fc.weight", ".c_proj.weight")):

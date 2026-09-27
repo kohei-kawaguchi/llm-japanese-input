@@ -1,0 +1,61 @@
+// Copyright 2026 LLM Japanese Input Authors
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//     * Neither the name of LLM Japanese Input Authors nor the names of its
+// contributors may be used to endorse or promote products derived from this
+// software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+
+package mozc.engine.evaluation;
+
+import "engine/evaluation/exact_quality_metrics.proto";
+import "engine/evaluation/quality_regression_corpus.proto";
+
+message QualityRegressionDevelopmentBaselineReportConfig {
+  required uint32 schema_version = 1;
+  required uint32 frozen_corpus_schema_version = 2;
+  required uint32 answer_corpus_schema_version = 3;
+  required uint32 report_schema_version = 4;
+  required QualityRegressionCorpusIdentity expected_corpus_identity = 5;
+  required string frozen_corpus_sha256 = 6;
+  required string answer_corpus_sha256 = 7;
+  required uint32 expected_case_count = 8;
+  required uint32 expected_correct_count = 9;
+}
+
+message QualityRegressionDevelopmentBaselineReportIdentity {
+  required string report_config_sha256 = 1;
+  required string frozen_corpus_sha256 = 2;
+  required string answer_corpus_sha256 = 3;
+  required QualityRegressionCorpusIdentity corpus_identity = 4;
+}
+
+message QualityRegressionDevelopmentBaselineReport {
+  required uint32 schema_version = 1;
+  required QualityRegressionDevelopmentBaselineReportIdentity identity = 2;
+  required uint64 case_count = 3;
+  required uint64 correct_count = 4;
+  required ExactRatio top_output_accuracy = 5;
+}

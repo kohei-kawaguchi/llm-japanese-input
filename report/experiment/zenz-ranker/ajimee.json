@@ -1,0 +1,1269 @@
+{
+  "prompt_version": "1",
+  "model_url": "https://huggingface.co/Miwa-Keita/zenz-v3.2-small-gguf/resolve/c67e03e07d215c869f591b274c1631170d3e11fe/ggml-model-Q5_K_M.gguf",
+  "model_sha256": "29c223d4c23327b80fd13ebb5ab2555057a46317997d5da391584ffbef0db673",
+  "runtime_model_sha256": "b660082fcbe8e538c4ccc1044f79c2c881364a25f8c9277a8b8f1dcf680e5b84",
+  "thread_count": 8,
+  "frozen_corpus_sha256": "9b1656a48ed3cfbf1577b7a404688affb49b793f9c556ba2d2fb46b41238c61c",
+  "answer_source_sha256": "819465115d76cca65eb9d6c8f3f60f8850723376b440eb5c41f0cd8fd7b2c389",
+  "cell": {
+    "copy_penalty": 100,
+    "order_prior": 1.0,
+    "top_k": 10
+  },
+  "metrics": {
+    "case_count": 200,
+    "baseline_correct_count": 103,
+    "model_correct_count": 145,
+    "retained_correct_count": 102,
+    "win_count": 43,
+    "regression_count": 1,
+    "unchanged_incorrect_count": 54,
+    "mozc_correct_exact_key_regression_count": 0,
+    "clean_key_copy_promotion_count": 1,
+    "baseline_character_error_sum": 251,
+    "model_character_error_sum": 130,
+    "reference_unicode_scalar_count": 4220,
+    "net_gain_cases": 42,
+    "paired_bootstrap": {
+      "definition_version": 1,
+      "sample_size": 200,
+      "win_count": 43,
+      "regression_count": 1,
+      "tie_count": 156,
+      "lower_gain_cases": 31,
+      "upper_gain_cases": 54,
+      "gain_denominator_cases": 200
+    }
+  },
+  "latency_milliseconds": {
+    "median": 1778.0145000015182,
+    "p90": 11026.285000009011,
+    "maximum": 30485.822200005714
+  },
+  "cases": [
+    {
+      "source_line": 7,
+      "has_context": true,
+      "merged_top_output": "青年誌で描くことの理由として、男性青年誌における男性優位の誠意式（",
+      "request_milliseconds": 6514.735600003405
+    },
+    {
+      "source_line": 12,
+      "has_context": true,
+      "merged_top_output": "の依頼が来るように",
+      "request_milliseconds": 700.917300009678
+    },
+    {
+      "source_line": 14,
+      "has_context": true,
+      "merged_top_output": "の男性方の土蔵から、宗像施工作品と思われる版画など、骨董品三百点が盗難",
+      "request_milliseconds": 9036.21500000554
+    },
+    {
+      "source_line": 15,
+      "has_context": false,
+      "merged_top_output": "例えば直交座標平面上の任意の点の原点から",
+      "request_milliseconds": 2251.099399996747
+    },
+    {
+      "source_line": 19,
+      "has_context": true,
+      "merged_top_output": "、本作もその",
+      "request_milliseconds": 554.4525999976031
+    },
+    {
+      "source_line": 33,
+      "has_context": true,
+      "merged_top_output": "た。」と個人的な感想を残したが、アインシュタインは歴史を先行しておらず、このような勘違いをした",
+      "request_milliseconds": 13377.209899990703
+    },
+    {
+      "source_line": 69,
+      "has_context": false,
+      "merged_top_output": "では、議員の不逮捕特権",
+      "request_milliseconds": 1903.1971000022168
+    },
+    {
+      "source_line": 118,
+      "has_context": true,
+      "merged_top_output": "二変更、あるいは複合性を選択するためにはそのように婚姻前に手続きを行わ",
+      "request_milliseconds": 11026.285000009011
+    },
+    {
+      "source_line": 124,
+      "has_context": true,
+      "merged_top_output": "は新暦八月１日もしくは月遅れの九月1日",
+      "request_milliseconds": 2738.756699998703
+    },
+    {
+      "source_line": 125,
+      "has_context": false,
+      "merged_top_output": "満たせば変身ベルトを手にした者が誰でも仮面ライダーになれるという、ここまでの平成ライダーで培われたイメージの集大成的な作品",
+      "request_milliseconds": 14267.413499997929
+    },
+    {
+      "source_line": 150,
+      "has_context": true,
+      "merged_top_output": "た後、そのまま東方向に伸び",
+      "request_milliseconds": 2478.0457000033493
+    },
+    {
+      "source_line": 167,
+      "has_context": true,
+      "merged_top_output": "三年九月中五日、友人のデニース・マクねーあが白人優越論者による十六番外製ヨハネ教会での爆弾テロ",
+      "request_milliseconds": 20062.534200007576
+    },
+    {
+      "source_line": 182,
+      "has_context": false,
+      "merged_top_output": "矩形状に配列した",
+      "request_milliseconds": 607.7405000014551
+    },
+    {
+      "source_line": 200,
+      "has_context": false,
+      "merged_top_output": "の研究テーマである多変数複素環数論",
+      "request_milliseconds": 2252.4006000039662
+    },
+    {
+      "source_line": 206,
+      "has_context": true,
+      "merged_top_output": "を収めたルーカスはその資金を映像・音響関係のデジタル化を中心とした技術開発に投資し、映画界に多大",
+      "request_milliseconds": 13042.097300014575
+    },
+    {
+      "source_line": 215,
+      "has_context": true,
+      "merged_top_output": "サプリメントの摂取などにより継続的に過剰摂取した場合には以下のよう",
+      "request_milliseconds": 3770.726200009449
+    },
+    {
+      "source_line": 217,
+      "has_context": true,
+      "merged_top_output": "あり（後述）、相撲部屋の数は減少傾向",
+      "request_milliseconds": 2656.5553000164073
+    },
+    {
+      "source_line": 234,
+      "has_context": false,
+      "merged_top_output": "浄土真宗事典が、どれに抵触するんです",
+      "request_milliseconds": 1778.0145000015182
+    },
+    {
+      "source_line": 251,
+      "has_context": true,
+      "merged_top_output": "数節あるが、",
+      "request_milliseconds": 670.216899998195
+    },
+    {
+      "source_line": 305,
+      "has_context": true,
+      "merged_top_output": "硬い殻を持つ卵を産むこと、高い代謝率",
+      "request_milliseconds": 2242.366700013008
+    },
+    {
+      "source_line": 333,
+      "has_context": true,
+      "merged_top_output": "宿所として作った白",
+      "request_milliseconds": 878.2655000013619
+    },
+    {
+      "source_line": 412,
+      "has_context": true,
+      "merged_top_output": "バスが釧路駅から阿寒湖畔まで",
+      "request_milliseconds": 674.6255999987625
+    },
+    {
+      "source_line": 437,
+      "has_context": true,
+      "merged_top_output": "最新のうえ解放を勝ち取った",
+      "request_milliseconds": 1434.576499996183
+    },
+    {
+      "source_line": 465,
+      "has_context": true,
+      "merged_top_output": "磁器皇帝には彼の息子である",
+      "request_milliseconds": 1312.8788999911194
+    },
+    {
+      "source_line": 469,
+      "has_context": true,
+      "merged_top_output": "欲求のむやみな加熱を抑えたい",
+      "request_milliseconds": 1476.1087999977462
+    },
+    {
+      "source_line": 607,
+      "has_context": true,
+      "merged_top_output": "妖精を謳っていた",
+      "request_milliseconds": 512.8922000003513
+    },
+    {
+      "source_line": 650,
+      "has_context": true,
+      "merged_top_output": "少年時代は短気でわがままな性格であり",
+      "request_milliseconds": 1435.7885999907012
+    },
+    {
+      "source_line": 678,
+      "has_context": true,
+      "merged_top_output": "自信がなかったため拒否していた",
+      "request_milliseconds": 671.2453999971331
+    },
+    {
+      "source_line": 773,
+      "has_context": true,
+      "merged_top_output": "バースデーソングを送ったりする中。",
+      "request_milliseconds": 1776.6298000042298
+    },
+    {
+      "source_line": 810,
+      "has_context": false,
+      "merged_top_output": "こぼれ落ちた種子は秋に芽生え、ロゼットで冬を越す",
+      "request_milliseconds": 3697.8855000088515
+    },
+    {
+      "source_line": 854,
+      "has_context": false,
+      "merged_top_output": "作品を展示するために設立した美術館で、その斬新な外観は",
+      "request_milliseconds": 3458.032500004265
+    },
+    {
+      "source_line": 881,
+      "has_context": true,
+      "merged_top_output": "漢字を和訓に当てている由来",
+      "request_milliseconds": 1266.3661000042339
+    },
+    {
+      "source_line": 941,
+      "has_context": false,
+      "merged_top_output": "荼毘に付された遺体",
+      "request_milliseconds": 424.68129999906523
+    },
+    {
+      "source_line": 965,
+      "has_context": false,
+      "merged_top_output": "外部の歌手の楽曲制作では",
+      "request_milliseconds": 765.8601000021008
+    },
+    {
+      "source_line": 981,
+      "has_context": true,
+      "merged_top_output": "点対称の位置",
+      "request_milliseconds": 401.635800000804
+    },
+    {
+      "source_line": 1003,
+      "has_context": false,
+      "merged_top_output": "てほしいと名付けたと聞いた」と本人が以前語っている",
+      "request_milliseconds": 4918.936000005488
+    },
+    {
+      "source_line": 1007,
+      "has_context": true,
+      "merged_top_output": "発電機兼用の電気モーターを組み合わせて走行するのが特徴で、時速四重五km未満は電気モーター",
+      "request_milliseconds": 9848.177099996974
+    },
+    {
+      "source_line": 1010,
+      "has_context": false,
+      "merged_top_output": "を変えるべく挑戦した一作（本人談）」で、",
+      "request_milliseconds": 3663.7202999918372
+    },
+    {
+      "source_line": 1011,
+      "has_context": true,
+      "merged_top_output": "の復讐",
+      "request_milliseconds": 337.7524000006815
+    },
+    {
+      "source_line": 1015,
+      "has_context": false,
+      "merged_top_output": "））の交換（総称して犠牲感という）を指す用語",
+      "request_milliseconds": 5550.158800006102
+    },
+    {
+      "source_line": 1016,
+      "has_context": false,
+      "merged_top_output": "は、不整地を全力疾走するモークが",
+      "request_milliseconds": 1378.9841000070737
+    },
+    {
+      "source_line": 1027,
+      "has_context": true,
+      "merged_top_output": "打席を迎えた横浜ベイスターズの代打鈴木貴教をファーストゴロに打ち取っ",
+      "request_milliseconds": 5995.757699993192
+    },
+    {
+      "source_line": 1029,
+      "has_context": true,
+      "merged_top_output": "度を超える",
+      "request_milliseconds": 489.3954000017402
+    },
+    {
+      "source_line": 1050,
+      "has_context": false,
+      "merged_top_output": "シャトルバスが運行されていた時期",
+      "request_milliseconds": 997.1645999994507
+    },
+    {
+      "source_line": 1053,
+      "has_context": true,
+      "merged_top_output": "）合併後は副市長",
+      "request_milliseconds": 693.6331000033533
+    },
+    {
+      "source_line": 1056,
+      "has_context": true,
+      "merged_top_output": "グループに分かれてリーグ戦を行い、一位が",
+      "request_milliseconds": 2442.383300001893
+    },
+    {
+      "source_line": 1061,
+      "has_context": true,
+      "merged_top_output": "アメリカ史上初の女性首席補佐官",
+      "request_milliseconds": 1471.5985999973782
+    },
+    {
+      "source_line": 1104,
+      "has_context": true,
+      "merged_top_output": "を注視したいと思いますが、最初の依頼では出てこなかった",
+      "request_milliseconds": 3299.6229999880597
+    },
+    {
+      "source_line": 1116,
+      "has_context": false,
+      "merged_top_output": "、一人前になることで、自他共に成人意識を深め、このときから彼らは初めて結婚資格を公認され、",
+      "request_milliseconds": 14165.676500004338
+    },
+    {
+      "source_line": 1126,
+      "has_context": false,
+      "merged_top_output": "設立関連事業として「電話網の中の見えないミュージアム」が電話網の中に開設さ",
+      "request_milliseconds": 6952.855299990915
+    },
+    {
+      "source_line": 1129,
+      "has_context": true,
+      "merged_top_output": "「朝駆け」、逆に深夜に集金を行うことを「ヨガ家」という",
+      "request_milliseconds": 5806.818499993824
+    },
+    {
+      "source_line": 1133,
+      "has_context": false,
+      "merged_top_output": "されます』という表現は、いかにも私がどこかのサイトから画像を盗用し",
+      "request_milliseconds": 5580.882900003417
+    },
+    {
+      "source_line": 1134,
+      "has_context": false,
+      "merged_top_output": "人文科学研究科博士",
+      "request_milliseconds": 540.6549999988783
+    },
+    {
+      "source_line": 1139,
+      "has_context": false,
+      "merged_top_output": "なく、ガミラスのデスラー総統から初めて入電したときには、作画スタッフに",
+      "request_milliseconds": 6399.306400000569
+    },
+    {
+      "source_line": 1145,
+      "has_context": false,
+      "merged_top_output": "これ以降の続編を書くことを何度か依頼されるも、「ゴジラを殺すのが可哀想だから",
+      "request_milliseconds": 6917.337900005805
+    },
+    {
+      "source_line": 1152,
+      "has_context": false,
+      "merged_top_output": "の共同実施を背景に協力・連携関係の積み重ねがあり、県内でも合併までの所要期間は最速であっ",
+      "request_milliseconds": 12065.512700000909
+    },
+    {
+      "source_line": 1154,
+      "has_context": false,
+      "merged_top_output": "これもまた全国で初めての",
+      "request_milliseconds": 1127.4105999946187
+    },
+    {
+      "source_line": 1161,
+      "has_context": true,
+      "merged_top_output": "二転校し、「自分の居場所はここなんだ」と感じ",
+      "request_milliseconds": 3392.327200008367
+    },
+    {
+      "source_line": 1163,
+      "has_context": false,
+      "merged_top_output": "、読売テレビ",
+      "request_milliseconds": 227.8649999971094
+    },
+    {
+      "source_line": 1165,
+      "has_context": true,
+      "merged_top_output": "、茶樹を社交家",
+      "request_milliseconds": 459.1445999976713
+    },
+    {
+      "source_line": 1174,
+      "has_context": false,
+      "merged_top_output": "射撃姿勢を保ちやすくし",
+      "request_milliseconds": 543.5902000062924
+    },
+    {
+      "source_line": 1189,
+      "has_context": true,
+      "merged_top_output": "占領地にいた",
+      "request_milliseconds": 359.1350999995484
+    },
+    {
+      "source_line": 1193,
+      "has_context": false,
+      "merged_top_output": "ハーゾグ監督が「予言」した通り、本拠地ブッシュ・スタジアムで本塁打を打てないなど期待を裏切り、同年限りで解雇され",
+      "request_milliseconds": 14695.01420000961
+    },
+    {
+      "source_line": 1195,
+      "has_context": false,
+      "merged_top_output": "トランプを手渡し、マカオとジョマの地球征服計画を阻止するよう頼むが、マカオとジョマの",
+      "request_milliseconds": 8304.202400000577
+    },
+    {
+      "source_line": 1212,
+      "has_context": false,
+      "merged_top_output": "父の転勤に伴い、ロンドンやローマ",
+      "request_milliseconds": 1809.3921000017872
+    },
+    {
+      "source_line": 1214,
+      "has_context": false,
+      "merged_top_output": "ともに水平安定板の内部には燃料タンクが設けられ、主翼タンクとの間で燃料を移動させ、機体の重心位置を制御するシステムが搭載",
+      "request_milliseconds": 13822.375199999442
+    },
+    {
+      "source_line": 1233,
+      "has_context": false,
+      "merged_top_output": "ニューギャラリーの会館にスウェーデンを代表して",
+      "request_milliseconds": 1790.1563000013994
+    },
+    {
+      "source_line": 1236,
+      "has_context": true,
+      "merged_top_output": "加えた場合において、自己の行為の責任を弁指揮するに足る知能を備えていないときは、その行為について賠償責任を負わないが、その責任無能力者を監督する法廷の義務を負うものは賠償責任を",
+      "request_milliseconds": 30485.822200005714
+    },
+    {
+      "source_line": 1261,
+      "has_context": false,
+      "merged_top_output": "二黄金色の均一な8日銀の幕を形成",
+      "request_milliseconds": 2004.8439999918628
+    },
+    {
+      "source_line": 1272,
+      "has_context": false,
+      "merged_top_output": "、日本初の水上ジェットコースター",
+      "request_milliseconds": 1245.6718000030378
+    },
+    {
+      "source_line": 1287,
+      "has_context": true,
+      "merged_top_output": "際に「不駐車」と非難し",
+      "request_milliseconds": 1548.3262000034301
+    },
+    {
+      "source_line": 1293,
+      "has_context": false,
+      "merged_top_output": "を通る道路沿いに住宅地が",
+      "request_milliseconds": 1032.7601999997569
+    },
+    {
+      "source_line": 1300,
+      "has_context": false,
+      "merged_top_output": "ペテルブルグ軍の拠点跡から北斗らが発掘",
+      "request_milliseconds": 2055.3303999968193
+    },
+    {
+      "source_line": 1328,
+      "has_context": false,
+      "merged_top_output": "軍として編成し始めたが、基準にあったコサックはほとんどいなかったので、内務人民委員部の士官や赤軍の兵士",
+      "request_milliseconds": 14041.791300000114
+    },
+    {
+      "source_line": 1329,
+      "has_context": false,
+      "merged_top_output": "甲板脇のハッチからタイ空気従軍",
+      "request_milliseconds": 1549.17569999634
+    },
+    {
+      "source_line": 1339,
+      "has_context": false,
+      "merged_top_output": "は「サラダパン」と呼ばれる、マヨネーズ出会えたたくあんの細切りを挟んだ惣菜パンが製造",
+      "request_milliseconds": 7749.550799995632
+    },
+    {
+      "source_line": 1342,
+      "has_context": false,
+      "merged_top_output": "など、食生活の徹底ぶりには感心されられるもの",
+      "request_milliseconds": 1543.3516000011878
+    },
+    {
+      "source_line": 1346,
+      "has_context": true,
+      "merged_top_output": "の慣行に従うべきこと、において、株式会社は、法務省令（会社計算規則）で定めるところにより、",
+      "request_milliseconds": 15588.528000000224
+    },
+    {
+      "source_line": 1351,
+      "has_context": false,
+      "merged_top_output": "な頚椎がいくつか発見されており、サウロポセイドンと",
+      "request_milliseconds": 2816.86190000255
+    },
+    {
+      "source_line": 1354,
+      "has_context": false,
+      "merged_top_output": "警察への告発を含めた刑事責任の追及を進めている",
+      "request_milliseconds": 2281.6288999947574
+    },
+    {
+      "source_line": 1377,
+      "has_context": false,
+      "merged_top_output": "アウト側に流されると大幅",
+      "request_milliseconds": 735.2665000053094
+    },
+    {
+      "source_line": 1390,
+      "has_context": false,
+      "merged_top_output": "相手の足払い",
+      "request_milliseconds": 280.5532999973366
+    },
+    {
+      "source_line": 1405,
+      "has_context": true,
+      "merged_top_output": "特殊な能力を有しており、スペキュラーはその能力を戦闘中でも増幅して活用できるように本気を強化しており、これによって本気特有の『幻影",
+      "request_milliseconds": 16415.849799996067
+    },
+    {
+      "source_line": 1414,
+      "has_context": false,
+      "merged_top_output": "ゴルファーとしても有名で三重も半ばにして突然",
+      "request_milliseconds": 2156.258199996955
+    },
+    {
+      "source_line": 1421,
+      "has_context": false,
+      "merged_top_output": "まで、イスラエルの艦船はスエズ運河を通航",
+      "request_milliseconds": 2182.1821999947133
+    },
+    {
+      "source_line": 1423,
+      "has_context": true,
+      "merged_top_output": "浜田は「マジで痛いみたいですよ」と発言",
+      "request_milliseconds": 6418.356099999073
+    },
+    {
+      "source_line": 1427,
+      "has_context": true,
+      "merged_top_output": "元にしながらも、それにとらわれず自由な",
+      "request_milliseconds": 2683.809400008613
+    },
+    {
+      "source_line": 1429,
+      "has_context": false,
+      "merged_top_output": "も高く、俊足を武器に仕掛けてくるドリブラーにスピードで負けることはほとんどなく、素早く体を入れてボールを奪取することもしばしば見られ",
+      "request_milliseconds": 21092.251099982605
+    },
+    {
+      "source_line": 1431,
+      "has_context": true,
+      "merged_top_output": "、酪酸、硫化水素",
+      "request_milliseconds": 919.9061000053916
+    },
+    {
+      "source_line": 1433,
+      "has_context": true,
+      "merged_top_output": "を射撃用に用いる準備をしたが、二度",
+      "request_milliseconds": 3346.9420000092214
+    },
+    {
+      "source_line": 1445,
+      "has_context": true,
+      "merged_top_output": "、この名前で",
+      "request_milliseconds": 841.9227000013052
+    },
+    {
+      "source_line": 1449,
+      "has_context": true,
+      "merged_top_output": "を強打、死亡し",
+      "request_milliseconds": 1153.3780000027036
+    },
+    {
+      "source_line": 1470,
+      "has_context": false,
+      "merged_top_output": "からは原産国を変えずに",
+      "request_milliseconds": 807.432700003119
+    },
+    {
+      "source_line": 1472,
+      "has_context": false,
+      "merged_top_output": "の専用運用間",
+      "request_milliseconds": 745.1690000034432
+    },
+    {
+      "source_line": 1545,
+      "has_context": true,
+      "merged_top_output": "司会を務め、自身のブログでもその釣果",
+      "request_milliseconds": 2226.8986999988556
+    },
+    {
+      "source_line": 1550,
+      "has_context": false,
+      "merged_top_output": "のおすすめの商品の概要、内容などを",
+      "request_milliseconds": 1995.7577000095625
+    },
+    {
+      "source_line": 1554,
+      "has_context": false,
+      "merged_top_output": "たが、藩内の派閥争いに敗れて、一時は",
+      "request_milliseconds": 1971.271099995647
+    },
+    {
+      "source_line": 1556,
+      "has_context": false,
+      "merged_top_output": "を誓って錠前をかける場所が用意されており、大井川鉄道ではこの錠前・鍵を販売して",
+      "request_milliseconds": 8810.741500003132
+    },
+    {
+      "source_line": 1559,
+      "has_context": false,
+      "merged_top_output": "意見が分かれて",
+      "request_milliseconds": 484.72750000291853
+    },
+    {
+      "source_line": 1570,
+      "has_context": false,
+      "merged_top_output": "して迎え",
+      "request_milliseconds": 357.9751000033866
+    },
+    {
+      "source_line": 1578,
+      "has_context": true,
+      "merged_top_output": "ていたが船級百九十一年に大改修を施し、複合コーナーが多数配置され現在",
+      "request_milliseconds": 8221.880200006126
+    },
+    {
+      "source_line": 1581,
+      "has_context": true,
+      "merged_top_output": "のですぐにわかる",
+      "request_milliseconds": 650.992100005169
+    },
+    {
+      "source_line": 1587,
+      "has_context": true,
+      "merged_top_output": "ことで、縦五十センチメートル横五十センチメートルのバースデーケーキと長さ五十センチメートルの",
+      "request_milliseconds": 7851.54600000169
+    },
+    {
+      "source_line": 1589,
+      "has_context": true,
+      "merged_top_output": "（制作局",
+      "request_milliseconds": 216.0286999951495
+    },
+    {
+      "source_line": 1591,
+      "has_context": false,
+      "merged_top_output": "は前週末）の試合を振り返る他、担当アナウンサーが中継先の天候、練習の模様、選手・",
+      "request_milliseconds": 10549.37829998562
+    },
+    {
+      "source_line": 1595,
+      "has_context": true,
+      "merged_top_output": "のブラスターキャノンを二機、トゥ・ケーブルの発射可能なハープーン・ガン（森内法）を",
+      "request_milliseconds": 10228.253299990683
+    },
+    {
+      "source_line": 1606,
+      "has_context": true,
+      "merged_top_output": "の形状は片開き分岐であっ",
+      "request_milliseconds": 1079.135200001474
+    },
+    {
+      "source_line": 1615,
+      "has_context": false,
+      "merged_top_output": "タイトルロゴを一新",
+      "request_milliseconds": 403.0177000040567
+    },
+    {
+      "source_line": 1632,
+      "has_context": true,
+      "merged_top_output": "された兵学校が",
+      "request_milliseconds": 741.6615999954956
+    },
+    {
+      "source_line": 1641,
+      "has_context": false,
+      "merged_top_output": "仕事で知られるリック・ルービンをプロデューサーに迎えたアルバム「",
+      "request_milliseconds": 4084.8961000028794
+    },
+    {
+      "source_line": 1651,
+      "has_context": false,
+      "merged_top_output": "念）、父の死により跡を継ぐ",
+      "request_milliseconds": 2416.8780999971204
+    },
+    {
+      "source_line": 1655,
+      "has_context": true,
+      "merged_top_output": "の受賞及びノミネート歴",
+      "request_milliseconds": 1111.520999998902
+    },
+    {
+      "source_line": 1657,
+      "has_context": false,
+      "merged_top_output": "全国高等学校野球選手権神奈川大会（リポーター",
+      "request_milliseconds": 3860.7283999990614
+    },
+    {
+      "source_line": 1660,
+      "has_context": true,
+      "merged_top_output": "他憲法改正を直ちに",
+      "request_milliseconds": 441.7967999997927
+    },
+    {
+      "source_line": 1669,
+      "has_context": true,
+      "merged_top_output": "施設の解説を参照",
+      "request_milliseconds": 1085.8837000032509
+    },
+    {
+      "source_line": 1676,
+      "has_context": true,
+      "merged_top_output": "しまったが、同じ富野由悠季監督作品である「伝説巨神イデオン」「機動戦士Ζガンダム」に連なる、同監督独特の救いのないダークな物語に",
+      "request_milliseconds": 23615.174599997772
+    },
+    {
+      "source_line": 1682,
+      "has_context": false,
+      "merged_top_output": "戦後裸一貫から",
+      "request_milliseconds": 483.36550000021816
+    },
+    {
+      "source_line": 1692,
+      "has_context": false,
+      "merged_top_output": "大きく深すぎ、表面板に",
+      "request_milliseconds": 1465.4507000013837
+    },
+    {
+      "source_line": 1697,
+      "has_context": true,
+      "merged_top_output": "に転じたりすることは",
+      "request_milliseconds": 1025.3699000022607
+    },
+    {
+      "source_line": 1699,
+      "has_context": true,
+      "merged_top_output": "ており、「芸歴も浅く、専門学校での勉強やレッスンを受けていないので自分の力で頑張るしかない。今、",
+      "request_milliseconds": 13083.847200015953
+    },
+    {
+      "source_line": 1702,
+      "has_context": true,
+      "merged_top_output": "二混声合唱",
+      "request_milliseconds": 430.67619999783346
+    },
+    {
+      "source_line": 1709,
+      "has_context": false,
+      "merged_top_output": "の内部のような見通しの効かない空間",
+      "request_milliseconds": 2393.5163999994984
+    },
+    {
+      "source_line": 1719,
+      "has_context": false,
+      "merged_top_output": "すぐ副キャプテンに就任",
+      "request_milliseconds": 1357.1553000001586
+    },
+    {
+      "source_line": 1723,
+      "has_context": true,
+      "merged_top_output": "二改定され",
+      "request_milliseconds": 1006.8417999955273
+    },
+    {
+      "source_line": 1725,
+      "has_context": false,
+      "merged_top_output": "無少なさ」であって、「糖分の過剰摂取」はあくまで",
+      "request_milliseconds": 9205.844400003116
+    },
+    {
+      "source_line": 1728,
+      "has_context": true,
+      "merged_top_output": "三ファン歴が高校時代から…）と政治関係の記事（若い自分にちょっぴり新党さきがけに関わった時代あり）にも投稿すると思います",
+      "request_milliseconds": 25389.682399994854
+    },
+    {
+      "source_line": 1729,
+      "has_context": false,
+      "merged_top_output": "はギリシアに敗れ",
+      "request_milliseconds": 618.501799996011
+    },
+    {
+      "source_line": 1742,
+      "has_context": true,
+      "merged_top_output": "の登場人物",
+      "request_milliseconds": 285.9790999991674
+    },
+    {
+      "source_line": 1744,
+      "has_context": false,
+      "merged_top_output": "、一日の将棋の勉強時間が十字間を超えると答えたことが",
+      "request_milliseconds": 4040.683400007765
+    },
+    {
+      "source_line": 1749,
+      "has_context": true,
+      "merged_top_output": "（地球参加）は",
+      "request_milliseconds": 1171.811299991532
+    },
+    {
+      "source_line": 1753,
+      "has_context": false,
+      "merged_top_output": "自主解散による都議選では杉並区から出馬するが落選、しかしながら法定得票数を上回り一部の",
+      "request_milliseconds": 7703.018399979555
+    },
+    {
+      "source_line": 1756,
+      "has_context": false,
+      "merged_top_output": "彼らが闇の仕置人であると見当をつけた",
+      "request_milliseconds": 2432.418400008828
+    },
+    {
+      "source_line": 1763,
+      "has_context": true,
+      "merged_top_output": "二線後年九月に十六日の放送を持って卒業",
+      "request_milliseconds": 3933.293499994761
+    },
+    {
+      "source_line": 1774,
+      "has_context": true,
+      "merged_top_output": "の天体からのX線を",
+      "request_milliseconds": 792.1835000015562
+    },
+    {
+      "source_line": 1775,
+      "has_context": true,
+      "merged_top_output": "（音声が鳴るので注意）のサイトから",
+      "request_milliseconds": 2649.6284999939235
+    },
+    {
+      "source_line": 1776,
+      "has_context": true,
+      "merged_top_output": "の道路・軌道併用橋にかけ直された",
+      "request_milliseconds": 2445.09410000137
+    },
+    {
+      "source_line": 1786,
+      "has_context": false,
+      "merged_top_output": "「酒類販売業免許」における組織変更の",
+      "request_milliseconds": 1919.3524000020261
+    },
+    {
+      "source_line": 1800,
+      "has_context": false,
+      "merged_top_output": "任務では彼から無線で指示を受けて",
+      "request_milliseconds": 1431.3988999983849
+    },
+    {
+      "source_line": 1820,
+      "has_context": true,
+      "merged_top_output": "（大成翌三回参加の日本移動演劇連盟に加盟",
+      "request_milliseconds": 4047.542500005875
+    },
+    {
+      "source_line": 1824,
+      "has_context": false,
+      "merged_top_output": "させる手法を始め、写真の上から巧妙に絵を描き、衣服を",
+      "request_milliseconds": 5069.402800014359
+    },
+    {
+      "source_line": 1825,
+      "has_context": false,
+      "merged_top_output": "の信任を得た",
+      "request_milliseconds": 530.1060000074358
+    },
+    {
+      "source_line": 1827,
+      "has_context": true,
+      "merged_top_output": "入れられるのを防ぐのと防犯上の理由から、監視カメラが設置さ",
+      "request_milliseconds": 2725.9605000035663
+    },
+    {
+      "source_line": 1836,
+      "has_context": false,
+      "merged_top_output": "以上で登場。最後の難関にふさわしく、ファンタ、ゲロッパ",
+      "request_milliseconds": 3954.9368000007235
+    },
+    {
+      "source_line": 1844,
+      "has_context": true,
+      "merged_top_output": "が発生したことなどから徐々に規制が進み、瀬戸内海では全面規制も",
+      "request_milliseconds": 4666.531500000929
+    },
+    {
+      "source_line": 1850,
+      "has_context": false,
+      "merged_top_output": "ライバル車であったトヨタのヴィッツ、ホンダのフィットが低燃費性を打ち出して爆発的人気を得ていた時期に、スポーツ性を",
+      "request_milliseconds": 11700.89540000481
+    },
+    {
+      "source_line": 1851,
+      "has_context": true,
+      "merged_top_output": "に仕えた",
+      "request_milliseconds": 358.3974000011949
+    },
+    {
+      "source_line": 1857,
+      "has_context": false,
+      "merged_top_output": "急増し、全国でも零戦プラモデルを発売しているメーカーの生産が追いつかず、一時的に入荷待ち状態になるなど",
+      "request_milliseconds": 10632.841600001484
+    },
+    {
+      "source_line": 1858,
+      "has_context": true,
+      "merged_top_output": "最終段階とされるが、実際はブルジョアジーの上昇期に出現し、人民投票や普通選挙など民主主義要員を含む独裁制という特異な近代の権力",
+      "request_milliseconds": 14659.127200002331
+    },
+    {
+      "source_line": 1859,
+      "has_context": false,
+      "merged_top_output": "の自社制作",
+      "request_milliseconds": 514.0685999976995
+    },
+    {
+      "source_line": 1862,
+      "has_context": true,
+      "merged_top_output": "バスケット、積載性に優れる荷台が装着",
+      "request_milliseconds": 1570.0116000061826
+    },
+    {
+      "source_line": 1870,
+      "has_context": false,
+      "merged_top_output": "大学校高級課程で戦略を",
+      "request_milliseconds": 837.2449999933451
+    },
+    {
+      "source_line": 1873,
+      "has_context": false,
+      "merged_top_output": "は自衛隊の特殊作戦群の戦闘要員にも配備されるように",
+      "request_milliseconds": 2663.137399991683
+    },
+    {
+      "source_line": 1878,
+      "has_context": false,
+      "merged_top_output": "打率や勝利数といったポピュラーなものから、併殺打率や被本塁打率などマニアックなものまで収録されている",
+      "request_milliseconds": 7357.38920001495
+    },
+    {
+      "source_line": 1890,
+      "has_context": false,
+      "merged_top_output": "家計を助けるため、領主の家に奉公し",
+      "request_milliseconds": 2188.1228999991436
+    },
+    {
+      "source_line": 1893,
+      "has_context": true,
+      "merged_top_output": "贈呈した舟盛りの",
+      "request_milliseconds": 429.32430000655586
+    },
+    {
+      "source_line": 1897,
+      "has_context": false,
+      "merged_top_output": "大震災被災地支援自愛としてオープン戦・巨人対阪神が施行され、会場に募金箱が設置された他、半期掲揚、黙祷が",
+      "request_milliseconds": 14353.363500000341
+    },
+    {
+      "source_line": 1901,
+      "has_context": true,
+      "merged_top_output": "させ、圧力隔壁下部を損傷するなどし",
+      "request_milliseconds": 1871.0056000054465
+    },
+    {
+      "source_line": 1908,
+      "has_context": true,
+      "merged_top_output": "盛んに興行され",
+      "request_milliseconds": 395.6930000022112
+    },
+    {
+      "source_line": 1912,
+      "has_context": true,
+      "merged_top_output": "については、消臭剤自体の",
+      "request_milliseconds": 688.9521000084642
+    },
+    {
+      "source_line": 1919,
+      "has_context": false,
+      "merged_top_output": "「笑いの野球",
+      "request_milliseconds": 479.7547000034683
+    },
+    {
+      "source_line": 1936,
+      "has_context": false,
+      "merged_top_output": "可哀想な思いをさせた",
+      "request_milliseconds": 721.2617000004684
+    },
+    {
+      "source_line": 1941,
+      "has_context": false,
+      "merged_top_output": "最悪の事態を回避するため",
+      "request_milliseconds": 400.636400001531
+    },
+    {
+      "source_line": 1953,
+      "has_context": true,
+      "merged_top_output": "ていることを確認したエムアイシックスはロシア側の合意により海上から巡航ミサイル",
+      "request_milliseconds": 3879.337399999713
+    },
+    {
+      "source_line": 1957,
+      "has_context": false,
+      "merged_top_output": "週刊少年サンデーや週刊少年マガジンより後発の週刊少年ジャンプを、一躍人気少年誌に押し上げた",
+      "request_milliseconds": 4431.5651999932015
+    },
+    {
+      "source_line": 1964,
+      "has_context": false,
+      "merged_top_output": "制作者とコンテンツホルダー間での",
+      "request_milliseconds": 1003.4468000048946
+    },
+    {
+      "source_line": 1966,
+      "has_context": false,
+      "merged_top_output": "浄土教に強く惹かれる",
+      "request_milliseconds": 734.909399998287
+    },
+    {
+      "source_line": 1973,
+      "has_context": false,
+      "merged_top_output": "若死にしたため、跡を継いだ",
+      "request_milliseconds": 1069.7836999916035
+    },
+    {
+      "source_line": 1982,
+      "has_context": false,
+      "merged_top_output": "修士課程保健科学",
+      "request_milliseconds": 179.08519999764394
+    },
+    {
+      "source_line": 1990,
+      "has_context": true,
+      "merged_top_output": "に跳ねてくる",
+      "request_milliseconds": 409.1470000021218
+    },
+    {
+      "source_line": 1992,
+      "has_context": false,
+      "merged_top_output": "回転軸が触れ回るように動く歳差運動のこと",
+      "request_milliseconds": 1617.3684000023059
+    },
+    {
+      "source_line": 2000,
+      "has_context": true,
+      "merged_top_output": "ており、日本人も意外に多い",
+      "request_milliseconds": 1372.9424999983166
+    },
+    {
+      "source_line": 2002,
+      "has_context": false,
+      "merged_top_output": "電気通信術の合格者は電気通信術を試験の翌月の初め",
+      "request_milliseconds": 2323.7332999997307
+    },
+    {
+      "source_line": 2014,
+      "has_context": false,
+      "merged_top_output": "旧幕府軍艦の攻防の舞台は日光に移る",
+      "request_milliseconds": 1615.6425999961357
+    },
+    {
+      "source_line": 2018,
+      "has_context": false,
+      "merged_top_output": "配置し、それを拡散板にてパネル上に拡散して直接照射",
+      "request_milliseconds": 3469.569399998363
+    },
+    {
+      "source_line": 2021,
+      "has_context": true,
+      "merged_top_output": "ないらしい（大切なものにユリを上げ",
+      "request_milliseconds": 1576.0746000014478
+    },
+    {
+      "source_line": 2022,
+      "has_context": false,
+      "merged_top_output": "権力行為を正当付ける権威は国民に存するという",
+      "request_milliseconds": 2286.4048999963416
+    },
+    {
+      "source_line": 2025,
+      "has_context": true,
+      "merged_top_output": "いるのかを追求し、また、優勢世代の明らかになっていない不完全筋の系統関係を探求し、これをライフワーク",
+      "request_milliseconds": 10852.823799999896
+    },
+    {
+      "source_line": 2030,
+      "has_context": true,
+      "merged_top_output": "うかがえる",
+      "request_milliseconds": 151.86069999799656
+    },
+    {
+      "source_line": 2032,
+      "has_context": false,
+      "merged_top_output": "第二次世界大戦五十年",
+      "request_milliseconds": 516.2146999991819
+    },
+    {
+      "source_line": 2071,
+      "has_context": false,
+      "merged_top_output": "米国半導体協会",
+      "request_milliseconds": 508.01079999473586
+    },
+    {
+      "source_line": 2075,
+      "has_context": false,
+      "merged_top_output": "感謝する日だと公言し",
+      "request_milliseconds": 633.6590999999316
+    },
+    {
+      "source_line": 2077,
+      "has_context": false,
+      "merged_top_output": "境に、北パラダ、南パラダのゲレンデに分かれている",
+      "request_milliseconds": 2584.0057999957935
+    },
+    {
+      "source_line": 2084,
+      "has_context": true,
+      "merged_top_output": "亡くなった年まで",
+      "request_milliseconds": 415.8620999969571
+    },
+    {
+      "source_line": 2098,
+      "has_context": true,
+      "merged_top_output": "は、現在の本堂の裏を流れる小川にあったらしく、現在は岸辺に設置されたフェンスに「聖観音",
+      "request_milliseconds": 8314.021600002889
+    },
+    {
+      "source_line": 2100,
+      "has_context": true,
+      "merged_top_output": "国公立大学輩出者数は五十歩百歩",
+      "request_milliseconds": 1094.8613999935333
+    },
+    {
+      "source_line": 2104,
+      "has_context": true,
+      "merged_top_output": "大ファンであり、武道館公演で",
+      "request_milliseconds": 1004.4362000044202
+    },
+    {
+      "source_line": 2108,
+      "has_context": true,
+      "merged_top_output": "を履いて単気筒エンジン",
+      "request_milliseconds": 629.1678999987198
+    },
+    {
+      "source_line": 2111,
+      "has_context": true,
+      "merged_top_output": "WOWOWが制作に加担することは",
+      "request_milliseconds": 1022.3343999932695
+    },
+    {
+      "source_line": 2128,
+      "has_context": false,
+      "merged_top_output": "の結果、弱冠中三歳にし",
+      "request_milliseconds": 1856.654700000945
+    },
+    {
+      "source_line": 2143,
+      "has_context": true,
+      "merged_top_output": "が上がってきており",
+      "request_milliseconds": 488.48369999905117
+    },
+    {
+      "source_line": 2144,
+      "has_context": true,
+      "merged_top_output": "ている開放型の場合を除き、閉じた冷却系回路を流れており、正常に稼働している間は環境への悪影響",
+      "request_milliseconds": 8895.594199995685
+    },
+    {
+      "source_line": 2159,
+      "has_context": true,
+      "merged_top_output": "ことで、温情を取り戻し、",
+      "request_milliseconds": 1160.0260000050184
+    },
+    {
+      "source_line": 2204,
+      "has_context": false,
+      "merged_top_output": "フリーに転身",
+      "request_milliseconds": 377.00609999956214
+    },
+    {
+      "source_line": 2262,
+      "has_context": true,
+      "merged_top_output": "たが、この番組以降は東芝を含む複数社の",
+      "request_milliseconds": 2693.9685999986978
+    },
+    {
+      "source_line": 2317,
+      "has_context": true,
+      "merged_top_output": "体型の俳優が演じる",
+      "request_milliseconds": 545.8049000044412
+    },
+    {
+      "source_line": 2340,
+      "has_context": true,
+      "merged_top_output": "保険化に改称",
+      "request_milliseconds": 504.73740000416
+    },
+    {
+      "source_line": 2384,
+      "has_context": false,
+      "merged_top_output": "白に近い色で脆く、牛の乳",
+      "request_milliseconds": 994.3135999965307
+    },
+    {
+      "source_line": 2579,
+      "has_context": false,
+      "merged_top_output": "暴力場面の一掃を行った",
+      "request_milliseconds": 998.975700000301
+    },
+    {
+      "source_line": 2600,
+      "has_context": true,
+      "merged_top_output": "ゆくゆくは政界進出を目論",
+      "request_milliseconds": 1338.8965999947686
+    },
+    {
+      "source_line": 2770,
+      "has_context": true,
+      "merged_top_output": "証言では信憑性に欠けると",
+      "request_milliseconds": 934.7499999967113
+    }
+  ],
+  "gain_points": 21.0,
+  "retention_percent": 99.02912621359224,
+  "slices": {
+    "context": {
+      "case_count": 100,
+      "baseline_correct_count": 46,
+      "model_correct_count": 63,
+      "gain_points": 17.0
+    },
+    "no_context": {
+      "case_count": 100,
+      "baseline_correct_count": 57,
+      "model_correct_count": 82,
+      "gain_points": 25.0
+    }
+  },
+  "gate": {
+    "gain_points": true,
+    "bootstrap_lower_gain": true,
+    "retention": true,
+    "slice_loss": true
+  },
+  "gate_passed": true
+}

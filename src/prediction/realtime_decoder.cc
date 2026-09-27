@@ -1,0 +1,259 @@
+// Copyright 2010-2021, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#include "prediction/realtime_decoder.h"
+
+#include <cstddef>
+#include <cstdint>
+#include <optional>
+#include <utility>
+#include <vector>
+
+#include "absl/hash/hash.h"
+#include "absl/log/check.h"
+#include "absl/log/log.h"
+#include "absl/strings/str_cat.h"
+#include "absl/strings/string_view.h"
+#include "base/strings/assign.h"
+#include "base/util.h"
+#include "converter/attribute.h"
+#include "converter/candidate.h"
+#include "converter/converter_interface.h"
+#include "converter/converter_util.h"
+#include "converter/immutable_converter_interface.h"
+#include "converter/inner_segment.h"
+#include "converter/segments.h"
+#include "dictionary/dictionary_token.h"
+#include "prediction/result.h"
+#include "request/conversion_request.h"
+
+namespace mozc::prediction {
+namespace {
+
+using ::mozc::converter::Attribute;
+
+static constexpr int kSuffixCacheSize = 256;
+
+}  // namespace
+
+RealtimeDecoder::RealtimeDecoder() : suffix_cache_(kSuffixCacheSize) {}
+RealtimeDecoder::RealtimeDecoder(
+    const ImmutableConverterInterface& immutable_converter,
+    const ConverterInterface& converter)
+    : immutable_converter_(std::cref(immutable_converter)),
+      converter_(std::cref(converter)),
+      suffix_cache_(kSuffixCacheSize) {}
+
+bool RealtimeDecoder::PushBackTopConversionResult(
+    const ConversionRequest& request, std::vector<Result>* results) const {
+  ConversionRequest::Options options;
+  options.max_conversion_candidates_size = 20;
+  options.composer_key_selection = ConversionRequest::PREDICTION_KEY;
+  // Some rewriters cause significant performance loss. So we skip them.
+  options.skip_slow_rewriters = true;
+  // This method emulates usual converter's behavior so here disable
+  // partial candidates.
+  options.create_partial_candidates = false;
+  options.used_in_predictor_realtime_conversion = true;
+  options.request_type = ConversionRequest::CONVERSION;
+  const ConversionRequest tmp_request = ConversionRequestBuilder()
+                                            .SetConversionRequestView(request)
+                                            .SetOptions(std::move(options))
+                                            .Build();
+
+  Segments tmp_segments = converter::PrepareSegmentsFromRequest(request);
+
+  DCHECK_EQ(tmp_segments.conversion_segments_size(), 1);
+  DCHECK_EQ(tmp_segments.conversion_segment(0).key(), tmp_request.key());
+
+  if (!converter().StartConversion(tmp_request, &tmp_segments)) {
+    return false;
+  }
+
+  std::optional<Result> result_opt =
+      converter::ConversionSegmentsToResult(tmp_segments.conversion_segments());
+  if (!result_opt.has_value()) {
+    return false;
+  }
+
+  Result& result = result_opt.value();
+  result.SetTypesAndTokenAttributes(REALTIME | REALTIME_TOP,
+                                    dictionary::Token::NONE);
+  result.attributes |= Attribute::NO_VARIANTS_EXPANSION;
+
+  results->emplace_back(std::move(result));
+
+  return true;
+}
+
+std::vector<Result> RealtimeDecoder::Decode(
+    const ConversionRequest& request) const {
+  std::vector<Result> results;
+  if (request.options().max_conversion_candidates_size == 0) {
+    return results;
+  }
+
+  // Accepts only single-segment request.
+  DCHECK_NE(request.request_type(), ConversionRequest::CONVERSION);
+  if (request.request_type() == ConversionRequest::CONVERSION) {
+    return results;
+  }
+
+  const ConversionRequest request_for_realtime =
+      ConversionRequestBuilder().SetConversionRequestView(request).Build();
+
+  Segments tmp_segments = converter::PrepareSegmentsFromRequest(request);
+  DCHECK_EQ(tmp_segments.conversion_segments_size(), 1);
+  DCHECK_EQ(tmp_segments.conversion_segment(0).key(),
+            request_for_realtime.key());
+
+  // First insert a top conversion result.
+  // Note: Do not call actual converter for partial suggestion /
+  // prediction. Converter::StartConversion() resets conversion key from
+  // composer rather than using the key in segments.
+  if (request.options().use_actual_converter_for_realtime_conversion &&
+      request.request_type() != ConversionRequest::PARTIAL_SUGGESTION &&
+      request.request_type() != ConversionRequest::PARTIAL_PREDICTION) {
+    if (!PushBackTopConversionResult(request_for_realtime, &results)) {
+      LOG(WARNING) << "Realtime conversion with converter failed";
+    }
+  }
+
+  // non-CONVERSION request returns concatenated single segment.
+  if (!immutable_converter().Convert(request_for_realtime.options(),
+                                     &tmp_segments) ||
+      tmp_segments.conversion_segments_size() != 1 ||
+      tmp_segments.conversion_segment(0).candidates_size() == 0) {
+    LOG(WARNING) << "Convert failed";
+    return results;
+  }
+
+  // Copy candidates into the array of Results.
+  const Segment& segment = tmp_segments.conversion_segment(0);
+  for (size_t i = 0; i < segment.candidates_size(); ++i) {
+    const converter::Candidate& candidate = segment.candidate(i);
+
+    Result result;
+    result.key = candidate.key;
+    result.value = candidate.value;
+    result.cost = candidate.cost;
+    result.wcost = candidate.wcost;
+    result.lid = candidate.lid;
+    result.rid = candidate.rid;
+    result.inner_segment_boundary = candidate.inner_segment_boundary;
+    result.SetTypesAndTokenAttributes(REALTIME, dictionary::Token::NONE);
+    result.attributes |= Attribute::NO_VARIANTS_EXPANSION;
+    if (candidate.key.size() < segment.key().size()) {
+      result.attributes |= Attribute::PARTIALLY_KEY_CONSUMED;
+      result.consumed_key_size = Util::CharsLen(candidate.key);
+    }
+    // Kana expansion happens inside the decoder.
+    if (candidate.attributes & Attribute::KEY_EXPANDED_IN_DICTIONARY) {
+      result.attributes |= KEY_EXPANDED_IN_DICTIONARY;
+    }
+    result.attributes |= candidate.attributes;
+    results.emplace_back(std::move(result));
+  }
+
+  return results;
+}
+
+std::vector<Result> RealtimeDecoder::ReverseDecode(
+    const ConversionRequest& request) const {
+  Segments tmp_segments = converter::PrepareSegmentsFromRequest(request);
+
+  const ConversionRequest request_for_reverse =
+      ConversionRequestBuilder()
+          .SetConversionRequestView(request)
+          .SetRequestType(ConversionRequest::REVERSE_CONVERSION)
+          .Build();
+
+  if (!immutable_converter().Convert(request_for_reverse.options(),
+                                     &tmp_segments) ||
+      tmp_segments.conversion_segments_size() == 0) {
+    LOG(WARNING) << "Reverse conversion failed";
+    return {};
+  }
+
+  if (std::optional<Result> result_opt = converter::ConversionSegmentsToResult(
+          tmp_segments.conversion_segments());
+      result_opt.has_value()) {
+    return {result_opt.value()};
+  }
+
+  return {};
+}
+
+std::optional<Result> RealtimeDecoder::DecodeSuffix(
+    const ConversionRequest& request, uint16_t prefix_rid,
+    absl::string_view suffix) const {
+  if (suffix.empty()) return std::nullopt;
+
+  const uint64_t hash = absl::HashOf(prefix_rid, suffix);
+
+  Result result;
+  if (suffix_cache_.Lookup(hash, &result)) {
+    return result;
+  }
+
+  ConversionRequest::Options options = request.options();
+  options.max_conversion_candidates_size = 1;
+  options.create_partial_candidates = false;
+  options.kana_modifier_insensitive_conversion = false;
+  options.use_actual_converter_for_realtime_conversion = false;
+  options.used_in_predictor_realtime_conversion = true;
+
+  const bool has_prefix = prefix_rid != 0;
+
+  if (has_prefix) {
+    // The left context of the suffix must be prefix_rid.
+    options.bos_id = prefix_rid;
+    // suffix is not a beginning of the input, so disable the prefix penalty.
+    options.disable_prefix_penalty = true;
+  }
+
+  const ConversionRequest req = ConversionRequestBuilder()
+                                    .SetConversionRequestView(request)
+                                    .SetOptions(std::move(options))
+                                    .SetEmptyHistoryResult()
+                                    .SetKey(suffix)
+                                    .Build();
+
+  std::vector<Result> results = Decode(req);
+  if (results.empty()) {
+    return std::nullopt;
+  }
+
+  result = results[0];
+  suffix_cache_.Insert(hash, std::move(results[0]));
+
+  return result;
+}
+
+}  // namespace mozc::prediction

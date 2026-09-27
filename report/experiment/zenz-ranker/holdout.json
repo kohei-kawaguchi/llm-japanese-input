@@ -1,0 +1,485 @@
+{
+  "prompt_version": "1",
+  "model_url": "https://huggingface.co/Miwa-Keita/zenz-v3.2-small-gguf/resolve/c67e03e07d215c869f591b274c1631170d3e11fe/ggml-model-Q5_K_M.gguf",
+  "model_sha256": "29c223d4c23327b80fd13ebb5ab2555057a46317997d5da391584ffbef0db673",
+  "runtime_model_sha256": "b660082fcbe8e538c4ccc1044f79c2c881364a25f8c9277a8b8f1dcf680e5b84",
+  "thread_count": 8,
+  "frozen_corpus_sha256": "aec5be85738ada4fad68943fff3a0e556cdf61b587f93cfa9ca380164e61e812",
+  "answer_source_sha256": "72c838c5422f04c8246114074ea9c82e577155e8d7ef653a21c2dbb75bb3dff3",
+  "cell": {
+    "copy_penalty": 100,
+    "order_prior": 1.0,
+    "top_k": 10
+  },
+  "metrics": {
+    "case_count": 72,
+    "baseline_correct_count": 42,
+    "model_correct_count": 53,
+    "retained_correct_count": 41,
+    "win_count": 12,
+    "regression_count": 1,
+    "unchanged_incorrect_count": 18,
+    "mozc_correct_exact_key_regression_count": 0,
+    "clean_key_copy_promotion_count": 0,
+    "baseline_character_error_sum": 56,
+    "model_character_error_sum": 36,
+    "reference_unicode_scalar_count": 435,
+    "net_gain_cases": 11,
+    "paired_bootstrap": {
+      "definition_version": 1,
+      "sample_size": 72,
+      "win_count": 12,
+      "regression_count": 1,
+      "tie_count": 59,
+      "lower_gain_cases": 5,
+      "upper_gain_cases": 18,
+      "gain_denominator_cases": 72
+    }
+  },
+  "latency_milliseconds": {
+    "median": 452.1863999998459,
+    "p90": 870.3822000006767,
+    "maximum": 1699.382400000104
+  },
+  "cases": [
+    {
+      "source_line": 2,
+      "has_context": false,
+      "merged_top_output": "足しました",
+      "request_milliseconds": 394.58580000064103
+    },
+    {
+      "source_line": 3,
+      "has_context": false,
+      "merged_top_output": "個人用",
+      "request_milliseconds": 452.1863999998459
+    },
+    {
+      "source_line": 4,
+      "has_context": false,
+      "merged_top_output": "絡めて",
+      "request_milliseconds": 230.77349999948638
+    },
+    {
+      "source_line": 5,
+      "has_context": false,
+      "merged_top_output": "話していた",
+      "request_milliseconds": 250.21170000036363
+    },
+    {
+      "source_line": 6,
+      "has_context": false,
+      "merged_top_output": "話しています",
+      "request_milliseconds": 296.3954999959242
+    },
+    {
+      "source_line": 7,
+      "has_context": false,
+      "merged_top_output": "出ましたら",
+      "request_milliseconds": 234.3371999977535
+    },
+    {
+      "source_line": 8,
+      "has_context": false,
+      "merged_top_output": "秋のことである",
+      "request_milliseconds": 295.2802000036172
+    },
+    {
+      "source_line": 9,
+      "has_context": false,
+      "merged_top_output": "むしろ風呂出て",
+      "request_milliseconds": 862.8721000022779
+    },
+    {
+      "source_line": 11,
+      "has_context": false,
+      "merged_top_output": "青い空に",
+      "request_milliseconds": 216.69160000055854
+    },
+    {
+      "source_line": 12,
+      "has_context": false,
+      "merged_top_output": "何度か",
+      "request_milliseconds": 190.8965000002354
+    },
+    {
+      "source_line": 13,
+      "has_context": false,
+      "merged_top_output": "ご担当者",
+      "request_milliseconds": 207.1088000011514
+    },
+    {
+      "source_line": 14,
+      "has_context": false,
+      "merged_top_output": "生涯グランドスラム",
+      "request_milliseconds": 116.930099999081
+    },
+    {
+      "source_line": 15,
+      "has_context": false,
+      "merged_top_output": "正直",
+      "request_milliseconds": 208.31039999939094
+    },
+    {
+      "source_line": 16,
+      "has_context": false,
+      "merged_top_output": "買います",
+      "request_milliseconds": 259.01839999642107
+    },
+    {
+      "source_line": 17,
+      "has_context": false,
+      "merged_top_output": "見ておくれ",
+      "request_milliseconds": 229.36460000346415
+    },
+    {
+      "source_line": 18,
+      "has_context": false,
+      "merged_top_output": "たち消え",
+      "request_milliseconds": 528.8081999970018
+    },
+    {
+      "source_line": 19,
+      "has_context": false,
+      "merged_top_output": "立ち消え",
+      "request_milliseconds": 426.0846999968635
+    },
+    {
+      "source_line": 20,
+      "has_context": false,
+      "merged_top_output": "見つけ次第",
+      "request_milliseconds": 464.3655999989278
+    },
+    {
+      "source_line": 21,
+      "has_context": false,
+      "merged_top_output": "勝手に",
+      "request_milliseconds": 400.990099999035
+    },
+    {
+      "source_line": 22,
+      "has_context": false,
+      "merged_top_output": "熊本と長野",
+      "request_milliseconds": 748.3646999990015
+    },
+    {
+      "source_line": 23,
+      "has_context": false,
+      "merged_top_output": "若いんだから",
+      "request_milliseconds": 283.602500001507
+    },
+    {
+      "source_line": 24,
+      "has_context": false,
+      "merged_top_output": "死んでない",
+      "request_milliseconds": 434.72519999704673
+    },
+    {
+      "source_line": 25,
+      "has_context": false,
+      "merged_top_output": "ご自由に",
+      "request_milliseconds": 327.2886999984621
+    },
+    {
+      "source_line": 26,
+      "has_context": false,
+      "merged_top_output": "競合性",
+      "request_milliseconds": 171.49179999978514
+    },
+    {
+      "source_line": 27,
+      "has_context": false,
+      "merged_top_output": "童顔",
+      "request_milliseconds": 222.2624999958498
+    },
+    {
+      "source_line": 28,
+      "has_context": false,
+      "merged_top_output": "支う",
+      "request_milliseconds": 171.07960000248568
+    },
+    {
+      "source_line": 29,
+      "has_context": false,
+      "merged_top_output": "これ以外にも",
+      "request_milliseconds": 870.3822000006767
+    },
+    {
+      "source_line": 30,
+      "has_context": false,
+      "merged_top_output": "適しているものは",
+      "request_milliseconds": 507.5531999955274
+    },
+    {
+      "source_line": 31,
+      "has_context": false,
+      "merged_top_output": "いかなければ",
+      "request_milliseconds": 567.5830999971367
+    },
+    {
+      "source_line": 33,
+      "has_context": false,
+      "merged_top_output": "大須に行く",
+      "request_milliseconds": 577.8895999956148
+    },
+    {
+      "source_line": 34,
+      "has_context": false,
+      "merged_top_output": "対人関係",
+      "request_milliseconds": 535.0850000049832
+    },
+    {
+      "source_line": 35,
+      "has_context": false,
+      "merged_top_output": "対人スキル",
+      "request_milliseconds": 308.8173000014649
+    },
+    {
+      "source_line": 36,
+      "has_context": false,
+      "merged_top_output": "寝落ち通話",
+      "request_milliseconds": 237.96169999877748
+    },
+    {
+      "source_line": 37,
+      "has_context": false,
+      "merged_top_output": "起きて音がお見てた",
+      "request_milliseconds": 1051.4124000019365
+    },
+    {
+      "source_line": 38,
+      "has_context": false,
+      "merged_top_output": "他の用事もできた",
+      "request_milliseconds": 557.1057000033761
+    },
+    {
+      "source_line": 39,
+      "has_context": false,
+      "merged_top_output": "供給量日！",
+      "request_milliseconds": 658.4896000022127
+    },
+    {
+      "source_line": 40,
+      "has_context": false,
+      "merged_top_output": "見たことない鳥いる",
+      "request_milliseconds": 991.7944000062562
+    },
+    {
+      "source_line": 63,
+      "has_context": false,
+      "merged_top_output": "お風呂入りません",
+      "request_milliseconds": 450.28309999725025
+    },
+    {
+      "source_line": 64,
+      "has_context": false,
+      "merged_top_output": "お茶入りません",
+      "request_milliseconds": 481.10889999770734
+    },
+    {
+      "source_line": 66,
+      "has_context": false,
+      "merged_top_output": "お気に召したなら",
+      "request_milliseconds": 594.8113999984344
+    },
+    {
+      "source_line": 67,
+      "has_context": false,
+      "merged_top_output": "ことここに至る",
+      "request_milliseconds": 1699.382400000104
+    },
+    {
+      "source_line": 68,
+      "has_context": false,
+      "merged_top_output": "身も蓋もない",
+      "request_milliseconds": 565.656199996738
+    },
+    {
+      "source_line": 69,
+      "has_context": false,
+      "merged_top_output": "二の句が告げない",
+      "request_milliseconds": 499.5303000050626
+    },
+    {
+      "source_line": 70,
+      "has_context": false,
+      "merged_top_output": "怪我の功名",
+      "request_milliseconds": 109.85060000166413
+    },
+    {
+      "source_line": 73,
+      "has_context": false,
+      "merged_top_output": "不幸中の幸い",
+      "request_milliseconds": 761.4204999990761
+    },
+    {
+      "source_line": 74,
+      "has_context": false,
+      "merged_top_output": "待ったなし",
+      "request_milliseconds": 350.6288999960816
+    },
+    {
+      "source_line": 75,
+      "has_context": false,
+      "merged_top_output": "効果不効果",
+      "request_milliseconds": 367.29900000318594
+    },
+    {
+      "source_line": 76,
+      "has_context": false,
+      "merged_top_output": "こともなげに",
+      "request_milliseconds": 185.55779999769584
+    },
+    {
+      "source_line": 77,
+      "has_context": false,
+      "merged_top_output": "ヤブから棒に",
+      "request_milliseconds": 372.51849999847764
+    },
+    {
+      "source_line": 79,
+      "has_context": false,
+      "merged_top_output": "乗る過疎るか",
+      "request_milliseconds": 315.7766999956948
+    },
+    {
+      "source_line": 80,
+      "has_context": false,
+      "merged_top_output": "押しも押されもせぬ",
+      "request_milliseconds": 645.2031999961036
+    },
+    {
+      "source_line": 81,
+      "has_context": false,
+      "merged_top_output": "押しも押されぬ",
+      "request_milliseconds": 456.7692000018724
+    },
+    {
+      "source_line": 82,
+      "has_context": false,
+      "merged_top_output": "抜き差しならぬ",
+      "request_milliseconds": 313.8591999922937
+    },
+    {
+      "source_line": 83,
+      "has_context": false,
+      "merged_top_output": "片務的",
+      "request_milliseconds": 77.93949999904726
+    },
+    {
+      "source_line": 84,
+      "has_context": false,
+      "merged_top_output": "総務的",
+      "request_milliseconds": 441.97560000247904
+    },
+    {
+      "source_line": 85,
+      "has_context": false,
+      "merged_top_output": "過去つ",
+      "request_milliseconds": 553.3424000004743
+    },
+    {
+      "source_line": 87,
+      "has_context": false,
+      "merged_top_output": "選ん高さ",
+      "request_milliseconds": 775.1067000062903
+    },
+    {
+      "source_line": 88,
+      "has_context": false,
+      "merged_top_output": "そういう意味なの",
+      "request_milliseconds": 620.3824000021996
+    },
+    {
+      "source_line": 89,
+      "has_context": false,
+      "merged_top_output": "お砂糖とお酢",
+      "request_milliseconds": 408.1328999982361
+    },
+    {
+      "source_line": 90,
+      "has_context": false,
+      "merged_top_output": "こちら家につきました",
+      "request_milliseconds": 873.6237999946752
+    },
+    {
+      "source_line": 91,
+      "has_context": false,
+      "merged_top_output": "あの棚にあります",
+      "request_milliseconds": 702.2537000048032
+    },
+    {
+      "source_line": 92,
+      "has_context": false,
+      "merged_top_output": "性を出す",
+      "request_milliseconds": 373.63080000068294
+    },
+    {
+      "source_line": 93,
+      "has_context": false,
+      "merged_top_output": "ビールはいた",
+      "request_milliseconds": 387.4260000029608
+    },
+    {
+      "source_line": 94,
+      "has_context": false,
+      "merged_top_output": "靴はいた",
+      "request_milliseconds": 522.0561000005546
+    },
+    {
+      "source_line": 95,
+      "has_context": false,
+      "merged_top_output": "友達の身長を測る",
+      "request_milliseconds": 958.0585999920004
+    },
+    {
+      "source_line": 96,
+      "has_context": false,
+      "merged_top_output": "昨日の夕食は天ぷらだった",
+      "request_milliseconds": 491.0645999971166
+    },
+    {
+      "source_line": 97,
+      "has_context": false,
+      "merged_top_output": "家に早く帰る",
+      "request_milliseconds": 649.4758000026195
+    },
+    {
+      "source_line": 98,
+      "has_context": false,
+      "merged_top_output": "天気がいいから洗濯しよう",
+      "request_milliseconds": 873.1833999972878
+    },
+    {
+      "source_line": 99,
+      "has_context": false,
+      "merged_top_output": "雨が降るかもしれない",
+      "request_milliseconds": 758.2017999993695
+    },
+    {
+      "source_line": 100,
+      "has_context": false,
+      "merged_top_output": "昨日はどのくらい寝ましたか",
+      "request_milliseconds": 814.679300003263
+    },
+    {
+      "source_line": 101,
+      "has_context": false,
+      "merged_top_output": "今度の手術はいつですか",
+      "request_milliseconds": 795.6145000080141
+    },
+    {
+      "source_line": 102,
+      "has_context": false,
+      "merged_top_output": "喧嘩をしてしまったので謝りたい",
+      "request_milliseconds": 985.7618999958504
+    }
+  ],
+  "gate": {
+    "net_gain": true,
+    "bootstrap_lower_gain": true,
+    "full_retention": false,
+    "no_exact_key_regression": true
+  },
+  "gate_passed": false
+}

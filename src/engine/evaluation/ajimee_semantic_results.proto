@@ -1,0 +1,84 @@
+// Copyright 2026 LLM Japanese Input Authors
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//     * Neither the name of LLM Japanese Input Authors nor the names of its
+// contributors may be used to endorse or promote products derived from this
+// software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto2";
+
+package mozc.engine.evaluation;
+
+import "engine/evaluation/ajimee_capacity_audit.proto";
+
+enum AjimeeSemanticOutcome {
+  AJIMEE_SEMANTIC_OUTCOME_UNSPECIFIED = 0;
+  AJIMEE_SEMANTIC_SUCCESS = 1;
+  AJIMEE_SEMANTIC_BACKEND_ERROR = 2;
+  AJIMEE_SEMANTIC_INVALID_RESPONSE = 3;
+}
+
+enum AjimeeSemanticNumericProfile {
+  AJIMEE_SEMANTIC_NUMERIC_PROFILE_UNSPECIFIED = 0;
+  AJIMEE_SEMANTIC_CONFIGURED = 1;
+}
+
+message AjimeeSemanticRunnerConfig {
+  required uint32 schema_version = 1;
+  required uint32 semantic_results_schema_version = 2;
+  required string capacity_audit_config_sha256 = 3;
+  required string capacity_audit_sha256 = 4;
+  required AjimeeSemanticNumericProfile numeric_profile = 5;
+}
+
+message AjimeeSemanticResultsIdentity {
+  required string frozen_corpus_sha256 = 1;
+  required string capacity_audit_config_sha256 = 2;
+  required string capacity_audit_sha256 = 3;
+  required AjimeeCapacityAuditIdentity capacity_audit_identity = 4;
+  required AjimeeSemanticNumericProfile numeric_profile = 5;
+}
+
+message AjimeeSemanticSegmentOrder {
+  required uint64 segment_id = 1;
+  repeated uint64 candidate_ids = 2;
+}
+
+message AjimeeSemanticCaseResult {
+  required uint64 source_index = 1;
+  required AjimeeSemanticOutcome outcome = 2;
+  required AjimeeCanonicalStatusCode canonical_status_code = 3;
+  optional bool response_token_matches_request = 4;
+  repeated AjimeeSemanticSegmentOrder response_segment_orders = 5;
+  optional string merged_top_output = 6;
+  optional bool response_within_request_bounds = 7;
+  optional uint64 response_segment_order_count = 8;
+  optional uint64 response_candidate_id_count = 9;
+}
+
+message AjimeeSemanticResults {
+  required uint32 schema_version = 1;
+  required AjimeeSemanticResultsIdentity identity = 2;
+  repeated AjimeeSemanticCaseResult cases = 3;
+}

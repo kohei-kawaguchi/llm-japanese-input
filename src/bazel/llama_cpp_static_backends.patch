@@ -1,0 +1,136 @@
+diff --git a/ggml/src/ggml-backend-reg.cpp b/ggml/src/ggml-backend-reg.cpp
+index 6a989ef5c..bc3f6ca62 100644
+--- a/ggml/src/ggml-backend-reg.cpp
++++ b/ggml/src/ggml-backend-reg.cpp
+@@ -1,16 +1,21 @@
+ #include "ggml-backend-impl.h"
+ #include "ggml-backend.h"
++#ifndef GGML_STATIC_BACKENDS_ONLY
+ #include "ggml-backend-dl.h"
++#endif
+ #include "ggml-impl.h"
+ #include <algorithm>
++#include <cctype>
+ #include <cstring>
++#ifndef GGML_STATIC_BACKENDS_ONLY
+ #include <filesystem>
+ #include <memory>
+ #include <string>
++#endif
+ #include <type_traits>
+ #include <vector>
+-#include <cctype>
+ 
++#ifndef GGML_STATIC_BACKENDS_ONLY
+ #ifdef _WIN32
+ #    define WIN32_LEAN_AND_MEAN
+ #    ifndef NOMINMAX
+@@ -21,6 +26,7 @@
+ #    include <dlfcn.h>
+ #    include <unistd.h>
+ #endif
++#endif
+ 
+ // Backend registry
+ #ifdef GGML_USE_CPU
+@@ -90,6 +96,7 @@
+ #include "ggml-et.h"
+ #endif
+ 
++#ifndef GGML_STATIC_BACKENDS_ONLY
+ namespace fs = std::filesystem;
+ 
+ static std::string path_str(const fs::path & path) {
+@@ -106,10 +113,13 @@ static std::string path_str(const fs::path & path) {
+         return std::string();
+     }
+ }
++#endif
+ 
+ struct ggml_backend_reg_entry {
+     ggml_backend_reg_t reg;
++#ifndef GGML_STATIC_BACKENDS_ONLY
+     dl_handle_ptr handle;
++#endif
+ };
+ 
+ struct ggml_backend_registry {
+@@ -174,6 +181,7 @@ struct ggml_backend_registry {
+     }
+ 
+     ~ggml_backend_registry() {
++#ifndef GGML_STATIC_BACKENDS_ONLY
+         // FIXME: backends cannot be safely unloaded without a function to destroy all the backend resources,
+         // since backend threads may still be running and accessing resources from the dynamic library
+         for (auto & entry : backends) {
+@@ -181,9 +189,14 @@ struct ggml_backend_registry {
+                 entry.handle.release(); // NOLINT
+             }
+         }
++#endif
+     }
+ 
++#ifdef GGML_STATIC_BACKENDS_ONLY
++    void register_backend(ggml_backend_reg_t reg) {
++#else
+     void register_backend(ggml_backend_reg_t reg, dl_handle_ptr handle = nullptr) {
++#endif
+         if (!reg) {
+             return;
+         }
+@@ -199,6 +215,10 @@ struct ggml_backend_registry {
+             __func__, ggml_backend_reg_name(reg), ggml_backend_reg_dev_count(reg));
+ #endif
++#ifdef GGML_STATIC_BACKENDS_ONLY
++        backends.push_back({ reg });
++#else
+         backends.push_back({ reg, std::move(handle) });
++#endif
+         for (size_t i = 0; i < ggml_backend_reg_dev_count(reg); i++) {
+             register_device(ggml_backend_reg_dev_get(reg, i));
+         }
+@@ -217,6 +237,7 @@ struct ggml_backend_registry {
+         devices.push_back(device);
+     }
+ 
++#ifndef GGML_STATIC_BACKENDS_ONLY
+     ggml_backend_reg_t load_backend(const fs::path & path, bool silent) {
+         dl_handle_ptr handle { dl_load_library(path) };
+         if (!handle) {
+@@ -287,6 +308,7 @@ struct ggml_backend_registry {
+         // remove backend
+         backends.erase(it);
+     }
++#endif
+ };
+ 
+ static ggml_backend_registry & get_reg() {
+@@ -390,6 +412,23 @@ ggml_backend_t ggml_backend_init_best(void) {
+ }
+ 
+ // Dynamic loading
++#ifdef GGML_STATIC_BACKENDS_ONLY
++ggml_backend_reg_t ggml_backend_load(const char * path) {
++    (void) path;
++    return nullptr;
++}
++
++void ggml_backend_unload(ggml_backend_reg_t reg) {
++    (void) reg;
++}
++
++void ggml_backend_load_all() {
++}
++
++void ggml_backend_load_all_from_path(const char * dir_path) {
++    (void) dir_path;
++}
++#else
+ ggml_backend_reg_t ggml_backend_load(const char * path) {
+     return get_reg().load_backend(path, false);
+ }
+@@ -591,3 +630,4 @@ void ggml_backend_load_all_from_path(const char * dir_path) {
+         ggml_backend_load(backend_path);
+     }
+ }
++#endif
