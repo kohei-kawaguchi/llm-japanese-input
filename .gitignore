@@ -85,3 +85,6 @@ MODULE.bazel.lock
 
 # Personal HPC4 cluster settings stay local.
 /scripts/config/hpc4.json
+
+# Personal Windows build settings stay local.
+/scripts/config/windows_build.json

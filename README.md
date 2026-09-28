@@ -50,15 +50,20 @@ The method, the predeclared evaluation, and the full results are in
 The Windows build follows Mozc's
 [Windows build instructions](docs/build_mozc_in_windows.md) with the
 additional host requirements recorded in
-[.cursor/plans/daily-use-ime-build.md](.cursor/plans/daily-use-ime-build.md):
-the .NET 8 SDK, the nuget.org package source, and a restricted `PATH` for the
-Qt build. From `src/`:
+[.cursor/plans/daily-use-ime-build.md](.cursor/plans/daily-use-ime-build.md).
+Those requirements are the .NET 8 SDK, the nuget.org package source, and a
+restricted PATH for the Qt build.
+
+Python, Bazelisk, and the Qt build PATH differ by device. They are read from
+`scripts/config/windows_build.json`, which stays on the device and is not
+committed. From the repository root:
 
 ```
-python build_tools/update_deps.py
-python build_tools/build_qt.py --release --confirm_license
-bazelisk build package --config release_build
+bash scripts/run.sh windows-build
 ```
+
+The command changes to `src` and runs the dependency update, the Qt build, and
+the package build.
 
 Install `bazel-bin/win32/installer/LLMJapaneseInput64.msi` by opening it. The
 model is downloaded by Bazel at a pinned revision and SHA256 and is installed

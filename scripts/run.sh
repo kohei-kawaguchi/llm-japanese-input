@@ -4,7 +4,7 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 if [[ $# -eq 0 ]]; then
-  echo "Usage: scripts/run.sh {qwen-prepare|hpc4-sync|qwen-hpc4-upload|qwen-hpc4-submit|qwen-hpc4-retrieve} [arguments]" >&2
+  echo "Usage: scripts/run.sh {qwen-prepare|hpc4-sync|qwen-hpc4-upload|qwen-hpc4-submit|qwen-hpc4-retrieve|windows-build} [arguments]" >&2
   exit 2
 fi
 
@@ -27,9 +27,12 @@ case "$stage" in
   qwen-hpc4-retrieve)
     exec bash scripts/hpc4/retrieve_qwen_outputs.sh "$@"
     ;;
+  windows-build)
+    exec bash scripts/windows/build_ime.sh "$@"
+    ;;
   *)
     echo "Unknown stage: $stage" >&2
-    echo "Expected one of: qwen-prepare, hpc4-sync, qwen-hpc4-upload, qwen-hpc4-submit, qwen-hpc4-retrieve" >&2
+    echo "Expected one of: qwen-prepare, hpc4-sync, qwen-hpc4-upload, qwen-hpc4-submit, qwen-hpc4-retrieve, windows-build" >&2
     exit 2
     ;;
 esac

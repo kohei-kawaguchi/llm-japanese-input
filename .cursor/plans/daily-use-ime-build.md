@@ -24,23 +24,30 @@ The host system PATH contains MSYS2 MinGW and Miniconda library directories.
 Qt's CMake searches the prefixes of PATH entries, finds their zstd and zlib
 packages, and passes `C:\msys64\mingw64\include` to MSVC, whose headers then
 conflict with the MinGW headers. The Qt build therefore runs with a PATH that
-contains only the Windows system directories and the Python interpreter
-directory. The host PATH setting itself is not changed.
+contains only the directories in `qt_path_directories` and the directory of
+the configured Python interpreter. The host PATH setting itself is not changed.
 
 ## Build steps
 
-Run from `src/`.
+Python, Bazelisk, and the Qt PATH are device settings. They are stored in
+`scripts/config/windows_build.json` and are not committed. `python` is the
+absolute path of the interpreter. `bazelisk` gives the download URL, the
+SHA256, and the path of the binary. `qt_path_directories` lists the Windows
+system directories used while Qt is built. The interpreter directory is
+appended to that list.
 
-1. `python build_tools/update_deps.py`
-2. Remove any `third_party/qt_src` and `third_party/qt_host` left by a build
-   that ran with the host PATH, because their CMake cache keeps the MinGW
-   packages.
-3. Run `python build_tools/build_qt.py --release --confirm_license` with PATH
-   restricted to `C:\WINDOWS\system32`, `C:\WINDOWS`,
-   `C:\WINDOWS\System32\Wbem`, `C:\WINDOWS\System32\WindowsPowerShell\v1.0`,
-   and the Python interpreter directory.
-4. `bazelisk build package --config release_build`
-5. Install `bazel-bin/win32/installer/LLMJapaneseInput64.msi`.
+Run from the repository root.
+
+1. If `src/third_party/qt_src` or `src/third_party/qt_host` was produced by a
+   build that used the host PATH, remove those directories. Their CMake cache
+   keeps the MinGW packages.
+2. `bash scripts/run.sh windows-build`
+3. Install `bazel-bin/win32/installer/LLMJapaneseInput64.msi`.
+
+The command changes to `src` and runs `build_tools/update_deps.py`,
+`build_tools/build_qt.py --release --confirm_license`, and
+`bazelisk build package --config release_build`. Bazelisk is downloaded to
+the configured path when that file is absent, and its SHA256 is checked.
 
 ## Release versions
 
