@@ -45,14 +45,43 @@ The method, the predeclared evaluation, and the full results are in
   limit and show Mozc's order.
 * The installer is about 100 MB because it includes the model.
 
-## Build and install
+## Install
+
+Download `LLMJapaneseInput64-<version>.msi` from the
+[Releases page](https://github.com/kohei-kawaguchi/llm-japanese-input/releases)
+and open it.
+
+## Build
 
 The Windows build follows Mozc's
-[Windows build instructions](docs/build_mozc_in_windows.md) with the
-additional host requirements recorded in
+[Windows build instructions](docs/build_mozc_in_windows.md). The details of
+the host setup are recorded in
 [.cursor/plans/daily-use-ime-build.md](.cursor/plans/daily-use-ime-build.md).
-Those requirements are the .NET 8 SDK, the nuget.org package source, and a
-restricted PATH for the Qt build.
+
+### Prerequisites
+
+* 64-bit Windows 10 or later.
+* Visual Studio 2022 Community with the Windows 11 SDK, the MSVC v143 x64/x86
+  build tools, and C++ ATL for the v143 build tools (x86 and x64).
+* Python 3.12 or later.
+* Git for Windows, whose Git Bash runs the build command and provides `curl`.
+* The .NET 8 SDK. A .NET runtime alone is not sufficient, because the
+  dependency update restores WiX with `dotnet tool restore`. Install it with
+  `winget install Microsoft.DotNet.SDK.8` and confirm that
+  `dotnet --list-sdks` lists an 8.0 version.
+* nuget.org as a NuGet package source. When `dotnet nuget list source` shows
+  no source, add it with
+  `dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org`.
+
+Bazel records the MSVC include directories when it first configures the C++
+toolchain. When a Visual Studio component such as ATL is added after a build
+has run, run `../.tools/bazelisk.exe fetch --configure --force` in `src` so that
+the new include directories are recorded.
+
+Bazelisk is not a prerequisite. The build downloads it to `.tools/` and checks
+its SHA256.
+
+### Build steps
 
 Python, Bazelisk, and the Qt build PATH differ by device. They are read from
 `scripts/config/windows_build.json`, which stays on the device and is not
@@ -68,11 +97,16 @@ bash scripts/run.sh windows-build
 The command changes to `src` and runs the dependency update, the Qt build, and
 the package build.
 
-Install `bazel-bin/win32/installer/LLMJapaneseInput64.msi` by opening it. The
-model is downloaded by Bazel at a pinned revision and SHA256 and is installed
-next to the conversion server. Raise `BUILD_OSS` in `src/version.bzl` for every
-installer release, because Windows Installer does not replace executables
-whose version is unchanged.
+The command copies the installer to `dist/LLMJapaneseInput64-<version>.msi`,
+where the version is read from the version file of the same build. Install it
+by opening that file. The copy is needed because Bazel places the installer
+behind the `src/bazel-bin` junction, and Windows Installer does not open a
+package through that junction.
+
+The model is downloaded by Bazel at a pinned revision and SHA256 and is
+installed next to the conversion server. Raise `BUILD_OSS` in `src/version.bzl`
+for every installer release, because Windows Installer does not replace
+executables whose version is unchanged.
 
 ## Turning ranking off
 

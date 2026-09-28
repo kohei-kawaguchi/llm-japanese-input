@@ -2,18 +2,27 @@
 
 import hashlib
 import os
+import shutil
 import subprocess
 import sys
 
 _HELPER_DIR = os.path.dirname(os.path.abspath(__file__))
-if _HELPER_DIR not in sys.path:
-  sys.path.insert(0, _HELPER_DIR)
+ROOT = os.path.abspath(os.path.join(_HELPER_DIR, "..", ".."))
+SRC = os.path.join(ROOT, "src")
+for _path in (_HELPER_DIR, os.path.join(SRC, "build_tools")):
+  if _path not in sys.path:
+    sys.path.insert(0, _path)
 
+import mozc_version
 import windows_build_config
 
 
-ROOT = os.path.abspath(os.path.join(_HELPER_DIR, "..", ".."))
 DEFAULT_CONFIG = os.path.join("scripts", "config", "windows_build.json")
+INSTALLER = os.path.join(
+    "bazel-bin", "win32", "installer", "LLMJapaneseInput64.msi"
+)
+VERSION_FILE = os.path.join("bazel-bin", "base", "mozc_version.txt")
+DIST = os.path.join(ROOT, "dist")
 
 
 def _sha256(path):
@@ -80,13 +89,24 @@ def _commands(python, bazelisk):
   ]
 
 
+def _copy_installer():
+  version = mozc_version.MozcVersion(
+      os.path.join(SRC, VERSION_FILE)
+  ).GetVersionString()
+  destination = os.path.join(DIST, f"LLMJapaneseInput64-{version}.msi")
+  os.makedirs(DIST, exist_ok=True)
+  shutil.copyfile(os.path.realpath(os.path.join(SRC, INSTALLER)), destination)
+  return destination
+
+
 def _print_plan(python, bazelisk, qt_path, commands):
   print(f"python: {python}")
   print(f"bazelisk: {bazelisk}")
-  print(f"cwd: {os.path.join(ROOT, 'src')}")
+  print(f"cwd: {SRC}")
   print(f"qt_path: {qt_path}")
   for command in commands:
     print(" ".join(command))
+  print(f"installer: {os.path.join(SRC, INSTALLER)} -> {DIST}")
 
 
 def _parse_args(argv):
@@ -142,12 +162,12 @@ def main():
       config["bazelisk"]["sha256"],
       bazelisk,
   )
-  src = os.path.join(ROOT, "src")
-  subprocess.run(commands[0], cwd=src, check=True)
+  subprocess.run(commands[0], cwd=SRC, check=True)
   qt_env = os.environ.copy()
   qt_env["PATH"] = qt_path
-  subprocess.run(commands[1], cwd=src, env=qt_env, check=True)
-  subprocess.run(commands[2], cwd=src, check=True)
+  subprocess.run(commands[1], cwd=SRC, env=qt_env, check=True)
+  subprocess.run(commands[2], cwd=SRC, check=True)
+  print(f"installer: {_copy_installer()}")
   return 0
 
 

@@ -88,3 +88,6 @@ MODULE.bazel.lock
 
 # Personal Windows build settings stay local.
 /scripts/config/windows_build.json
+
+# Windows installers copied out of bazel-bin by the build.
+/dist/

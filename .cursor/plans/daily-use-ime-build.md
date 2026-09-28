@@ -42,12 +42,16 @@ Run from the repository root.
    build that used the host PATH, remove those directories. Their CMake cache
    keeps the MinGW packages.
 2. `bash scripts/run.sh windows-build`
-3. Install `bazel-bin/win32/installer/LLMJapaneseInput64.msi`.
+3. Install `dist/LLMJapaneseInput64-<version>.msi`.
 
 The command changes to `src` and runs `build_tools/update_deps.py`,
 `build_tools/build_qt.py --release --confirm_license`, and
 `bazelisk build package --config release_build`. Bazelisk is downloaded to
 the configured path when that file is absent, and its SHA256 is checked.
+After the package build, the installer is copied from
+`src/bazel-bin/win32/installer/LLMJapaneseInput64.msi` to `dist/` under a name
+that carries the version in `src/bazel-bin/base/mozc_version.txt`. Windows
+Installer does not open a package through the `src/bazel-bin` junction.
 
 ## Release versions
 
@@ -70,7 +74,7 @@ name, and every OSS TSF GUID and the installer UpgradeCode are new, so the
 product can coexist with an official Mozc install. Internal executable names
 such as `mozc_server.exe` stay unchanged because users do not see them. The
 Mozc icons are reused until the product has its own icons. The installer is
-`bazel-bin/win32/installer/LLMJapaneseInput64.msi`. The previous Mozc install
+`dist/LLMJapaneseInput64-<version>.msi`. The previous Mozc install
 is removed before this installer is installed, and its learning data is not
 migrated.
 
