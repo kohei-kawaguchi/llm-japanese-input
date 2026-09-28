@@ -56,7 +56,10 @@ restricted PATH for the Qt build.
 
 Python, Bazelisk, and the Qt build PATH differ by device. They are read from
 `scripts/config/windows_build.json`, which stays on the device and is not
-committed. From the repository root:
+committed. Copy `scripts/config/windows_build.example.json` to that path and
+replace `python` with the absolute path of the local Python interpreter. Paths
+use forward slashes. Change `qt_path_directories` only when Windows is not
+installed in `C:/WINDOWS`. From the repository root:
 
 ```
 bash scripts/run.sh windows-build

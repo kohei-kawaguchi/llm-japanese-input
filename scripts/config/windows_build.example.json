@@ -1,0 +1,14 @@
+{
+  "python": "C:/Users/USERNAME/AppData/Local/Programs/Python/Python311/python.exe",
+  "bazelisk": {
+    "url": "https://github.com/bazelbuild/bazelisk/releases/download/v1.29.0/bazelisk-windows-amd64.exe",
+    "sha256": "092a8738d5b41aae7a85c42cc961b1034e3389aba43ffc20c0fabda7b43e095b",
+    "path": ".tools/bazelisk.exe"
+  },
+  "qt_path_directories": [
+    "C:/WINDOWS/system32",
+    "C:/WINDOWS",
+    "C:/WINDOWS/System32/Wbem",
+    "C:/WINDOWS/System32/WindowsPowerShell/v1.0"
+  ]
+}
